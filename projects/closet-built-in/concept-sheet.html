@@ -1,0 +1,1116 @@
+<title>Closet Built-In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a shop drawing sheet. Big front elevation with notes beside it, then the center-column options as a row of mini elevations, then the plan view and build notes. */
+:root {
+  --paper: #eef1f1;
+  --sheet: #fafbfb;
+  --ink: #1c2529;
+  --ink-soft: #56646b;
+  --rule: #d2dadc;
+  --wallface: #eff2f2;
+  --wood: #ddb987;
+  --wood-dark: #a77d45;
+  --face: #e8cc9c;
+  --kick: #6f604f;
+  --fabric-1: #8a9ca7;
+  --fabric-2: #677f8c;
+  --fabric-3: #a3b09a;
+  --dim: #2b5d8c;
+  --dim-soft: rgba(43, 93, 140, 0.10);
+  --veil: rgba(28, 37, 41, 0.08);
+  --hatch: #8f9ba1;
+
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1416; --sheet: #161c1f; --ink: #dfe6e9; --ink-soft: #9aa8ae; --rule: #2b353a;
+    --wallface: #1a2125; --wood: #a5814f; --wood-dark: #7a5c34; --face: #b8955f; --kick: #4b4035;
+    --fabric-1: #5d6f7a; --fabric-2: #485a65; --fabric-3: #6b7964;
+    --dim: #82b5e4; --dim-soft: rgba(130, 181, 228, 0.12); --veil: rgba(0, 0, 0, 0.28); --hatch: #56646b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1416; --sheet: #161c1f; --ink: #dfe6e9; --ink-soft: #9aa8ae; --rule: #2b353a;
+  --wallface: #1a2125; --wood: #a5814f; --wood-dark: #7a5c34; --face: #b8955f; --kick: #4b4035;
+  --fabric-1: #5d6f7a; --fabric-2: #485a65; --fabric-3: #6b7964;
+  --dim: #82b5e4; --dim-soft: rgba(130, 181, 228, 0.12); --veil: rgba(0, 0, 0, 0.28); --hatch: #56646b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: 20px;
+  padding-block: 28px 64px;
+  display: grid;
+  gap: 28px;
+}
+h1, h2, h3 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+  margin: 0;
+  line-height: 1.1;
+}
+h1 { font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+h2 { font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
+h3 { font-size: 1.25rem; }
+p { margin: 0; }
+.num, .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+
+/* title block */
+.titleblock {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px 40px;
+  align-items: end;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 20px;
+}
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+.lede { margin-top: 12px; max-width: 60ch; color: var(--ink-soft); font-size: 1.05rem; }
+.specs {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  margin: 0;
+  font-size: 0.92rem;
+}
+.specs dt { font-family: var(--f-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); padding-top: 3px; }
+.specs dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.specs dd small { display: block; font-family: var(--f-body); color: var(--ink-soft); font-size: 0.82rem; }
+
+/* sheets */
+.sheet {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.sheet-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 20px;
+}
+.sheet-head .cap { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-soft); letter-spacing: 0.04em; }
+.scroll { overflow-x: auto; min-width: 0; }
+.scroll svg { display: block; width: 100%; height: auto; min-width: 520px; }
+
+.elev-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* option switcher */
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button, .card button {
+  font: 500 0.8rem var(--f-mono);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.seg button:hover, .card button:hover { border-color: var(--ink); }
+button:focus-visible { outline: 2px solid var(--dim); outline-offset: 2px; }
+
+/* section notes */
+.notes { display: grid; gap: 18px; min-width: 0; }
+.note { display: grid; gap: 6px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.note:first-child { border-top: 0; padding-top: 0; }
+.note .tag {
+  font-family: var(--f-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim);
+}
+.note p { color: var(--ink-soft); font-size: 0.95rem; }
+.heights { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; margin: 2px 0 0; font-size: 0.92rem; }
+.heights dt { font-family: var(--f-mono); font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+.heights dd { margin: 0; color: var(--ink-soft); }
+
+/* option cards */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.card {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--rule);
+  background: var(--sheet);
+}
+.card.is-on { border-color: var(--dim); box-shadow: inset 0 0 0 1px var(--dim); background: var(--dim-soft); }
+.card svg { width: 78px; height: auto; display: block; }
+.card .body { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.card .badge { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.card p { font-size: 0.93rem; color: var(--ink-soft); }
+.card ul { margin: 0; padding-left: 1.1em; font-size: 0.9rem; color: var(--ink-soft); }
+.card li + li { margin-top: 2px; }
+.card button { justify-self: start; margin-top: 4px; }
+.card button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+
+.cards-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cards-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.why { color: var(--ink-soft); font-size: 0.95rem; max-width: 75ch; }
+.phases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.phase { display: grid; gap: 8px; align-content: start; padding-top: 14px; border-top: 2px solid var(--ink); }
+.phase .tag { font-family: var(--f-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); }
+.cutlist { display: grid; gap: 26px; }
+.cut-phase { display: grid; gap: 10px; }
+.cut-phase > h3 { padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.cut-table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 0.9rem; }
+.cut-table caption { text-align: left; font-family: var(--f-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); padding: 10px 0 6px; }
+.cut-table th { text-align: left; font: 500 0.7rem var(--f-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); }
+.cut-table td { padding: 7px 12px 7px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.cut-table td.q, .cut-table td.sz { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.cut-table td.n { color: var(--ink-soft); }
+.cut-table col.c-part { width: 26%; } .cut-table col.c-q { width: 8%; } .cut-table col.c-sz { width: 22%; }
+.copywrap { display: flex; align-items: center; gap: 12px; }
+.copybtn { font: 500 0.8rem var(--f-mono); color: var(--ink); background: transparent; border: 1px solid var(--rule); padding: 6px 10px; cursor: pointer; }
+.copybtn:hover { border-color: var(--ink); }
+.sheetplan { display: grid; gap: 8px; }
+.sheetplan svg { max-width: 860px; }
+.s-cut { fill: var(--ink); font-size: 1.9px; }
+.s-raw { fill: url(#rawHatch); stroke: var(--ink-soft); stroke-width: 0.2; }
+.s-rawfin { fill: url(#rawHatch); stroke: var(--dim); stroke-width: 0.45; }
+.pill { display: inline-block; margin-left: 8px; padding: 1px 7px; font: 500 0.66rem var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; border: 1px solid var(--rule); color: var(--ink-soft); vertical-align: 1px; white-space: nowrap; }
+.pill-hidden, .pill-header, .pill-paint { background: var(--dim-soft); color: var(--dim); border-color: transparent; }
+.pill-finish { border-color: var(--dim); color: var(--dim); }
+.cut-table tr.raw td:first-child { box-shadow: inset 3px 0 0 var(--dim); padding-left: 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.85rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { display: inline-block; width: 14px; height: 14px; border: 1px solid var(--ink-soft); }
+.sw-pre { background: var(--face); border-color: var(--wood-dark); }
+.sw-raw { background: repeating-linear-gradient(45deg, var(--wallface) 0 3px, var(--hatch) 3px 4px); }
+.sw-fin { background: repeating-linear-gradient(45deg, var(--wallface) 0 3px, var(--hatch) 3px 4px); border: 2px solid var(--dim); }
+.s-sheet { fill: var(--wallface); stroke: var(--ink); stroke-width: 0.3; }
+.s-sheettitle { fill: var(--ink-soft); font-size: 2.2px; }
+
+/* plan + build */
+.two { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.list { margin: 0; padding-left: 1.15em; display: grid; gap: 8px; color: var(--ink-soft); font-size: 0.95rem; }
+.list strong { color: var(--ink); font-weight: 600; }
+.cols3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.cols3 h3 { margin-bottom: 10px; }
+
+/* svg classes */
+svg text { font-family: var(--f-mono); }
+.s-wall { fill: var(--wallface); stroke: var(--ink); stroke-width: 0.35; }
+.s-wallcut { fill: var(--hatch); fill-opacity: 0.25; stroke: var(--ink); stroke-width: 0.3; }
+.s-floor { stroke: var(--ink); stroke-width: 0.6; }
+.s-wood { fill: var(--wood); stroke: var(--wood-dark); stroke-width: 0.15; }
+.s-top { fill: var(--wood-dark); stroke: var(--wood-dark); stroke-width: 0.15; }
+.s-face { fill: var(--face); stroke: var(--wood-dark); stroke-width: 0.15; }
+.s-kick { fill: var(--kick); }
+.s-pull { fill: var(--ink); }
+.s-rod { stroke: var(--ink-soft); stroke-width: 0.7; stroke-linecap: round; }
+.s-hook { stroke: var(--ink-soft); stroke-width: 0.14; fill: none; }
+.s-g1 { fill: var(--fabric-1); }
+.s-g2 { fill: var(--fabric-2); }
+.s-g3 { fill: var(--fabric-3); }
+.s-fold { stroke: var(--sheet); stroke-width: 0.12; stroke-opacity: 0.7; }
+.s-dash { fill: none; stroke: var(--ink-soft); stroke-width: 0.18; stroke-dasharray: 0.8 0.6; }
+.s-basket { fill: var(--fabric-3); fill-opacity: 0.55; stroke: var(--ink-soft); stroke-width: 0.12; }
+.s-shoe { fill: var(--ink-soft); fill-opacity: 0.55; }
+.s-veil { fill: var(--veil); }
+.s-hatchln { stroke: var(--hatch); stroke-width: 0.13; }
+.s-open { fill: none; stroke: var(--dim); stroke-width: 0.32; stroke-dasharray: 1.4 0.8; }
+.s-dimln { stroke: var(--dim); stroke-width: 0.18; fill: none; }
+.s-dimtx { fill: var(--dim); font-size: 2.2px; font-weight: 500; }
+.s-lbl { fill: var(--ink-soft); font-size: 1.7px; paint-order: stroke; stroke: var(--sheet); stroke-width: 0.6px; stroke-linejoin: round; }
+.s-lbl-dark { fill: var(--ink); font-size: 1.55px; }
+.s-rodend { fill: var(--ink-soft); }
+.s-arrow { fill: none; stroke: var(--dim); stroke-width: 0.3; stroke-linecap: round; stroke-linejoin: round; }
+.s-garment { fill: var(--fabric-1); fill-opacity: 0.75; }
+.s-bad { fill: none; stroke: var(--ink-soft); stroke-width: 0.2; stroke-dasharray: 0.5 0.5; }
+.s-hanger { stroke: var(--fabric-2); stroke-width: 0.22; stroke-opacity: 0.8; }
+.s-rodplan { stroke: var(--ink-soft); stroke-width: 0.35; stroke-dasharray: 1 0.6; }
+.s-drawerout { fill: var(--dim-soft); stroke: var(--dim); stroke-width: 0.22; stroke-dasharray: 1 0.6; }
+
+@media (max-width: 1000px) {
+  .cards-3, .cards-2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .elev-grid, .two, .titleblock, .phases { grid-template-columns: minmax(0, 1fr); }
+  .cols3 { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
+@media (max-width: 760px) {
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .sheet { padding: 16px; }
+  .wrap { padding-inline: 16px; }
+}
+</style>
+
+<main class="wrap">
+  <header class="titleblock">
+    <div>
+      <p class="eyebrow">Reach-in closet · concept sheet</p>
+      <h1>Closet Built-In</h1>
+      <p class="lede">Three sections behind a 48½″ opening: double hang on the left, a 24″ column in the middle with a rolling hamper, three drawers and shelves, and long hang on the right with the floor left open below it.</p>
+    </div>
+    <dl class="specs">
+      <dt>Interior</dt><dd>80″ W × 24″ D × 95½″ H</dd>
+      <dt>Opening</dt><dd>48½″ W × 80½″ H, no doors</dd>
+      <dt>Returns</dt><dd>15¾″ each side<small>Assumes the opening is centered. Measure both sides before cutting.</small></dd>
+      <dt>Header</dt><dd>15″ of wall above the opening</dd>
+    </dl>
+  </header>
+
+  <section class="sheet" aria-labelledby="elev-title">
+    <div class="sheet-head">
+      <h2 id="elev-title">Front elevation</h2>
+      <div class="seg" role="group" aria-label="Center column option" id="seg"></div>
+    </div>
+    <div class="elev-grid">
+      <div>
+        <div class="scroll"><svg id="elev" role="img" aria-label="Front elevation of the closet built-in"></svg></div>
+        <p class="mono" style="font-size:.74rem;color:var(--ink-soft);margin-top:8px">Looking at the back wall. Hatched areas sit behind the front wall: the two returns and the header. Blue dashed line = the opening.</p>
+      </div>
+      <div class="notes">
+        <div class="note">
+          <span class="tag">Left · 28″ wide</span>
+          <h3>Double hang</h3>
+          <dl class="heights">
+            <dt>84″</dt><dd>Top shelf, 12″ deep, runs the full 80″</dd>
+            <dt>81½″</dt><dd>Upper rod: shirts, jackets</dd>
+            <dt>41″</dt><dd>Lower rod: shirts, folded pants</dd>
+          </dl>
+          <p>About 28 hangers per rod, so roughly 55 garments. Of each 28″ rod, about 12″ is in front of you; the rest slides out from behind the return.</p>
+        </div>
+        <div class="note">
+          <span class="tag">Center · 24″ wide, 22⁹⁄₁₆″ inside</span>
+          <h3 id="c-name">Hamper at the base</h3>
+          <dl class="heights" id="c-heights"></dl>
+          <p id="c-text"></p>
+        </div>
+        <div class="note">
+          <span class="tag">Right · 28″ wide</span>
+          <h3>Long hang, open floor</h3>
+          <dl class="heights">
+            <dt>84″</dt><dd>Top shelf, 12″ deep</dd>
+            <dt>70″</dt><dd>Shelf, 12″ deep: hats, bags, folded sweaters</dd>
+            <dt>67½″</dt><dd>Rod: suits, coats, dresses</dd>
+          </dl>
+          <p>A 55″ coat clears the floor by about 10″. Suits (about 40″) leave 25″ or more of open floor for shoes, a hamper or a bag. To set the rod for your own clothes, measure your longest garment from hook to hem and add about 10″.</p>
+        </div>
+        <div class="note">
+          <span class="tag">Above the header · 10¾″ to ceiling</span>
+          <p>Everything above 80½″ is behind the header, so the only way a box comes down is through the gap between the top shelf and the front wall. That is why the top shelf is 12″ deep and not full depth: it leaves a 12″ gap. Bins about 11″ deep drop straight down through it; deeper ones need a tilt. A full-depth shelf would leave ¾″ and trap whatever is up there. See section B below.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="sect-title">
+    <div class="sheet-head">
+      <h2 id="sect-title">Side sections</h2>
+      <span class="cap">Cut front to back, back wall on the left, room on the right</span>
+    </div>
+    <div class="two">
+      <div class="scroll"><svg id="sect" role="img" aria-label="Side sections through the hanging section and the center column"></svg></div>
+      <ul class="list">
+        <li><strong>The header decides the depths up high.</strong> Anything above 80½″ has to come down through the gap between a shelf's front edge and the front wall.</li>
+        <li><strong>A: the hanging sections.</strong> Rods 12″ off the back wall, shelves 12″ deep so the front edge sits right over the rod. That leaves a 12″ gap under the header to slide a bin forward and drop it out.</li>
+        <li><strong>B: the center column.</strong> It runs full depth up to the 70″ shelf, which is the highest one with useful room in front of it: 9¾″ clear before you hit the header, so stacks slide straight out. Above that it uses the same 12″ top shelf as the sides.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="phase-title">
+    <div class="sheet-head">
+      <h2 id="phase-title">Build phases</h2>
+      <span class="cap">The closet is fully usable after phase 1. Pick a phase to draw it in the elevation.</span>
+    </div>
+    <div class="cards cards-2" id="cards"></div>
+    <div class="phases">
+      <div class="phase">
+        <span class="tag">Phase 1</span>
+        <h3>Shell, rods and shelves</h3>
+        <ol class="list">
+          <li><strong>On the bench:</strong> edge band the partition fronts, drill the shelf pin holes on their inner faces from 27″ to 68″, and notch the bottoms for the baseboard. The holes are far easier to drill flat than in place.</li>
+          <li><strong>Cleats and nailers</strong> into the studs. Level them off marks at 84″ and 70″ rather than measuring up from the floor.</li>
+          <li><strong>Stand the partitions.</strong> They are 84″ tall and the opening is 80½″, so bring each one in tilted and stand it up inside. The diagonal is 87¼″, which clears the 95½″ ceiling.</li>
+          <li><strong>Tie them together:</strong> the floor rail at the back and the fixed 70″ shelf, then the three top shelf pieces and the right 70″ shelf.</li>
+          <li><strong>Finish:</strong> glue on the nosings, hang the rods, and drop in the adjustable shelves at 28″, 42″ and 55¾″. The rolling hamper goes on the floor below them.</li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="tag">Phase 2</span>
+        <h3>Hamper frame and 3 drawers</h3>
+        <ol class="list">
+          <li><strong>Pull the two lower adjustable shelves.</strong> The third moves to 59⅝″; the spares can go on the right side's open floor.</li>
+          <li><strong>Build the hamper frame:</strong> the right side, the back 15½″ behind where the face goes, and the top rail on the left. The left side stays open.</li>
+          <li><strong>Build the three drawer boxes and mount the slides</strong> on the partitions, using a spacer board cut to each slide's height so both sides match. The hamper frame's slides go at the top of the frame.</li>
+          <li><strong>Fix the hardwood top</strong> at 49″ with pocket screws into the partitions from below.</li>
+          <li><strong>Hang the faces</strong> with ⅛″ gaps, starting with the hamper face ¼″ off the floor, then set the remaining shelf.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="cut-title">
+    <div class="sheet-head">
+      <h2 id="cut-title">Cut list</h2>
+      <div class="copywrap"><span id="copy-status" class="cap" aria-live="polite"></span><button type="button" id="copy-cut" class="copybtn">Copy as text</button></div>
+    </div>
+    <p class="why">Finished sizes in inches. Shelves are side to side × front to back, partitions are height × depth, faces are width × height. Anything that meets a wall is listed at its nominal size: measure in place and cut to fit.</p>
+    <div id="cutlist" class="cutlist"></div>
+    <div class="sheetplan">
+      <h3>Phase 1 plywood layout</h3>
+      <p class="why">Hatched parts come from your unfinished 48 × 56 piece, including the strip for the phase 2 faces. Cutting the faces in order from one strip keeps the grain running up the column. Its grain runs along the 56″ side, so the 28″ shelves run with the grain.</p>
+      <div class="legend"><span><i class="sw sw-pre"></i>Prefinished</span><span><i class="sw sw-raw"></i>Unfinished, doesn't show</span><span><i class="sw sw-fin"></i>Unfinished, needs a coat</span></div>
+      <div class="scroll"><svg id="sheets" role="img" aria-label="Cutting layout for two sheets of plywood"></svg></div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="plan-title">
+    <div class="sheet-head">
+      <h2 id="plan-title">Plan view</h2>
+      <span class="cap">From above, back wall at the top, room at the bottom</span>
+    </div>
+    <div class="two">
+      <div class="scroll"><svg id="plan" role="img" aria-label="Plan view of the closet from above"></svg></div>
+      <ul class="list">
+        <li><strong>The corners behind the returns are where hanging belongs.</strong> Hangers slide into view; a drawer there could not open past the front wall.</li>
+        <li><strong>The center column sits fully inside the opening</strong> (28″ to 52″ from the left wall, inside the 15¾″ to 64¼″ opening), so drawers clear the jambs.</li>
+        <li><strong>The hamper frame and drawers open 21″ into the room.</strong> Keep about 24″ clear in front of the opening, and a path to the left for the hamper.</li>
+        <li><strong>The hamper can be at most 15″ deep.</strong> It rolls out the frame's open left side, past the left jamb. With the frame fully open, only the front 15½″ of it is clear of a 4½″ thick front wall, so the frame's back panel sits 15½″ behind the face. Measure your wall; a thicker one means a shallower hamper.</li>
+        <li><strong>Hard floor assumed.</strong> Casters drag on carpet.</li>
+        <li><strong>Rods 12″ off the back wall,</strong> with a 12″ shelf above so its front edge sits right over the rod. Hangers need about 20″ of depth, and you have 24″.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="build-title">
+    <div class="sheet-head">
+      <h2 id="build-title">Build notes</h2>
+    </div>
+    <div class="cols3">
+      <div>
+        <h3>Carcass</h3>
+        <ul class="list">
+          <li>23/32″ plywood (sold as ¾″), prefinished maple or birch, with hardwood edge banding. All sizes here are for 23/32″.</li>
+          <li>Two partitions, floor to 84″, 23¼″ deep. That leaves ¾″ at the back to scribe to the wall. Notch them over the baseboard or pull the baseboard.</li>
+          <li>Top shelf 12″ deep, on cleats screwed to studs on all three walls and screwed down into the partition tops. Spans are 28″, 22⁹⁄₁₆″ and 28″.</li><li>Shelves over rods are 12″ deep too, with the rod right under the front edge. Keep the rod at 12″ rather than pulling it back under the shelf: coats are 20–22″ across the shoulders and need the room behind. Only the center column shelves at 70″ and below run full depth.</li>
+          <li>Glue a 1½″ hardwood nosing on the 28″ shelves so they don't sag under sweaters.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Center column</h3>
+        <ul class="list">
+          <li>22⁹⁄₁₆″ inside width gives 21⁹⁄₁₆″ drawer boxes with ½″ side-mount slides. Check your slides' spec before building boxes.</li>
+          <li>21″ full-extension slides on a 23¼″ deep carcass. The hamper rolls on the floor, so its frame's slides carry only the frame.</li>
+          <li>Faces overlay ⅜″ of each partition edge and finish flush with the front wall's inside face.</li>
+          <li>No toe kick: the hamper face runs to ¼″ off the floor.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Check before you cut</h3>
+        <ul class="list">
+          <li>Measure each return. If the opening is off-center, shift the center column to stay centered on the opening, not the closet.</li>
+          <li>Check the ceiling height at the front, back and both corners.</li>
+          <li>Check the walls for plumb and the back corners for square.</li>
+          <li>Find the studs on all three walls for the cleats and rod sockets.</li>
+          <li>Note any outlet, switch or attic hatch inside the closet.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  const H = 95.5, W = 80;
+  const OPEN = { x0: 15.75, x1: 64.25, h: 80.5 };
+  const C0 = 28.75, C1 = 51.25;      // center column, inside faces of the partitions
+  const TOP = 84;                     // top shelf, underside
+  const CTOP = 70;                    // highest full-depth shelf in the center column
+  const SHELF_D = 12;                 // depth of every shelf above a rod, and of the top shelf
+  const Y = h => +(H - h).toFixed(3);
+
+  // n shelves between h and CTOP, the last one exactly at CTOP
+  function shelfPlan(h, n) {
+    const th = 0.75;
+    const clear = (CTOP - h - (n - 1) * th) / n;
+    const positions = [];
+    let b = h;
+    for (let i = 0; i < n; i++) { const sh = b + clear; positions.push(sh); b = sh + th; }
+    return { clear, positions };
+  }
+
+  const FR = { 0: "", 0.125: "⅛", 0.25: "¼", 0.375: "⅜", 0.5: "½", 0.625: "⅝", 0.75: "¾", 0.875: "⅞" };
+  function fmt(n) {
+    const w = Math.floor(n + 1e-6);
+    const f = Math.round((n - w) * 8) / 8;
+    return (w ? String(w) : (f ? "" : "0")) + (FR[f] || "") + "″";
+  }
+
+  function rnd(seed) {
+    let s = seed;
+    return () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
+  }
+
+  function R(x0, h0, x1, h1, cls, extra) {
+    return `<rect x="${x0}" y="${Y(h1)}" width="${+(x1 - x0).toFixed(3)}" height="${+(h1 - h0).toFixed(3)}" class="${cls}"${extra || ""}/>`;
+  }
+  function L(x0, y0, x1, y1, cls) {
+    return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" class="${cls}"/>`;
+  }
+  function T(x, y, s, cls, anchor, rot) {
+    const tr = rot ? ` transform="rotate(${rot} ${x} ${y})"` : "";
+    return `<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor || "middle"}"${tr}>${s}</text>`;
+  }
+  function dimH(x0, x1, y, label, lx) {
+    const t = 0.8;
+    return L(x0, y, x1, y, "s-dimln") +
+      L(x0 - t, y + t, x0 + t, y - t, "s-dimln") + L(x1 - t, y + t, x1 + t, y - t, "s-dimln") +
+      L(x0, y - 1.4, x0, y + 1.4, "s-dimln") + L(x1, y - 1.4, x1, y + 1.4, "s-dimln") +
+      T(lx != null ? lx : (x0 + x1) / 2, y - 0.9, label, "s-dimtx");
+  }
+  function dimV(x, y0, y1, label) {
+    const t = 0.8;
+    return L(x, y0, x, y1, "s-dimln") +
+      L(x - t, y0 + t, x + t, y0 - t, "s-dimln") + L(x - t, y1 + t, x + t, y1 - t, "s-dimln") +
+      L(x - 1.4, y0, x + 1.4, y0, "s-dimln") + L(x - 1.4, y1, x + 1.4, y1, "s-dimln") +
+      T(x - 0.9, (y0 + y1) / 2, label, "s-dimtx", "middle", -90);
+  }
+  function lbl(x, h, s, anchor) { return T(x, Y(h), s, "s-lbl", anchor || "start"); }
+
+  // garments hung edge-on from a rod that runs left to right
+  function garments(x0, x1, rodH, minLen, maxLen, seed) {
+    const r = rnd(seed);
+    let s = "";
+    const cls = ["s-g1", "s-g2", "s-g3"];
+    for (let x = x0 + 0.9; x < x1 - 1.2; x += 1.15) {
+      const len = minLen + r() * (maxLen - minLen);
+      const top = rodH - 1.6;
+      s += `<path d="M${x + 0.45} ${Y(rodH - 0.1)} q0.5 0 0.5 0.5 q0 0.5 -0.5 0.5 L${x + 0.45} ${Y(top)}" class="s-hook"/>`;
+      s += R(x, top - len, x + 0.95, top, cls[Math.floor(r() * 3)], ' rx="0.25"');
+    }
+    return s;
+  }
+
+  function rod(x0, x1, h) {
+    return L(x0 + 0.4, Y(h), x1 - 0.4, Y(h), "s-rod");
+  }
+
+  function stack(x, h, w, ht, seed) {
+    const r = rnd(seed);
+    let s = R(x, h, x + w, h + ht, r() > 0.5 ? "s-g1" : "s-g3", ' rx="0.3"');
+    for (let k = h + 1.4; k < h + ht - 0.3; k += 1.4) s += L(x + 0.3, Y(k), x + w - 0.3, Y(k), "s-fold");
+    return s;
+  }
+
+  /* ---------- center column states ---------- */
+  const FX0 = 28.375, FX1 = 51.625;   // overlay faces cover 3/8" of each partition edge
+  const OPTIONS = [
+    {
+      id: "phase1", short: "Phase 1", name: "Phase 1: open shelves", badge: "Phase 1",
+      blurb: "The rolling hamper sits on the floor in the bottom bay, with three adjustable shelves above it.",
+      bullets: [
+        "The closet is fully usable from day one",
+        "Shelves on pins at 28″, 42″ and 55¾″, below the fixed 70″ shelf"
+      ],
+      parts: [
+        { t: "bay", h: 28 },
+        { t: "shelf" },
+        { t: "shelves", n: 3 }
+      ]
+    },
+    {
+      id: "phase2", short: "Phase 2", name: "Phase 2: hamper and drawers", badge: "Phase 2",
+      blurb: "A pull-out frame for the rolling hamper, three drawers, a hardwood top at 49″, then two shelves up to 70″.",
+      bullets: [
+        "The hamper face runs to ¼″ off the floor; there is no toe kick",
+        "Pull the frame out and roll the hamper off its open left side",
+        "Drawer faces 7⅞″, 6⅞″ and 5⅞″"
+      ],
+      parts: [
+        { t: "hamper", h: 28 },
+        { t: "drawers", heights: [8, 7, 6], labels: ["sweats · pajamas", "t-shirts", "socks · underwear"] },
+        { t: "top", h: 1 },
+        { t: "shelves", n: 2 }
+      ]
+    }
+  ];
+
+  // rolling hamper seen from the front: a basket on two visible casters
+  function rollingHamper(x0, x1, h0, ht) {
+    let t = R(x0, h0 + 1.8, x1, h0 + ht, "s-basket", ' rx="0.6"');
+    for (let k = h0 + 3.2; k < h0 + ht - 0.8; k += 1.5) t += L(x0 + 0.5, Y(k), x1 - 0.5, Y(k), "s-hook");
+    t += `<circle cx="${x0 + 1.6}" cy="${Y(h0 + 0.9)}" r="0.9" class="s-rodend"/><circle cx="${x1 - 1.6}" cy="${Y(h0 + 0.9)}" r="0.9" class="s-rodend"/>`;
+    return t;
+  }
+
+  function centerSVG(opt, labels) {
+    let s = "", h = 0, heights = [];
+    const cx = (C0 + C1) / 2;
+    for (const p of opt.parts) {
+      if (p.t === "kick") {
+        s += R(C0, 0, C1, p.h, "s-kick");
+        h = p.h;
+      } else if (p.t === "drawers") {
+        p.heights.forEach((fh, i) => {
+          s += R(FX0, h + 0.06, FX1, h + fh - 0.06, "s-face");
+          const ph = h + fh * 0.42;
+          s += R(cx - 2.6, ph - 0.22, cx + 2.6, ph + 0.22, "s-pull", ' rx="0.2"');
+          if (labels && p.labels) s += T(cx, Y(h + fh - 1.9), p.labels[i], "s-lbl-dark");
+          heights.push([h + fh, `Drawer, ${fmt(fh - 0.125)} face: ${p.labels[i]}`]);
+          h += fh;
+        });
+      } else if (p.t === "top") {
+        s += R(C0, h, C1, h + p.h, "s-top");
+        heights.push([h + p.h, "Hardwood top"]);
+        h += p.h;
+      } else if (p.t === "bottom") {
+        s += R(C0, h, C1, h + 0.75, "s-wood");
+        h += 0.75;
+      } else if (p.t === "bay") {
+        s += rollingHamper(C0 + 1.6, C1 - 1.6, h, 22);
+        if (labels) s += T(cx, Y(h + 24.5), "rolling hamper", "s-lbl-dark");
+        heights.push([h + p.h, `Open bay, ${fmt(p.h)} tall, with the rolling hamper on the floor`]);
+        h += p.h;
+      } else if (p.t === "shelf") {
+        s += R(C0, h, C1, h + 0.75, "s-wood");
+        heights.push([h + 0.75, "Adjustable shelf, comes out in phase 2"]);
+        h += 0.75;
+      } else if (p.t === "shelves") {
+        const { clear, positions } = shelfPlan(h, p.n);
+        let base = h;
+        positions.forEach((sh, i) => {
+          s += stack(C0 + 0.8, base, 10, Math.min(clear - 1.6, 5 + (i % 2) * 2), 11 + i);
+          s += stack(C0 + 11.7, base, 10, Math.min(clear - 1.6, 6.5 - (i % 2) * 1.5), 23 + i);
+          s += R(C0, sh, C1, sh + 0.75, "s-wood");
+          base = sh + 0.75;
+        });
+        // top cubby: only the part below the header is reachable
+        s += stack(C0 + 0.8, base, 10, 7.5, 31) + stack(C0 + 11.7, base, 10, 6, 32);
+        heights.push([CTOP, `${p.n} shelves about ${fmt(Math.round(clear * 4) / 4)} apart; the top one lines up with the right side's 70″ shelf`]);
+        heights.push([TOP, `Top cubby: ${fmt(OPEN.h - CTOP - 0.75)} clear below the header`]);
+        if (labels) s += T(cx, Y(82.4), "sweaters · jeans", "s-lbl-dark");
+      } else if (p.t === "shoes") {
+        const tier = p.h / p.n;
+        for (let i = 0; i < p.n; i++) {
+          const b = h + i * tier;
+          if (i > 0) s += R(C0, b - 0.75, C1, b, "s-wood");
+          for (let k = 0; k < 3; k++) {
+            const sx = C0 + 1 + k * 7.1;
+            s += `<path d="M${sx} ${Y(b + 0.3)} h6 q0.4 0 0.4 -0.6 l-0.6 -2.2 q-0.4 -0.9 -1.6 -0.9 h-1.4 q-1 0 -1.6 -1.2 l-0.5 -0.4 h-0.7 z" class="s-shoe"/>`;
+          }
+          s += R(C0, b + 0.2, C1, b + 1, "s-top", ' fill-opacity="0.85"');
+        }
+        if (labels) s += T(cx, Y(h + p.h - 2.5), "angled shoe tiers", "s-lbl-dark");
+        heights.push([h + p.h, `Shoe tiers, about ${fmt(tier)} each`]);
+        h += p.h;
+        s += R(C0, h - 0.75, C1, h, "s-wood");
+      } else if (p.t === "hamper") {
+        s += R(FX0, h + 0.25, FX1, h + p.h - 0.125, "s-face");
+        s += R(C0 + 1.6, h + 1.8, C1 - 1.6, h + 22, "s-dash", ' rx="0.6"');
+        s += R(cx - 2.6, h + p.h - 2.6, cx + 2.6, h + p.h - 2.16, "s-pull", ' rx="0.2"');
+        if (labels) s += T(cx, Y(h + 12), "rolling hamper", "s-lbl-dark");
+        heights.push([h + p.h, `Hamper frame, ${fmt(p.h - 0.375)} face from ¼″ off the floor`]);
+        h += p.h;
+      } else if (p.t === "cubbies") {
+        const rowH = p.h / p.rows, dv = 0.75;
+        const cw = (C1 - C0 - dv) / 2;
+        for (let r = 0; r < p.rows; r++) {
+          const b = h + r * rowH;
+          if (r > 0) s += R(C0, b - dv / 2, C1, b + dv / 2, "s-wood");
+          for (let c = 0; c < p.cols; c++) {
+            const x0 = C0 + c * (cw + dv);
+            if ((r + c) % 3 === 0) {
+              s += `<path d="M${x0 + 1.4} ${Y(b + 0.5)} h7 q0.4 0 0.4 -0.6 l-0.6 -2.2 q-0.4 -0.9 -1.6 -0.9 h-1.6 q-1 0 -1.6 -1.2 l-0.5 -0.4 h-0.9 z" class="s-shoe"/>`;
+            } else {
+              s += R(x0 + 0.6, b + 0.5, x0 + cw - 0.6, b + rowH - 1.6, "s-basket", ' rx="0.4"');
+              for (let k = b + 1.6; k < b + rowH - 2; k += 1.1) s += L(x0 + 1, Y(k), x0 + cw - 1, Y(k), "s-hook");
+            }
+          }
+        }
+        s += R(cx - dv / 2, h, cx + dv / 2, h + p.h, "s-wood");
+        h += p.h;
+        s += R(C0, h, C1, h + dv, "s-wood");
+        heights.push([h, `${p.rows * p.cols} cubbies, about ${fmt(Math.floor(cw * 8) / 8)} wide`]);
+        h += dv;
+      }
+    }
+    return { svg: s, heights };
+  }
+
+  /* ---------- front elevation ---------- */
+  function hatchDefs(id) {
+    return `<defs><pattern id="${id}" patternUnits="userSpaceOnUse" width="1.6" height="1.6" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" class="s-hatchln"/></pattern></defs>`;
+  }
+
+  function elevation(opt) {
+    let s = hatchDefs("hatchE");
+    // interior back wall
+    s += R(0, 0, W, H, "s-wall");
+
+    // bins above top shelf
+    [[2, 26], [30, 50], [54, 78]].forEach(([a, b]) => {
+      const mid = (a + b) / 2;
+      s += R(a, TOP + 0.75, mid - 0.6, TOP + 8.5, "s-dash");
+      s += R(mid + 0.6, TOP + 0.75, b, TOP + 8.5, "s-dash");
+    });
+
+    // left: double hang
+    s += garments(0, 28, 81.5, 30, 36, 3);
+    s += rod(0, 28, 81.5);
+    s += garments(0, 28, 41, 24, 37, 7);
+    s += rod(0, 28, 41);
+
+    // right: long hang
+    s += R(52, 70, W, 70.75, "s-wood");
+    s += stack(54, 70.75, 9, 6, 41) + stack(64.5, 70.75, 7, 8, 42);
+    s += garments(52, W, 67.5, 38, 55, 19);
+    s += rod(52, W, 67.5);
+    // open floor items
+    s += R(66.5, 0, 77.5, 13, "s-basket", ' rx="0.6"');
+    for (let k = 1.5; k < 12; k += 1.4) s += L(67, Y(k), 77, Y(k), "s-hook");
+    s += `<path d="M54 ${Y(0)} h7 q0.4 0 0.4 -0.6 l-0.6 -2.2 q-0.4 -0.9 -1.6 -0.9 h-1.6 q-1 0 -1.6 -1.2 l-0.5 -0.4 h-0.9 z" class="s-shoe"/>`;
+    s += `<path d="M58.5 ${Y(0)} h7 q0.4 0 0.4 -0.6 l-0.6 -2.2 q-0.4 -0.9 -1.6 -0.9 h-1.6 q-1 0 -1.6 -1.2 l-0.5 -0.4 h-0.9 z" class="s-shoe" transform="translate(0 0)"/>`;
+
+    // partitions, then the center column in front of them, then the top shelf
+    s += R(28, 0, 28.75, TOP, "s-wood");
+    s += R(51.25, 0, 52, TOP, "s-wood");
+    s += centerSVG(opt, true).svg;
+    s += R(0, TOP, W, TOP + 0.75, "s-wood");
+
+    // floor
+    s += L(-3, Y(0), W + 3, Y(0), "s-floor");
+
+    // what the front wall hides
+    const veil = (x0, h0, x1, h1) => R(x0, h0, x1, h1, "s-veil") + R(x0, h0, x1, h1, "", ' fill="url(#hatchE)"');
+    s += veil(0, 0, OPEN.x0, H);
+    s += veil(OPEN.x1, 0, W, H);
+    s += veil(OPEN.x0, OPEN.h, OPEN.x1, H);
+    s += R(OPEN.x0, 0, OPEN.x1, OPEN.h, "s-open");
+
+    // labels
+    s += T(OPEN.x0 / 2, Y(60), "BEHIND RETURN", "s-lbl", "middle", -90);
+    s += T((OPEN.x1 + W) / 2, Y(60), "BEHIND RETURN", "s-lbl", "middle", -90);
+    s += T(40, Y(92.6), "HEADER · bins on top shelf", "s-lbl", "middle");
+    s += lbl(15.9, 82.3, "rod 81½″");
+    s += lbl(15.9, 41.8, "rod 41″");
+    s += lbl(52.8, 71.6, "shelf 70″ · 12″ deep", "start");
+    s += lbl(64.1, 68.3, "rod 67½″", "end");
+    s += lbl(52.8, 15, "open floor", "start");
+    s += lbl(52.8, 84.9 + 1.6, "top shelf 84″ · 12″ deep", "start");
+
+    // dimensions
+    s += dimH(0, W, -7, fmt(W));
+    s += dimH(0, 28, -2.6, "28″") + dimH(28, 52, -2.6, "24″") + dimH(52, W, -2.6, "28″");
+    s += dimH(0, OPEN.x0, H + 5, fmt(OPEN.x0)) + dimH(OPEN.x0, OPEN.x1, H + 5, fmt(OPEN.x1 - OPEN.x0) + " opening") + dimH(OPEN.x1, W, H + 5, fmt(W - OPEN.x1));
+    s += dimV(-10, Y(0), Y(H), fmt(H));
+    s += dimV(-4.6, Y(0), Y(OPEN.h), fmt(OPEN.h) + " opening");
+
+    return s;
+  }
+
+  const elevSvg = document.getElementById("elev");
+  elevSvg.setAttribute("viewBox", "-15 -11 98 116");
+
+  /* ---------- plan view ---------- */
+  function plan() {
+    const D = 24, wt = 4.5;
+    let s = hatchDefs("hatchP");
+    const PR = (x0, y0, x1, y1, cls, extra) => `<rect x="${x0}" y="${y0}" width="${+(x1 - x0).toFixed(3)}" height="${+(y1 - y0).toFixed(3)}" class="${cls}"${extra || ""}/>`;
+    const wall = (x0, y0, x1, y1) => PR(x0, y0, x1, y1, "s-wallcut") + PR(x0, y0, x1, y1, "", ' fill="url(#hatchP)"');
+
+    s += PR(0, 0, W, D, "s-wall", ' stroke-width="0"');
+    // behind-return zones
+    s += PR(0, 0, OPEN.x0, D, "s-veil") + PR(OPEN.x1, 0, W, D, "s-veil");
+
+    // hangers
+    for (let x = 1; x < 27.5; x += 1.3) s += L(x, 3, x, 21, "s-hanger");
+    for (let x = 53; x < 79.5; x += 1.3) s += L(x, 3, x, 21, "s-hanger");
+    s += L(0.5, 12, 27.5, 12, "s-rodplan") + L(52.5, 12, 79.5, 12, "s-rodplan");
+
+    // center column and partitions
+    s += PR(C0, 0, C1, 23.25, "s-face");
+    s += PR(C0 + 0.8, 0.8, C1 - 0.8, 22.4, "s-dash");
+    s += PR(28, 0, 28.75, 23.25, "s-wood") + PR(51.25, 0, 52, 23.25, "s-wood");
+    s += PR(C0 + 0.8, 23.25, C1 - 0.8, 23.25 + 21, "s-drawerout");
+    s += PR(C0 + 1.6, 23.25 + 21 - 15.5, C1 - 1.6, 23.25 + 21 - 0.4, "s-basket", ' rx="0.5"');
+    s += `<path d="M${C0 + 2} ${23.25 + 17} H${C0 - 9}" class="s-arrow"/><path d="M${C0 - 8} ${23.25 + 16} L${C0 - 9} ${23.25 + 17} L${C0 - 8} ${23.25 + 18}" class="s-arrow"/>`;
+    s += T(C0 - 9.5, 23.25 + 17.6, "hamper rolls out left", "s-lbl", "end");
+    s += T((C0 + C1) / 2, 23.25 + 3.2, "frame open 21″", "s-lbl", "middle");
+
+    // walls
+    s += wall(-wt, -wt, W + wt, 0);
+    s += wall(-wt, 0, 0, D + wt);
+    s += wall(W, 0, W + wt, D + wt);
+    s += wall(0, D, OPEN.x0, D + wt);
+    s += wall(OPEN.x1, D, W, D + wt);
+    s += L(OPEN.x0, D, OPEN.x0, D + wt, "s-open") + L(OPEN.x1, D, OPEN.x1, D + wt, "s-open");
+
+    // labels
+    s += T(OPEN.x0 / 2, D + wt / 2 + 0.6, "return", "s-lbl", "middle");
+    s += T((OPEN.x1 + W) / 2, D + wt / 2 + 0.6, "return", "s-lbl", "middle");
+    s += T(14, 10.6, "double hang", "s-lbl", "middle");
+    s += T(66, 10.6, "long hang", "s-lbl", "middle");
+    s += T(14, 14.3, "rod 12″ off wall", "s-lbl", "middle");
+    s += T(4, 46, "ROOM", "s-lbl", "middle");
+
+    // dimensions
+    s += dimH(0, W, -wt - 3.2, fmt(W));
+    s += dimV(-wt - 3.2, 0, D, fmt(D));
+    s += dimH(0, OPEN.x0, D + wt + 4.2, fmt(OPEN.x0));
+    s += dimH(OPEN.x0, OPEN.x1, D + wt + 4.2, fmt(OPEN.x1 - OPEN.x0), 22);
+    s += dimH(OPEN.x1, W, D + wt + 4.2, fmt(W - OPEN.x1));
+    return s;
+  }
+  /* ---------- side sections ---------- */
+  function sections(opt) {
+    const D = 24, wt = 4.5;
+    let s = hatchDefs("hatchS");
+    const SR = (ox, z0, h0, z1, h1, cls, extra) => R(ox + z0, h0, ox + z1, h1, cls, extra);
+    const wall = (ox, z0, h0, z1, h1) => SR(ox, z0, h0, z1, h1, "s-wallcut") + SR(ox, z0, h0, z1, h1, "", ' fill="url(#hatchS)"');
+
+    function shell(ox, title) {
+      let t = SR(ox, 0, 0, D, H, "s-wall", ' stroke-width="0"');
+      t += wall(ox, -wt, 0, 0, H + 1.5);
+      t += wall(ox, 0, H, D + wt, H + 1.5);
+      t += wall(ox, D, OPEN.h, D + wt, H);
+      t += L(ox - wt, Y(0), ox + D + wt + 4, Y(0), "s-floor");
+      t += T(ox + D + wt / 2, Y(88), "HEADER", "s-lbl", "middle", -90);
+      t += T(ox + D + wt + 4.6, Y(20), "room →", "s-lbl", "start");
+      t += T(ox + D / 2, Y(0) + 5.5, title, "s-lbl", "middle");
+      return t;
+    }
+    function bin(ox, z0, h0, w, ht) {
+      let t = SR(ox, z0, h0, z0 + w, h0 + ht, "s-basket", ' rx="0.4"');
+      for (let k = h0 + 1.2; k < h0 + ht - 0.6; k += 1.2) t += L(ox + z0 + 0.4, Y(k), ox + z0 + w - 0.4, Y(k), "s-hook");
+      return t;
+    }
+    function topShelf(ox, showPath) {
+      let t = SR(ox, 0, TOP, SHELF_D, TOP + 0.75, "s-wood");
+      t += bin(ox, 0.8, TOP + 0.75, 10, 8.5);
+      // bin coming down through the gap
+      if (showPath) t += SR(ox, SHELF_D + 0.6, 71.5, SHELF_D + 10.4, 80, "s-dash", ' rx="0.4"');
+      if (showPath) t += `<path d="M${ox + 9} ${Y(TOP + 9.6)} Q${ox + 18} ${Y(TOP + 10)} ${ox + 18.4} ${Y(80.6)}" class="s-arrow"/>`;
+      if (showPath) t += `<path d="M${ox + 17.4} ${Y(81.8)} L${ox + 18.4} ${Y(80.6)} L${ox + 19.3} ${Y(81.9)}" class="s-arrow"/>`;
+      // dims along the ceiling
+      t += dimH(ox, ox + SHELF_D, -4.2, fmt(SHELF_D));
+      t += dimH(ox + SHELF_D, ox + D, -4.2, fmt(D - SHELF_D) + " gap");
+      return t;
+    }
+    function sideHamper(ox, z0, z1, h0) {
+      let t = SR(ox, z0, h0 + 1.8, z1, h0 + 22, "s-basket", ' rx="0.5"');
+      for (let k = h0 + 3.2; k < h0 + 21.2; k += 1.5) t += L(ox + z0 + 0.4, Y(k), ox + z1 - 0.4, Y(k), "s-hook");
+      t += `<circle cx="${ox + z0 + 1.4}" cy="${Y(h0 + 0.9)}" r="0.9" class="s-rodend"/><circle cx="${ox + z1 - 1.4}" cy="${Y(h0 + 0.9)}" r="0.9" class="s-rodend"/>`;
+      return t;
+    }
+    function sideGarment(ox, rodH, len, seedCls) {
+      const X = ox + 12, sh = rodH - 3.2;
+      return `<path d="M${X - 9.8} ${Y(sh)} Q${X} ${Y(sh + 2.4)} ${X + 9.8} ${Y(sh)} L${X + 9.2} ${Y(sh - len)} L${X - 9.2} ${Y(sh - len)} Z" class="s-garment ${seedCls}"/>` +
+        L(X, Y(rodH - 1.3), X - 9.6, Y(sh + 0.2), "s-hook") + L(X, Y(rodH - 1.3), X + 9.6, Y(sh + 0.2), "s-hook") +
+        `<path d="M${X} ${Y(rodH - 1.3)} L${X + 0.9} ${Y(rodH - 0.3)} A0.95 0.95 0 0 0 ${X - 0.9} ${Y(rodH - 0.1)}" class="s-hook" style="stroke-width:.22"/>` +
+        `<circle cx="${X}" cy="${Y(rodH)}" r="0.65" class="s-rodend"/>`;
+    }
+
+    // A: hanging section
+    const A = 0;
+    s += shell(A, "A · left hanging section");
+    s += sideGarment(A, 81.5, 31, "s-g1");
+    s += sideGarment(A, 41, 32, "s-g2");
+    s += topShelf(A, true);
+    s += T(A + 13.2, Y(42.4), "rod 12″ off wall", "s-lbl", "start");
+    s += dimV(A + D + wt + 3.2, Y(0), Y(OPEN.h), fmt(OPEN.h));
+
+    // B: center column, drawn from the selected option
+    const B = 46;
+    s += shell(B, "B · center column");
+    let h = 0;
+    for (const p of opt.parts) {
+      if (p.t === "kick") {
+        s += SR(B, 0, 0, 20.25, p.h, "s-kick");
+        h = p.h;
+      } else if (p.t === "drawers") {
+        p.heights.forEach(fh => {
+          s += SR(B, 1, h + 0.6, 22.4, h + fh - 1.1, "s-dash");
+          s += SR(B, 23.25, h + 0.06, 24, h + fh - 0.06, "s-face");
+          s += SR(B, 24, h + fh * 0.42 - 0.3, 24.6, h + fh * 0.42 + 0.3, "s-pull");
+          h += fh;
+        });
+      } else if (p.t === "top") {
+        s += SR(B, 0, h, 24, h + p.h, "s-top");
+        h += p.h;
+      } else if (p.t === "shoes") {
+        const tier = p.h / p.n;
+        for (let i = 0; i < p.n; i++) {
+          const b = h + i * tier;
+          s += `<path d="M${B} ${Y(b + 5)} L${B + 22.5} ${Y(b + 1)} L${B + 22.5} ${Y(b + 2)}" class="s-arrow" style="stroke:var(--wood-dark);stroke-width:.6"/>`;
+        }
+        h += p.h;
+        s += SR(B, 0, h - 0.75, 23.25, h, "s-wood");
+      } else if (p.t === "hamper") {
+        // frame: right side panel 21 deep, back panel 15½ behind the face, rolling hamper in front of it
+        s += SR(B, 2.25, h + 0.5, 23.25, h + 27, "s-dash");
+        s += SR(B, 7.25, h + 0.5, 7.75, h + 27, "s-wood");
+        s += sideHamper(B, 8.1, 22.9, h);
+        s += SR(B, 23.25, h + 0.25, 24, h + p.h - 0.125, "s-face");
+        s += SR(B, 24, h + p.h - 2.6, 24.6, h + p.h - 2, "s-pull");
+        h += p.h;
+      } else if (p.t === "cubbies") {
+        const rowH = p.h / p.rows;
+        for (let r = 0; r < p.rows; r++) {
+          const b = h + r * rowH;
+          if (r > 0) s += SR(B, 0, b - 0.375, 23.25, b + 0.375, "s-wood");
+          s += bin(B, 6, b + 0.6, 15, rowH - 2.2);
+        }
+        h += p.h;
+        s += SR(B, 0, h, 23.25, h + 0.75, "s-wood");
+        h += 0.75;
+      } else if (p.t === "bottom") {
+        s += SR(B, 0, h, 23.25, h + 0.75, "s-wood");
+        h += 0.75;
+      } else if (p.t === "bay") {
+        s += sideHamper(B, 6, 21, h);
+        h += p.h;
+      } else if (p.t === "shelf") {
+        s += SR(B, 0, h, 22.5, h + 0.75, "s-wood");
+        h += 0.75;
+      } else if (p.t === "shelves") {
+        const { positions } = shelfPlan(h, p.n);
+        let base = h;
+        positions.forEach((sh, i) => {
+          s += stack(B + 1, base, 12, Math.min(sh - base - 1.6, 6 + (i % 2)), 51 + i);
+          s += R(B, sh, B + 23.25, sh + 0.75, "s-wood");
+          base = sh + 0.75;
+        });
+        s += stack(B + 1, base, 12, 7.5, 61);
+        // stack sliding out under the header
+        s += SR(B, 14, base, 23, base + 6.5, "s-dash", ' rx="0.3"');
+        s += `<path d="M${B + 14.5} ${Y(base + 3.2)} H${B + 26}" class="s-arrow"/><path d="M${B + 25} ${Y(base + 4.2)} L${B + 26} ${Y(base + 3.2)} L${B + 25} ${Y(base + 2.2)}" class="s-arrow"/>`;
+        s += dimV(B + D + wt + 3.2, Y(base), Y(OPEN.h), fmt(OPEN.h - base));
+      }
+    }
+    s += topShelf(B, false);
+    // where a full-depth top shelf would have gone
+    s += SR(B, SHELF_D, TOP, D - 0.75, TOP + 0.75, "s-bad");
+    s += T(B + 18.4, Y(TOP + 2.2), "not full depth", "s-lbl", "middle");
+    return s;
+  }
+  const sectSvg = document.getElementById("sect");
+  sectSvg.setAttribute("viewBox", "-8 -9 96 113");
+
+  const planSvg = document.getElementById("plan");
+  planSvg.setAttribute("viewBox", "-12 -12 102 60");
+  planSvg.innerHTML = plan();
+
+  /* ---------- cut list ---------- */
+  const CUT = [
+    { phase: "Phase 1 · shell, rods and shelves", groups: [
+      { mat: "23/32″ prefinished plywood (sold as ¾″) · one 4×8 and one 4×4 (layout below)", rows: [
+        ["Partitions", "2", "84 × 23¼", "4×8. Edge band the front. Shelf pin holes on the inner face only, 27″ to 68″. Notch for the baseboard."],
+        ["Right 70″ shelf", "1", "28 × 11¼", "4×8 offcut. Grain runs front to back; the nosing covers the front edge. Cut to fit."],
+        ["Center fixed shelf", "1", "22⁹⁄₁₆ × 23¼", "4×4. At 70″. Edge band the front. Add ½″ to the length if you dado it in."],
+        ["Center adjustable shelves", "3", "22⁷⁄₁₆ × 22½", "4×4. Edge band the front. On pins at 28″, 42″ and 55¾″; one stays for phase 2."]
+      ]},
+      { mat: "23/32″ plywood, unfinished · your 48 × 56 piece (layout below)", rows: [
+        ["Nailers", "2", "22⁹⁄₁₆ × 3½", "Behind the center top shelf and under the back of the 70″ shelf, screwed to studs.", "hidden"],
+        ["Left and right top shelves", "2", "28 × 11¼", "Above the header, so only the underside shows, from below. The nosing covers the front edge. Cut to fit.", "header"],
+        ["Center top shelf", "1", "24 × 11¼", "Above the header. Sits on both partition tops.", "header"],
+        ["Strip for the phase 2 faces", "1", "48⅝ × 23⁵⁄₁₆", "Cut it now and set it aside. See the faces in phase 2.", "finish"]
+      ]},
+      { mat: "Solid wood", rows: [
+        ["Shelf nosing, ¾ × 1½", "4", "3 @ 28, 1 @ 22⁹⁄₁₆", "Flush with the shelf top, hangs ¾″ below to stiffen it. The center one fits between the partitions, since the center top shelf sits on them."],
+        ["Side cleats, 1×4", "6", "10½", "Wall and partition ends of the left top, right top and right 70″ shelves. Rod sockets screw to these."],
+        ["Back cleats, 1×2", "3", "26½", "Between the side cleats. Cut to fit."],
+        ["Floor rail, 1×4", "1", "22⁹⁄₁₆", "On edge at the back of the center column, at the floor. Ties the partition bottoms and screws to studs."],
+        ["Rod backer, 1×4", "1", "6", "Left side wall at 41″, for the lower rod's socket."]
+      ]},
+      { mat: "Hardware", rows: [
+        ["Closet rod, 1⁵⁄₁₆″", "3", "2 @ 26¼, 1 @ 27", "Cut to fit between the sockets."],
+        ["Rod sockets", "3 pairs", "", ""],
+        ["Shelf pins, 5 mm", "12", "", ""],
+        ["Iron-on edge banding", "about 20 ft", "", "Partition fronts and center shelves."],
+        ["Rolling hamper", "1", "19½ W × 15 D × 23 H, max", "Buy one, or build a ½″ ply box on four 2″ casters. 15″ deep is the limit (see the plan view); 23″ tall clears the frame's top rail."]
+      ]}
+    ]},
+    { phase: "Phase 2 · hamper frame and 3 drawers", groups: [
+      { mat: "Faces · from the strip cut in phase 1", rows: [
+        ["Hamper face", "1", "23⁵⁄₁₆ × 27⅝", "Width × height. Bottom edge ¼″ off the floor. Covers ⅜″ of each partition edge.", "finish"],
+        ["Drawer faces", "3", "23⁵⁄₁₆ × 7⅞, 6⅞, 5⅞", "Cut in order after the hamper face so the grain runs up the column.", "finish"]
+      ]},
+      { mat: "Solid wood", rows: [
+        ["Hardwood top, ¾″ or 1″", "1", "22⁹⁄₁₆ × 24", "At 49″. Pocket screws into the partitions from below."],
+        ["Hamper frame top rail", "1", "21 × 3, ¾ thick", "Left side of the frame, at the top, 24″ to 27″ off the floor. The left slide mounts to it and the hamper rolls out under it."]
+      ]},
+      { mat: "12 mm Baltic birch (sold as ½″) · one 5×5 sheet", rows: [
+        ["Hamper frame side", "1", "21 × 26½", "Right side, ½″ to 27″ off the floor. Length × height. The right slide mounts to it."],
+        ["Hamper frame back", "1", "20⁵⁄₁₆ × 26½", "15½″ behind the face, fitting between the side and the top rail. The hamper sits between it and the face."],
+        ["Drawer box sides", "6", "2 each @ 21 × 6½, 5½, 4½", "Length × height. Boxes are 21⁹⁄₁₆″ wide outside."],
+        ["Drawer box fronts and backs", "6", "2 each @ 20⅝ × 6½, 5½, 4½", "Fit between the sides. Sized for 12 mm sides: measure yours and cut these so the box is 21⁹⁄₁₆″ outside."]
+      ]},
+      { mat: "¼″ plywood · one 4×4", rows: [
+        ["Drawer bottoms", "3", "21 × 20⁷⁄₁₆", "In ¼″ grooves, ¼″ deep and ¼″ up from the bottom edge."]
+      ]},
+      { mat: "Hardware", rows: [
+        ["21″ full-extension side-mount slides", "4 pairs", "", "Soft-close for the drawers. The hamper rolls on the floor, so its pair only carries the frame."],
+        ["Pulls", "4", "", ""]
+      ]}
+    ]}
+  ];
+
+  const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const TAGS = { hidden: "Hidden", header: "Behind header", paint: "Paint", finish: "Needs finish" };
+  const tagHTML = k => k ? `<span class="pill pill-${k}">${TAGS[k]}</span>` : "";
+  document.getElementById("cutlist").innerHTML = CUT.map(ph =>
+    `<div class="cut-phase"><h3>${esc(ph.phase)}</h3>` + ph.groups.map(g =>
+      `<div class="scroll"><table class="cut-table"><caption>${esc(g.mat)}</caption>` +
+      `<colgroup><col class="c-part"><col class="c-q"><col class="c-sz"><col></colgroup>` +
+      `<thead><tr><th scope="col">Part</th><th scope="col">Qty</th><th scope="col">Size</th><th scope="col">Notes</th></tr></thead><tbody>` +
+      g.rows.map(r => `<tr${r[4] ? ` class="raw"` : ""}><td>${esc(r[0])}${tagHTML(r[4])}</td><td class="q">${esc(r[1])}</td><td class="sz">${esc(r[2])}</td><td class="n">${esc(r[3])}</td></tr>`).join("") +
+      `</tbody></table></div>`).join("") + `</div>`).join("");
+
+  function cutText() {
+    return "CLOSET BUILT-IN · CUT LIST (inches)\n" + CUT.map(ph =>
+      "\n" + ph.phase.toUpperCase() + "\n" + ph.groups.map(g =>
+        "\n" + g.mat + "\n" + g.rows.map(r => "  " + r[1] + " × " + r[0] + (r[2] ? "  —  " + r[2] : "") + (r[4] ? "  [" + TAGS[r[4]] + "]" : "") + (r[3] ? "  (" + r[3] + ")" : "")).join("\n")
+      ).join("\n")).join("\n");
+  }
+  document.getElementById("copy-cut").addEventListener("click", () => {
+    const status = document.getElementById("copy-status");
+    const text = cutText();
+    const fallback = () => {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      status.textContent = ok ? "Copied" : "Copy failed: select the tables instead";
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => { status.textContent = "Copied"; }, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  /* ---------- sheet layout ---------- */
+  function sheetLayout() {
+    const SHEETS = [
+      { title: "4×8 · 23/32″ prefinished, 48 × 96", w: 96, h: 48, parts: [
+        [0, 0, 84, 23.25, "Partition · 84 × 23¼"],
+        [0, 23.375, 84, 23.25, "Partition · 84 × 23¼"],
+        [84.125, 0, 11.25, 28, "R 70″ shelf · 28 × 11¼", true]
+      ]},
+      { title: "4×4 · 23/32″ prefinished, 48 × 48", w: 48, h: 48, parts: [
+        [0, 0, 22.5625, 23.25, "Fixed shelf · 70″"],
+        [22.6875, 0, 22.4375, 22.5, "Adj. shelf"],
+        [0, 23.375, 22.4375, 22.5, "Adj. shelf"],
+        [22.6875, 23.375, 22.4375, 22.5, "Adj. shelf"]
+      ]},
+      { title: "Your piece · 23/32″ unfinished, 56 × 48, grain along 56", w: 56, h: 48, raw: true, parts: [
+        [0, 0, 27.625, 23.3125, "Hamper face", false, "finish"],
+        [27.75, 0, 7.875, 23.3125, "7⅞", false, "finish"],
+        [35.75, 0, 6.875, 23.3125, "6⅞", false, "finish"],
+        [42.75, 0, 5.875, 23.3125, "5⅞", false, "finish"],
+        [48.75, 0, 3.5, 22.5625, "Nailer", true, "raw"],
+        [52.375, 0, 3.5, 22.5625, "Nailer", true, "raw"],
+        [0, 23.4375, 28, 11.25, "L top · 28 × 11¼", false, "raw"],
+        [28.125, 23.4375, 24, 11.25, "Center top · 24 × 11¼", false, "raw"],
+        [0, 34.8125, 28, 11.25, "R top · 28 × 11¼", false, "raw"],
+        [28.125, 34.8125, 27.875, 11.25, "spare", false, "spare"]
+      ]}
+    ];
+    // place the two smaller panels side by side under the 4x8
+    const POS = [[0, 0], [0, 58], [52, 58]];
+    let s = `<defs><pattern id="rawHatch" patternUnits="userSpaceOnUse" width="1.4" height="1.4" patternTransform="rotate(45)"><rect width="1.4" height="1.4" class="s-sheet" style="stroke:none"/><line x1="0" y1="0" x2="0" y2="1.4" class="s-hatchln" style="stroke-width:.25"/></pattern></defs>`;
+    SHEETS.forEach((sh, i) => {
+      const [ox, oy] = POS[i];
+      s += `<text x="${ox}" y="${oy - 1.6}" class="s-sheettitle">${sh.title}</text>`;
+      s += `<rect x="${ox}" y="${oy}" width="${sh.w}" height="${sh.h}" class="s-sheet"/>`;
+      sh.parts.forEach(([x, y, w, h, label, rot, kind]) => {
+        const cls = kind === "spare" ? "s-dash" : kind === "raw" ? "s-raw" : kind === "finish" ? "s-rawfin" : "s-face";
+        s += `<rect x="${ox + x}" y="${oy + y}" width="${w}" height="${h}" class="${cls}"/>`;
+        const cx = ox + x + w / 2, cy = oy + y + h / 2 + 0.65;
+        const tcls = kind === "spare" ? "s-lbl" : "s-cut";
+        s += rot ? `<text x="${cx + 0.65}" y="${cy - 0.65}" class="${tcls}" text-anchor="middle" transform="rotate(-90 ${cx + 0.65} ${cy - 0.65})">${label}</text>`
+                 : `<text x="${cx}" y="${cy}" class="${tcls}" text-anchor="middle">${label}</text>`;
+      });
+    });
+    return s;
+  }
+  const sheetsSvg = document.getElementById("sheets");
+  sheetsSvg.setAttribute("viewBox", "-1 -5 110 112");
+  sheetsSvg.innerHTML = sheetLayout();
+
+  /* ---------- cards + switcher ---------- */
+  const seg = document.getElementById("seg");
+  const cards = document.getElementById("cards");
+  OPTIONS.forEach(o => {
+    const b = document.createElement("button");
+    b.type = "button"; b.id = "seg-" + o.id; b.textContent = o.short;
+    b.addEventListener("click", () => setOption(o.id));
+    seg.appendChild(b);
+
+    const thumb = R(28, 0, 28.75, TOP, "s-wood") + R(51.25, 0, 52, TOP, "s-wood") +
+      centerSVG(o, false).svg + R(26, TOP, 54, TOP + 0.75, "s-wood") +
+      L(26, Y(0), 54, Y(0), "s-floor");
+    const card = document.createElement("article");
+    card.className = "card"; card.id = "card-" + o.id;
+    card.innerHTML =
+      `<svg viewBox="26.5 ${Y(TOP + 3)} 27 ${TOP + 4}" aria-hidden="true">${thumb}</svg>` +
+      `<div class="body">${o.badge ? `<span class="badge">${o.badge}</span>` : ""}<h3>${o.name}</h3><p>${o.blurb}</p>` +
+      `<ul>${o.bullets.map(x => `<li>${x}</li>`).join("")}</ul>` +
+      `<button type="button" id="btn-${o.id}">Show in elevation</button></div>`;
+    card.querySelector("button").addEventListener("click", () => {
+      setOption(o.id);
+      document.getElementById("elev-title").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    });
+    cards.appendChild(card);
+  });
+
+  function setOption(id) {
+    const o = OPTIONS.find(x => x.id === id) || OPTIONS[0];
+    elevSvg.innerHTML = elevation(o);
+    sectSvg.innerHTML = sections(o);
+    const { heights } = centerSVG(o, false);
+    document.getElementById("c-name").textContent = o.name;
+    document.getElementById("c-heights").innerHTML = heights.slice().reverse()
+      .map(([h, t]) => `<dt>${fmt(h)}</dt><dd>${t}</dd>`).join("");
+    document.getElementById("c-text").textContent = o.blurb;
+    OPTIONS.forEach(x => {
+      const on = x.id === o.id;
+      document.getElementById("seg-" + x.id).setAttribute("aria-pressed", on);
+      document.getElementById("btn-" + x.id).setAttribute("aria-pressed", on);
+      document.getElementById("btn-" + x.id).textContent = on ? "Shown in elevation" : "Show in elevation";
+      document.getElementById("card-" + x.id).classList.toggle("is-on", on);
+    });
+    try { localStorage.setItem("closet-option-4", o.id); } catch (e) {}
+  }
+
+  let start = "phase2";
+  try { start = localStorage.getItem("closet-option-4") || start; } catch (e) {}
+  setOption(start);
+})();
+</script>

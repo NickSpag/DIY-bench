@@ -1,0 +1,18 @@
+import { createServer } from "vite"; import { chromium } from "playwright-core"; import fs from "node:fs";
+const ok = (c, m) => { console.log((c ? "PASS " : "FAIL ") + m); if (!c) process.exitCode = 1; };
+const server = await createServer({ root: ".", server: { port: 5197, host: "127.0.0.1" }, logLevel: "error" }); await server.listen();
+const b = await chromium.launch({ channel: "chrome", headless: true }); const page = await b.newPage();
+await page.goto("http://127.0.0.1:5197/loader.html");
+await page.waitForFunction(() => window.__wb?.project);
+const marker = await page.evaluate(() => (window.__marker = 42));
+const proj = "projects/closet/project.ts", help = "projects/closet/helpers.ts";
+const p0 = fs.readFileSync(proj, "utf8"), h0 = fs.readFileSync(help, "utf8");
+fs.writeFileSync(proj, p0.replace('id: "top-shelf"', 'id: "top-shelf-2"'));
+await page.waitForFunction(() => window.__wb.project.parts[0].id === "top-shelf-2", null, { timeout: 8000 });
+ok(await page.evaluate(() => window.__marker) === 42, "project edit: no full reload");
+fs.writeFileSync(help, "export const shelfDepth = 11.25;\n");
+await page.waitForFunction(() => window.__wb.project.parts[0].depth === 11.25, null, { timeout: 8000 });
+ok(await page.evaluate(() => window.__marker) === 42, "helper edit: re-evaluated through the loader, no full reload");
+ok(await page.evaluate(() => window.__wb.storeEvaluations) === 1, "store module evaluated once");
+fs.writeFileSync(proj, p0); fs.writeFileSync(help, h0);
+await b.close(); await server.close();
