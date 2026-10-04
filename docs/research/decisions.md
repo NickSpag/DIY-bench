@@ -57,7 +57,7 @@ Each entry gives the decision, the reasoning, the alternatives rejected and why,
 - **Display:**
   - Imperial values show as whole inches plus a fraction rounded to 1/16″. Halves, quarters and eighths use the single-character fractions (`23¼`). Sixteenths use superscript and subscript digits (`1⁵⁄₁₆`), as the reference does.
   - A value that is not a multiple of 1/16 gets a `≈` prefix.
-  - A part's thickness is displayed from its material: to 1/32″ when the material thickness is a multiple of 1/32 (`23/32`), and in the material's `thicknessLabel` when it has one (`12 mm` for metric stock). So 23/32″ plywood does not print as `≈¾`, and 12 mm Baltic birch does not print as `≈½` (spec.md section 5.6).
+  - A part's thickness is displayed from its material: to 1/32″ when the material thickness is a multiple of 1/32 (`23/32`), and in the material's `thicknessLabel` when it has one (`12 mm` for metric stock). So 23/32″ plywood does not print as `≈¾`, and 15/32″ plywood does not print as `≈½` (spec.md section 5.6).
   - Metric shows millimetres to 0.5 mm.
   - The UI can switch display units independently of the model unit.
 - **Input parsing** (CLI and UI): accepts `23 1/4`, `23-1/4`, `23.25`, `23¼`, `2' 3-1/2"` and `590mm`.
@@ -502,7 +502,8 @@ How each surface uses it:
 **Decision.**
 - The fixture encodes the concept sheet as committed (c10ee19).
 - The only design option is the hardwood top thickness, 1″ (default) or ¾″. The two-drawer option is dropped.
-- Materials use their real thicknesses: plywood 23/32″, Baltic birch 12 mm.
+- Materials use their real thicknesses: plywood sold as ¾″ is 23/32″, and plywood sold as ½″ is 15/32″.
+- The drawer boxes and hamper frame use ordinary ½″ plywood, not the concept sheet's 12 mm Baltic birch (user's choice, 2026-10-04). It all fits on one 4×8.
 - The baseboard is modelled as 5½ × ¾ (thickness approximate) on the back and side walls, and the partitions are notched over the back baseboard.
 
 **Reasoning.**

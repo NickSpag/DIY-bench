@@ -24,7 +24,8 @@ The research (`research.md`) was written before the repo had a name, so it calls
 - **Name and home:** `DIY-bench`, private GitHub repo.
 - **Selection:** clicking a part in any view to highlight it everywhere is enough.
   Hover is optional, not required.
-- **Plywood:** "¾″" sheet goods are 23/32″; "½″" Baltic birch is 12 mm.
+- **Plywood:** "¾″" sheet goods are 23/32″; "½″" plywood is 15/32″. The drawer boxes and
+  hamper frame use ordinary ½″ plywood, not the concept sheet's 12 mm Baltic birch.
 - **App shell:** a local Vite web app shown in VS Code's integrated browser, with
   Claude Code in the VS Code terminal on the right. Tauri may wrap it later.
 - **UI framework:** React.
@@ -39,6 +40,4 @@ The research (`research.md`) was written before the repo had a name, so it calls
 
 ## Still open
 
-- **Baltic birch sheet count:** the model needs two 5×5 sheets (the second holds only
-  two drawer sides); the concept sheet says one.
 - **Baseboard thickness:** confirm ¾″.

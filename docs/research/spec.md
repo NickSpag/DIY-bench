@@ -410,7 +410,7 @@ Imperial formatting:
 - Append `″` when `marks` is true.
 - Write feet only when asked (`opts.feet`). The reference never uses feet.
 
-Examples: 23.25 → `23¼`; 0.75 → `¾`; 1.3125 → `1⁵⁄₁₆`; 50.8333 → `≈50¹³⁄₁₆`; 0 → `0`. Thickness: 0.71875 → `23/32`; 12 mm stock → `12 mm`.
+Examples: 23.25 → `23¼`; 0.75 → `¾`; 1.3125 → `1⁵⁄₁₆`; 50.8333 → `≈50¹³⁄₁₆`; 0 → `0`. Thickness: 0.71875 → `23/32`; 0.46875 → `15/32`; metric stock with `thicknessLabel: "12 mm"` → `12 mm`.
 
 Parsing accepts:
 - `23 1/4`, `23-1/4`, `23.25`, `23¼`
@@ -426,7 +426,7 @@ Thickness display. A part's thickness is shown from its material, not from the l
 - otherwise, if the thickness is a multiple of 1/32 but not of 1/16, it is shown to 1/32″ with a plain slash (`23/32`);
 - every other thickness uses the normal 1/16 formatting.
 
-The cut list size column, the CSV, the text export and the tooltips use this rule, so 23/32″ plywood never prints as `≈¾` and 12 mm Baltic birch never prints as `≈½`. Material names carry the trade size ("sold as ¾″").
+The cut list size column, the CSV, the text export and the tooltips use this rule, so 23/32″ plywood never prints as `≈¾` and 15/32″ plywood never prints as `≈½`. Material names carry the trade size ("sold as ¾″").
 
 ---
 
@@ -756,7 +756,7 @@ In scope now: the CSV/text cut list and the PDF plan set. GLB, STL, DXF and STEP
 
 There is no two-drawer option. The only design option is the hardwood top thickness: 1″ (the default) or ¾″. The concept sheet lists "Hardwood top, ¾″ or 1″".
 
-The file below started from `spikes/fixture/closet.ts`. It was updated on 2026-10-03 to the current concept sheet and evaluated with the spike's evaluator. The spike folder itself is unchanged and still holds the older version. The current file evaluates in 4–13 ms per configuration (verified). The TypeScript 7 type-check (`strict`, `erasableSyntaxOnly`, `verbatimModuleSyntax`) was verified for the older version only; the current file adds the `thicknessLabel` field to `bb-12`, which M1 adds to the material types (section 5.2). M1 reproduces the file in the repo.
+The file below started from `spikes/fixture/closet.ts`. It was updated on 2026-10-03 to the current concept sheet and evaluated with the spike's evaluator. The spike folder itself is unchanged and still holds the older version. The current file evaluates in 4–13 ms per configuration (verified). The TypeScript 7 type-check (`strict`, `erasableSyntaxOnly`, `verbatimModuleSyntax`) was verified for the older version only and must be re-run in M1. M1 reproduces the file in the repo.
 
 ### 8.1 `projects/closet-built-in/project.ts`
 
@@ -768,7 +768,7 @@ import { defineProject, span, box, type Box, type Range } from "../../core/model
 
 const T = 23 / 32;   // plywood sold as ¾″
 const B = 0.75;      // 1× pine boards and the ¾″ hardwood
-const BB = 12 / 25.4; // 12 mm Baltic birch, sold as ½″
+const BH = 15 / 32;   // plywood sold as ½″
 
 export const P = {
   room: { width: 80, depth: 24, height: 95.5, wall: 4.5 },
@@ -813,8 +813,8 @@ export default defineProject({
       stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
     "ply-raw": { type: "sheet", name: "23/32″ plywood, unfinished (owned piece)", thickness: T, grained: true, finish: "none", kerf: 0.125,
       stock: [{ id: "owned-56x48", length: 56, width: 48, owned: 1, note: "Grain runs along the 56″ side" }] },
-    "bb-12": { type: "sheet", name: "12 mm Baltic birch (sold as ½″)", thickness: BB, thicknessLabel: "12 mm", grained: true, finish: "none", kerf: 0.125,
-      stock: [{ id: "5x5", length: 60, width: 60, buy: true }] },
+    "ply-half": { type: "sheet", name: "15/32″ plywood (sold as ½″)", thickness: BH, grained: true, finish: "none", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
     "ply-quarter": { type: "sheet", name: "¼″ plywood", thickness: 0.25, grained: true, finish: "none", kerf: 0.125,
       stock: [{ id: "4x4", length: 48, width: 48, buy: true }] },
     "pine-1x4": { type: "board", name: "1×4", nominal: "1×4", thickness: B, width: 3.5, finish: "none" },
@@ -959,34 +959,34 @@ export default defineProject({
         joins: [{ to: `drawer-${i + 1}-front`, by: "screws" }] });
     });
 
-    // ---------- phase 2: hamper frame (12 mm Baltic birch + hardwood rail) ----------
+    // ---------- phase 2: hamper frame (½″ plywood + hardwood rail) ----------
     const F = P.frame, frameY = span(F.offFloor, F.height);                     // ½″ to 27″
     const bx0 = C0 + P.slide, bx1 = C1 - P.slide;                               // box and frame outside width 21⁹⁄₁₆″
     const boxZ = [zFront - P.boxLength, zFront] as Range;                       // 2.25 .. 23.25
-    b.panel({ id: "hamper-frame-side", name: "Hamper frame side", material: "bb-12", phase: "p2", step: "p2-frame",
-      box: box([bx1 - BB, bx1], frameY, boxZ), grain: "z", exposure: "hidden" });
+    b.panel({ id: "hamper-frame-side", name: "Hamper frame side", material: "ply-half", phase: "p2", step: "p2-frame",
+      box: box([bx1 - BH, bx1], frameY, boxZ), grain: "z", exposure: "hidden" });
     b.board({ id: "hamper-frame-rail", name: "Hamper frame top rail", material: "hw-34", phase: "p2", step: "p2-frame",
       box: box(span(bx0, B), [frameY[1] - F.rail, frameY[1]], boxZ), grain: "z", exposure: "hidden",
       notes: "The left slide mounts to it and the hamper rolls out under it." });
-    b.panel({ id: "hamper-frame-back", name: "Hamper frame back", material: "bb-12", phase: "p2", step: "p2-frame",
-      box: box([bx0 + B, bx1 - BB], frameY, [backZ - BB, backZ]), grain: "x", exposure: "hidden",
+    b.panel({ id: "hamper-frame-back", name: "Hamper frame back", material: "ply-half", phase: "p2", step: "p2-frame",
+      box: box([bx0 + B, bx1 - BH], frameY, [backZ - BH, backZ]), grain: "x", exposure: "hidden",
       joins: [{ to: "hamper-frame-side", by: "screws" }, { to: "hamper-frame-rail", by: "screws" }] });
 
     // ---------- phase 2: drawer boxes ----------
     zones.forEach((_, i) => {
       const n = i + 1, h = P.drawerBoxHeights[i], y0 = faceTops[i] + 0.5;     // box ½″ above the zone bottom: inferred
       const yr = span(y0, h), g = P.groove;
-      const side = (id: string, x: Range) => b.panel({ id, name: "Drawer box side", where: `drawer ${n}`, material: "bb-12", phase: "p2", step: "p2-drawers",
+      const side = (id: string, x: Range) => b.panel({ id, name: "Drawer box side", where: `drawer ${n}`, material: "ply-half", phase: "p2", step: "p2-drawers",
         box: box(x, yr, boxZ), grain: "z", exposure: "hidden" });
-      side(`drawer-${n}-side-l`, span(bx0, BB)); side(`drawer-${n}-side-r`, [bx1 - BB, bx1]);
-      for (const [end, z] of [["front", [boxZ[1] - BB, boxZ[1]]], ["back", [boxZ[0], boxZ[0] + BB]]] as const) {
-        b.panel({ id: `drawer-${n}-${end}`, name: "Drawer box front or back", where: `drawer ${n} ${end}`, material: "bb-12", phase: "p2", step: "p2-drawers",
-          box: box([bx0 + BB, bx1 - BB], yr, z as Range), grain: "x", exposure: "hidden",
+      side(`drawer-${n}-side-l`, span(bx0, BH)); side(`drawer-${n}-side-r`, [bx1 - BH, bx1]);
+      for (const [end, z] of [["front", [boxZ[1] - BH, boxZ[1]]], ["back", [boxZ[0], boxZ[0] + BH]]] as const) {
+        b.panel({ id: `drawer-${n}-${end}`, name: "Drawer box front or back", where: `drawer ${n} ${end}`, material: "ply-half", phase: "p2", step: "p2-drawers",
+          box: box([bx0 + BH, bx1 - BH], yr, z as Range), grain: "x", exposure: "hidden",
           joins: [{ to: `drawer-${n}-side-l`, by: "glue" }, { to: `drawer-${n}-side-r`, by: "glue" }] });
       }
       const inset = g.depth - 0.0625;                                           // bottom sits in ¼″ grooves with 1/16″ play
       b.panel({ id: `drawer-${n}-bottom`, name: "Drawer bottom", where: `drawer ${n}`, material: "ply-quarter", phase: "p2", step: "p2-drawers",
-        box: box([bx0 + BB - inset, bx1 - BB + inset], span(y0 + g.up, 0.25), [boxZ[0] + BB - inset, boxZ[1] - BB + inset]),
+        box: box([bx0 + BH - inset, bx1 - BH + inset], span(y0 + g.up, 0.25), [boxZ[0] + BH - inset, boxZ[1] - BH + inset]),
         grain: "x", grainLock: false, exposure: "hidden",
         joins: ["side-l", "side-r", "front", "back"].map(k => ({ to: `drawer-${n}-${k}`, by: "groove" as const })) });
     });
@@ -1083,7 +1083,7 @@ Each of these is marked `inferred` in the file or below. Each must also be liste
 | Shelf clearance each side | 1/16″ | Width 22⁷⁄₁₆ in a 22⁹⁄₁₆ opening. |
 | Baseboard | 5½ × ¾ on the back wall and both side walls; the thickness is approximate (the user's measurement was "maybe ¾″"); the partitions are notched over the back baseboard | The sheet gives no baseboard size. |
 | Floor rail placement | in front of the baseboard (z ¾ to 1½) | The sheet does not resolve the clash between the floor rail and the baseboard. |
-| 12 mm Baltic birch | modelled at its exact thickness, 12/25.4″. The drawer box fronts and backs (≈20⅝), the frame back (≈20⁵⁄₁₆) and the drawer bottoms (≈21 × ≈20⁷⁄₁₆) are therefore not exact sixteenths, and display with ≈ | The sheet says to measure the actual sides before cutting fronts and backs. |
+| Drawer box and hamper frame stock | ordinary plywood sold as ½″, modelled at 15/32″, bought as a 4×8 | The sheet specifies 12 mm Baltic birch on a 5×5; the user chose ordinary plywood on 2026-10-04. The frame back becomes 20¹¹⁄₃₂ (sheet: 20⁵⁄₁₆); fronts and backs stay 20⅝. Measure the actual sheet before cutting fronts and backs. |
 | Drawer box vertical position | ½″ above each drawer zone's bottom | The sheet gives heights, not positions. |
 | Drawer bottom fit | ¼″ grooves, 1/16″ play | Gives the sheet's 21 × 20⁷⁄₁₆. |
 | Rod lengths | between sockets, ⅛″ socket allowance | Gives the sheet's 2 @ 26¼, 1 @ 27. |
@@ -1101,7 +1101,7 @@ Carry over the concept sheet's prose. It is design reasoning, not data:
 - **Check before you cut:** returns, ceiling at four points, plumb and square, studs, outlets.
 - **Extras to consider:** valet rod, felt-lined drawer, belt and tie pull-outs, hamper bags, LED strip, slide-out shelves.
 - **Assumptions:** the table in 8.2.
-- **Open questions:** Baltic birch sheet count (one 5×5 or two); baseboard thickness to confirm.
+- **Open questions:** baseboard thickness to confirm.
 - **Decisions log:** dated one-liners, for example "2026-10-03: three drawers, top at 49″".
 
 ### 8.4 What evaluation must report for the fixture
@@ -1109,7 +1109,7 @@ In both configurations (`top=1` and `top=0.75`), evaluation reports no issues: n
 
 The overlap check (section 6.4) is tested by deliberately breaking the fixture. Each breakage must produce exactly these `overlap` errors:
 - **(a)** Widen the center nosing to span the partitions (`[pl, colR]` instead of `[C0, C1]`): `top-shelf-center-nosing` with `partition-left`, and with `partition-right`, in p1 and p2.
-- **(b)** Widen the frame back to `[bx0, bx1 - BB]`: `hamper-frame-rail` with `hamper-frame-back`, in p2.
+- **(b)** Widen the frame back to `[bx0, bx1 - BH]`: `hamper-frame-rail` with `hamper-frame-back`, in p2.
 - **(c)** Remove the partitions' `notch` joint: `partition-left` and `partition-right`, each with `baseboard-back`, in p1 and p2.
 
 All three were checked against the spike's evaluator on 2026-10-03.
@@ -1745,11 +1745,11 @@ All values are for the default configuration (`top=1`) unless marked. They were 
 | p1 | 1×2 | 3 | Back cleat | 26½ × 1½ × ¾ | hidden; cut to fit |
 | p2 (cut p1) | 23/32″ unfinished (owned) | 1 | Hamper face | 27⅝ × 23⁵⁄₁₆ × 23/32 | needs finish; from strip |
 | p2 (cut p1) | 23/32″ unfinished (owned) | 1 each | Drawer face | 7⅞, 6⅞, 5⅞ × 23⁵⁄₁₆ × 23/32 | needs finish; from strip |
-| p2 | 12 mm Baltic birch | 1 | Hamper frame side | 21 × 26½ × 12 mm | hidden |
-| p2 | 12 mm Baltic birch | 1 | Hamper frame back | ≈20⁵⁄₁₆ × 26½ × 12 mm | hidden |
-| p2 | 12 mm Baltic birch | 2 each | Drawer box side | 21 × 6½, 5½, 4½ × 12 mm | hidden |
-| p2 | 12 mm Baltic birch | 2 each | Drawer box front or back | ≈20⅝ × 6½, 5½, 4½ × 12 mm | hidden |
-| p2 | ¼″ plywood | 3 | Drawer bottom | ≈21 × ≈20⁷⁄₁₆ × ¼ | hidden; grain free |
+| p2 | 15/32″ plywood | 1 | Hamper frame side | 21 × 26½ × 15/32 | hidden |
+| p2 | 15/32″ plywood | 1 | Hamper frame back | 20¹¹⁄₃₂ × 26½ × 15/32 | hidden |
+| p2 | 15/32″ plywood | 2 each | Drawer box side | 21 × 6½, 5½, 4½ × 15/32 | hidden |
+| p2 | 15/32″ plywood | 2 each | Drawer box front or back | 20⅝ × 6½, 5½, 4½ × 15/32 | hidden |
+| p2 | ¼″ plywood | 3 | Drawer bottom | 21 × 20⁷⁄₁₆ × ¼ | hidden; grain free |
 | p2 | Hardwood 1″ | 1 | Hardwood top | 22⁹⁄₁₆ × 24 × 1 | |
 | p2 | Hardwood ¾″ | 1 | Hamper frame top rail | 21 × 3 × ¾ | hidden |
 
@@ -1766,10 +1766,10 @@ Hardware: rods 3 (2 @ 26¼, 1 @ 27), rod sockets 3 pairs, shelf pins 12, rolling
 | p1 | 23/32″ prefinished | 4×8 (buy) | partition-left, partition-right, shelf-right-70 (turned) |
 | p1 | 23/32″ prefinished | 4×4 (buy) | center-shelf-fixed, center-shelf-adj-1, -2, -3 |
 | p1 | 23/32″ unfinished | owned 56×48 | the faces strip (48⅝ × 23⁵⁄₁₆), top-shelf-left, top-shelf-right, top-shelf-center, nailer-top, nailer-70 |
-| p2 | 12 mm Baltic birch | 5×5 (buy), two sheets | first: hamper-frame-side, hamper-frame-back, drawer 1 and 2 boxes, drawer-3-front and -back; second: only drawer-3-side-l and drawer-3-side-r |
+| p2 | 15/32″ plywood | 4×8 (buy) | hamper-frame-side, hamper-frame-back, and all 12 drawer box sides, fronts and backs |
 | p2 | ¼″ plywood | 4×4 (buy) | the 3 drawer bottoms |
 
-Phase 1 still matches the concept sheet's layout. Phase 2 Baltic birch differs: the concept sheet says one 5×5, which was true before the frame was raised to 27″. It stays two sheets even with the frame panels grain-free (open question in section 15). `top=0.75` gives the same purchases.
+Phase 1 still matches the concept sheet's layout. Phase 2 differs from the sheet by design: ordinary ½″ plywood on one 4×8 replaces 12 mm Baltic birch on a 5×5. `top=0.75` gives the same purchases.
 
 ### 13.2 Golden files
 `projects/<id>/expected/` holds, per configuration:
@@ -1811,7 +1811,7 @@ Phase 1 still matches the concept sheet's layout. Phase 2 Baltic birch differs: 
 | The packer is weak on larger jobs | low for closets | wasted plywood | The strategy search; the `--optimise` path through PackingSolver (D8). |
 | The agent edits a looped part's instance wrongly, or breaks ID stability | medium | wrong cut list | AGENTS.md rules; the hook's change summary shows renamed or removed IDs; golden files. |
 | A stale selection misleads the agent ("this one" means something selected an hour ago) | medium | wrong part changed | Timestamps and staleness lines; AGENTS.md says to ask when unclear. |
-| Material is bought at a different thickness than modelled | low | parts collide or gaps appear | Resolved for the closet: 23/32″ plywood and 12 mm Baltic birch are modelled at their real thicknesses (D21). Thickness lives on the material, so one change ripples if the stock changes; the `thickness` invariant catches a mismatch. |
+| Material is bought at a different thickness than modelled | low | parts collide or gaps appear | Resolved for the closet: 23/32″ and 15/32″ plywood are modelled at their real thicknesses (D21). Thickness lives on the material, so one change ripples if the stock changes; the `thickness` invariant catches a mismatch. |
 | The local dev server can be driven by other pages | low | state file poisoned | Bind to 127.0.0.1, same-origin check on `/__wb/state`, token on `/__wb/control`. |
 | Concept-sheet inconsistencies get copied into the model | medium | wrong parts | Invariants found three in the earlier closet model; the sheet has since adopted the fixes, and section 8.4 keeps them as a regression test. Encode design rules as `b.check`. |
 
@@ -1821,6 +1821,5 @@ Phase 1 still matches the concept sheet's layout. Phase 2 Baltic birch differs: 
 
 Only questions the user alone can answer. Each has a default that the spec assumes until it is answered.
 
-1. **Baltic birch sheet count.** The 12 mm Baltic birch needs two 5×5 sheets; the second holds only the two sides of drawer 3. The concept sheet says one. Buy a second 5×5, or change something to fit one sheet? Default: two sheets, as the model computes.
-2. **Baseboard thickness.** The model uses 5½ × ¾ on the back and side walls, from your "maybe ¾″". Please confirm the thickness. Default: ¾″.
-3. **Shelf-pin spacing**, for the partitions' holes in M10. Default: 1¼″, marked `// inferred`.
+1. **Baseboard thickness.** The model uses 5½ × ¾ on the back and side walls, from your "maybe ¾″". Please confirm the thickness. Default: ¾″.
+2. **Shelf-pin spacing**, for the partitions' holes in M10. Default: 1¼″, marked `// inferred`.
