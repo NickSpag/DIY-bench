@@ -174,3 +174,14 @@ test("a step shows the parts installed so far: p1-stand has cleats and partition
   expect(ids).not.toContain("top-shelf-left");
   expect(ids).not.toContain("center-shelf-fixed");
 });
+
+test("Labels names the room objects in 3D, and Dims places the current drawing's dimensions there", async ({ page }) => {
+  await openApp(page, "?project=tv-wall-shelves&opt.console=60x22");
+  const labels = page.locator(".viewport .vp-label");
+  await expect(labels).toHaveText(["TV", "Air conditioner", "Media console, 60″ × 22″"]);   // the console's space defers to the console
+  await page.getByRole("button", { name: "Labels" }).click();
+  await expect(labels).toHaveCount(0);
+  await expect(page.locator(".viewport .vp-dim")).toHaveCount(0);
+  await page.getByTestId("dims-3d").click();
+  await expect(page.locator(".viewport .vp-dim").filter({ hasText: /^14$/ })).toHaveCount(1);   // the long shelf to the AC
+});

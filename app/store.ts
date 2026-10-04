@@ -23,7 +23,7 @@ export type WbState = {
   selected: string[]; selectSource: Source;
   camera: { mode: "perspective" | "orthographic" };
   section: Section; sectionSync: boolean;
-  explode: number; display: "in" | "mm"; showContents: boolean; showRoom: boolean;
+  explode: number; display: "in" | "mm"; showContents: boolean; showRoom: boolean; showLabels: boolean; showDims: boolean;
   hiddenLines: boolean | null; // session override of a view's hiddenLines; null keeps the view's own
   compare: Config | null; // compare mode: the other configuration
   resolved: Resolved | null; lastGood: Resolved | null;
@@ -52,7 +52,7 @@ export const useWb = create<WbState & WbActions>()((set, get) => ({
   selected: [], selectSource: null,
   camera: { mode: "perspective" },
   section: { axis: "x", at: 40, enabled: false, flip: false }, sectionSync: true,
-  explode: 0, display: "in", showContents: false, showRoom: true,
+  explode: 0, display: "in", showContents: false, showRoom: true, showLabels: true, showDims: false,
   hiddenLines: null,
   compare: null,
   resolved: null, lastGood: null, error: null,

@@ -29,3 +29,14 @@ export function toScreen(look: Look, axis: Axis, r: Range): Range | null {
   if (!m) return null;
   return m.sign === 1 ? [r[0], r[1]] : [-r[1], -r[0]];
 }
+
+/** The world point at view coordinates (u, v), on the plane at world coordinate c along the look axis. */
+export function worldPoint(look: Look, u: number, v: number, c: number): [number, number, number] {
+  switch (look) {
+    case "-z": return [u, v, c];
+    case "+z": return [-u, v, c];
+    case "+x": return [c, v, u];
+    case "-x": return [c, v, -u];
+    case "-y": return [u, c, -v];
+  }
+}

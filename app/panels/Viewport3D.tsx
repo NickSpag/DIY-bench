@@ -2,16 +2,19 @@
 // cylinder) with edges, picking that respects the section plane, selection outlines and tints,
 // explode, standard views, an orthographic toggle and a view cube. The <Canvas> and the camera
 // controls stay mounted across model reloads, so an edit never moves the camera.
-import { Canvas, useThree, type ThreeEvent } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { CameraControls, CameraControlsImpl, Edges, GizmoHelper, GizmoViewcube, Html, Outlines } from "@react-three/drei";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
+import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { useWb, type Section } from "../store.ts";
 import { css } from "../theme.ts";
 import { useFmt } from "../fmt.ts";
 import { fmtPartSize } from "../../core/query.ts";
 import { extent } from "../../core/geometry.ts";
-import type { Box, Resolved, ResolvedPart } from "../../core/model/types.ts";
+import type { Box, Resolved, ResolvedPart, View } from "../../core/model/types.ts";
+import { layoutDims } from "../../core/drawings/dims.ts";
+import { lookAxis, projectBox, worldPoint } from "../../core/drawings/view-mapping.ts";
 
 type Vec3 = [number, number, number];
 
@@ -24,7 +27,7 @@ export const viewportApi: {
 
 // ---------- colours from the theme ----------
 
-type Palette = Record<"bg" | "wood" | "raw" | "face" | "hardwood" | "pine" | "metal" | "edge" | "wall" | "wallEdge" | "select" | "step" | "fabric" | "grid1" | "grid2" | "ink", string>;
+type Palette = Record<"bg" | "wood" | "raw" | "face" | "hardwood" | "pine" | "metal" | "edge" | "wall" | "wallEdge" | "select" | "step" | "fabric" | "grid1" | "grid2" | "ink" | "dim", string>;
 
 function readPalette(): Palette {
   const v = (n: string, fb: string) => css(n) || fb;
@@ -33,6 +36,7 @@ function readPalette(): Palette {
     hardwood: v("--hardwood", "#b98a52"), pine: v("--pine", "#ecdcb6"), metal: v("--metal", "#8d979c"), edge: v("--edge", "#5a4220"),
     wall: v("--wallface", "#eff2f2"), wallEdge: v("--ink-faint", "#8a979d"), select: v("--hl-select", "#e2531b"), step: v("--hl-step", "#2f8f6a"),
     fabric: v("--fabric-1", "#8a9ca7"), grid1: v("--rule-strong", "#b9c4c7"), grid2: v("--rule", "#d2dadc"), ink: v("--ink", "#1c2529"),
+    dim: v("--dim", "#2b5d8c"),
   };
 }
 
@@ -142,6 +146,39 @@ function useAnimated(target: number): number {
     return () => cancelAnimationFrame(raf);
   }, [target]);
   return value;
+}
+
+// ---------- text in the scene: room-object names and dimension figures ----------
+
+/** Draws CSS2D labels over the canvas on every frame (plain DOM, positioned by three.js). */
+function Css2dLayer() {
+  const gl = useThree((s) => s.gl);
+  const size = useThree((s) => s.size);
+  const renderer = useMemo(() => {
+    const r = new CSS2DRenderer();
+    Object.assign(r.domElement.style, { position: "absolute", inset: "0", pointerEvents: "none", zIndex: "1" });
+    return r;
+  }, []);
+  useEffect(() => {
+    const host = gl.domElement.parentElement;
+    host?.appendChild(renderer.domElement);
+    return () => renderer.domElement.remove();
+  }, [gl, renderer]);
+  useEffect(() => renderer.setSize(size.width, size.height), [renderer, size]);
+  useFrame(({ scene, camera }) => renderer.render(scene, camera));
+  return null;
+}
+
+function SceneText({ position, text, className, testid }: { position: Vec3; text: string; className: string; testid?: string }) {
+  const obj = useMemo(() => {
+    const el = document.createElement("div");
+    const o = new CSS2DObject(el);
+    return o;
+  }, []);
+  obj.element.className = className;
+  obj.element.textContent = text;
+  if (testid) obj.element.dataset.label = testid;
+  return <primitive object={obj} position={position} />;
 }
 
 // ---------- parts ----------
@@ -259,6 +296,7 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
   const section = useWb((s) => s.section);
   const showContents = useWb((s) => s.showContents);
   const showRoom = useWb((s) => s.showRoom);
+  const showLabels = useWb((s) => s.showLabels);
   const k = useAnimated(explode);
   const invalidate = useThree((s) => s.invalidate);
 
@@ -298,10 +336,87 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
           selected={sel.has(e.part.id)} inStep={stepParts.has(e.part.id) && !sel.has(e.part.id)}
           section={section.enabled ? plane : null} />
       ))}
+      {showLabels && shown.filter((e) => e.part.kind === "context" && LABELLED.has(e.part.role) && !(e.part.role === "space" && filled(e, shown))).map((e) => {
+        const c = centreOf(e.box), o = explodeOffset(e, centre, k);
+        return (
+          <SceneText key={`label-${e.part.id}`} position={[c[0] + o[0], c[1] + o[1], c[2] + o[2]]} text={e.part.name} className="vp-label" testid={e.part.id} />
+        );
+      })}
     </group>
   );
 }
 const NO_PLANES: THREE.Plane[] = [];
+// The room objects the 3D view names: what the build works around, or leaves room for.
+const LABELLED = new Set(["fixture", "space", "contents"]);
+/** A space with something standing in it (a console tried in the space for one) leaves the naming to that. */
+const filled = (sp: Entry, all: Entry[]) => all.some((e) => e !== sp && e.part.kind === "context" && (e.part.role === "fixture" || e.part.role === "contents")
+  && (["x", "y", "z"] as const).every((a) => e.box[a][0] < sp.box[a][1] && sp.box[a][0] < e.box[a][1]));
+
+// ---------- dimensions: the current drawing view's, placed in the scene ----------
+
+/** The plane a view's dimensions sit on: a section's cut, else the far side of the built parts (the wall, the floor). */
+function dimPlane(view: View, r: Resolved, boxes: Box[]): number {
+  if (view.kind === "section" && view.cut !== undefined) return view.cut;
+  const axis = lookAxis(view.look);
+  const built = r.parts.filter((p) => p.kind !== "context" && p.bounds).map((p) => p.bounds as Box);
+  const use = built.length ? built : boxes;
+  return view.look[0] === "-" ? Math.min(...use.map((b) => b[axis][0])) : Math.max(...use.map((b) => b[axis][1]));
+}
+
+function Dims3D({ color }: { color: string }) {
+  const r = useWb((s) => s.resolved);
+  const phase = useWb((s) => s.phase);
+  const step = useWb((s) => s.step);
+  const viewId = useWb((s) => s.drawingView);
+  const show = useWb((s) => s.showDims);
+  const f = useFmt();
+  const built = useMemo(() => {
+    if (!r || !show) return null;
+    const view = r.views.find((x) => x.id === viewId) ?? r.views[0];
+    if (!view) return null;
+    const state = r.stateAt(phase, step ?? undefined);
+    const boxes = new Map(state.parts.filter((e) => e.box).map((e) => [e.part.id, e.box as Box]));
+    const all = [...boxes.values()].map((b) => projectBox(b, view.look));
+    if (!all.length) return null;
+    const content = { u0: Math.min(...all.map((b) => b.u[0])), u1: Math.max(...all.map((b) => b.u[1])), v0: Math.min(...all.map((b) => b.v[0])), v1: Math.max(...all.map((b) => b.v[1])) };
+    const s = Math.max(content.u1 - content.u0, content.v1 - content.v0) / 100;
+    const c = dimPlane(view, r, [...boxes.values()]);
+    const dims = layoutDims(view, (id) => boxes.get(id), content, (n) => f.L(n));
+    const pts: number[] = [];
+    const seg = (u0: number, v0: number, u1: number, v1: number) => pts.push(...worldPoint(view.look, u0, v0, c), ...worldPoint(view.look, u1, v1, c));
+    const tick = 1.4 * s;
+    const texts = dims.map((d) => {
+      if (d.orient === "h") {
+        seg(d.a, d.at, d.b, d.at);
+        for (const x of [d.a, d.b]) { seg(x - tick / 2, d.at - tick / 2, x + tick / 2, d.at + tick / 2); seg(x, d.at - tick, x, d.at + tick); }
+        return { key: d.index, text: d.text, at: worldPoint(view.look, (d.a + d.b) / 2, d.at + d.textSide * 2.2 * s, c) };
+      }
+      seg(d.at, d.a, d.at, d.b);
+      for (const y of [d.a, d.b]) { seg(d.at - tick / 2, y - tick / 2, d.at + tick / 2, y + tick / 2); seg(d.at - tick, y, d.at + tick, y); }
+      return { key: d.index, text: d.text, at: worldPoint(view.look, d.at + d.textSide * 2.2 * s, (d.a + d.b) / 2, c) };
+    });
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    const lines = new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({ color, depthTest: false, transparent: true, opacity: 0.95 }));
+    lines.renderOrder = 12;
+    lines.raycast = noRaycast;
+    return { lines, texts };
+  }, [r, phase, step, viewId, show, f.display, color]);
+  useEffect(() => () => {
+    if (!built) return;
+    built.lines.geometry.dispose();
+    (built.lines.material as THREE.Material).dispose();
+  }, [built]);
+  if (!built) return null;
+  return (
+    <group>
+      <primitive object={built.lines} />
+      {built.texts.map((t) => (
+        <SceneText key={`dim-${t.key}`} position={t.at} text={t.text} className="vp-dim" />
+      ))}
+    </group>
+  );
+}
 
 // ---------- tooltip ----------
 
@@ -574,6 +689,8 @@ function Scene() {
       <SceneParts pal={pal} plane={plane} />
       {showRoom && <gridHelper key={`${pal.grid1}${gridSize}`} args={[gridSize, gridSize / 6, pal.grid1, pal.grid2]} position={[gridCentre[0], groundRef.current + 0.01, gridCentre[2]]} raycast={noRaycast} />}
       <Tooltip />
+      <Dims3D color={pal.dim} />
+      <Css2dLayer />
       <CameraRig boxRef={boxRef} />
       <GizmoHelper alignment="bottom-right" margin={[62, 62]}>
         <GizmoViewcube
@@ -592,6 +709,8 @@ function Toolbar() {
   const explode = useWb((s) => s.explode);
   const section = useWb((s) => s.section);
   const showRoom = useWb((s) => s.showRoom);
+  const showLabels = useWb((s) => s.showLabels);
+  const showDims = useWb((s) => s.showDims);
   const showContents = useWb((s) => s.showContents);
   const r = useWb((s) => s.resolved);
   const set = useWb((s) => s.set);
@@ -635,6 +754,8 @@ function Toolbar() {
       <div className="seg" role="group" aria-label="Show">
         <button type="button" aria-pressed={showRoom} title="Walls, floor and grid" onClick={() => set({ showRoom: !showRoom })}>Room</button>
         <button type="button" aria-pressed={showContents} title="Clothes, bins and other contents" onClick={() => set({ showContents: !showContents })}>Contents</button>
+        <button type="button" aria-pressed={showLabels} title="Name the TV, air conditioner and other room objects" onClick={() => set({ showLabels: !showLabels })}>Labels</button>
+        <button type="button" aria-pressed={showDims} title="The current drawing's dimensions, placed in 3D" data-testid="dims-3d" onClick={() => set({ showDims: !showDims })}>Dims</button>
       </div>
     </div>
   );

@@ -412,3 +412,7 @@ table.t tr[data-part] td:first-child { box-shadow: inset 3px 0 0 var(--hl, trans
 html.render-flow, html.render-flow body, html.render-flow #root { height: auto; }
 html.render-flow .render-root { position: static; }
 html.render-flow .render-root .pane-body { overflow: visible; }
+
+/* 3D view: names of room objects, and dimension text */
+.vp-label { font: 600 0.72rem var(--f-mono); color: var(--ink); background: color-mix(in oklab, var(--sheet) 82%, transparent); padding: 1px 5px; border: 1px solid var(--rule); white-space: nowrap; }
+.vp-dim { font: 500 0.72rem var(--f-mono); color: var(--dim, #2b5d8c); background: color-mix(in oklab, var(--sheet) 70%, transparent); padding: 0 3px; white-space: nowrap; }
