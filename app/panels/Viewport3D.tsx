@@ -447,6 +447,7 @@ function CameraRig({ boxRef }: { boxRef: React.MutableRefObject<Box | null> }) {
       smoothTime={0.18}
       draggingSmoothTime={0.08}
       dollyToCursor
+      dollySpeed={2.5}
       minDistance={2}
       maxDistance={2000}
     />
