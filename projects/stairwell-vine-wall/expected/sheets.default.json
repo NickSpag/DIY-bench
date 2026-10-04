@@ -1,0 +1,134 @@
+[
+  {
+    "phase": "p1",
+    "material": "lattice",
+    "materialName": "Wood lattice, ¼″ slats (two layers, ½″ thick)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "½",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "4x8",
+        "owned": true,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["trellis-lower"],
+            "name": "Trellis panel",
+            "x": 0,
+            "y": 0,
+            "l": 96,
+            "w": 45,
+            "turned": false,
+            "needsFinish": true
+          }
+        ],
+        "offcuts": []
+      },
+      {
+        "stock": "4x8",
+        "owned": true,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["trellis-upper"],
+            "name": "Trellis panel",
+            "x": 0,
+            "y": 0,
+            "l": 52.875,
+            "w": 45,
+            "turned": false,
+            "needsFinish": true
+          }
+        ],
+        "offcuts": [{"x": 53, "y": 0, "l": 43, "w": 48}]
+      }
+    ],
+    "unplaced": [],
+    "bought": {},
+    "owned": {"4x8": 2},
+    "strategy": "area/shorterLeftover/prefer=none"
+  },
+  {
+    "phase": "p1",
+    "material": "ply",
+    "materialName": "23/32″ plywood (sold as ¾″)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "23/32",
+    "finished": true,
+    "sheets": [
+      {
+        "stock": "4x4",
+        "owned": false,
+        "length": 48,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["planter-front"],
+            "name": "Planter front or back",
+            "x": 0,
+            "y": 0,
+            "l": 37.25,
+            "w": 16,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["planter-back"],
+            "name": "Planter front or back",
+            "x": 0,
+            "y": 16.125,
+            "l": 37.25,
+            "w": 16,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["planter-bottom"],
+            "name": "Planter bottom",
+            "x": 0,
+            "y": 32.25,
+            "l": 35.8125,
+            "w": 7.5625,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["planter-end-left"],
+            "name": "Planter end",
+            "x": 0,
+            "y": 39.9375,
+            "l": 16,
+            "w": 7.5625,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["planter-end-right"],
+            "name": "Planter end",
+            "x": 16.125,
+            "y": 39.9375,
+            "l": 16,
+            "w": 7.5625,
+            "turned": false,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [
+          {"x": 37.375, "y": 0, "l": 10.625, "w": 48},
+          {"x": 32.25, "y": 39.9375, "l": 3.5625, "w": 7.5625}
+        ]
+      }
+    ],
+    "unplaced": [],
+    "bought": {"4x4": 1},
+    "owned": {},
+    "strategy": "area/longerLeftover/prefer=none"
+  }
+]
