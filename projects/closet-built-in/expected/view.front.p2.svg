@@ -17,7 +17,7 @@
 .wb-drawing .e { fill: none; stroke-linecap: square; stroke: color-mix(in oklab, var(--wood-dark, #a77d45) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.16px * var(--s, 1) * var(--hl-w, 1)); }
 .wb-drawing .e.e-ctx { stroke: color-mix(in oklab, var(--ink, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.3px * var(--s, 1) * var(--hl-w, 1)); }
 .wb-drawing .e.e-metal { stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); }
-.wb-drawing .e.e-cut { stroke: color-mix(in oklab, var(--ink, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.32px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .e.e-cut { stroke: color-mix(in oklab, var(--cut-edge, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.32px * var(--s, 1) * var(--hl-w, 1)); }
 .wb-drawing .hid { fill: none; stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.12px * var(--s, 1) * var(--hl-w, 1)); stroke-dasharray: calc(0.7px * var(--s, 1)) calc(0.45px * var(--s, 1)); }
 .wb-drawing .veil { pointer-events: none; }
 .wb-drawing .v-fill { fill: var(--veil, rgba(28, 37, 41, 0.08)); }

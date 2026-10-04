@@ -28,6 +28,7 @@
   --sheet-board: #eff2f2;
   --edge: #5a4220;
   --cut-wood: #b58c55;
+  --cut-edge: #1c2529;
 
   --hl-select: #e2531b;
   --hl-select-soft: rgba(226, 83, 27, 0.14);
@@ -56,7 +57,7 @@
     --kick: #4b4035; --metal: #7d878c;
     --fabric-1: #5d6f7a; --fabric-2: #485a65; --fabric-3: #6b7964;
     --dim: #82b5e4; --dim-soft: rgba(130, 181, 228, 0.12); --veil: rgba(0, 0, 0, 0.28); --hatch: #56646b;
-    --sheet-board: #1d2427; --edge: #2a1d0e; --cut-wood: #6e5130;
+    --sheet-board: #1d2427; --edge: #2a1d0e; --cut-wood: #6e5130; --cut-edge: #0b0f11;
     --hl-select: #ff7a3d; --hl-select-soft: rgba(255, 122, 61, 0.16); --hl-hover: #f5b469;
     --hl-step: #4cc495; --hl-step-soft: rgba(76, 196, 149, 0.14);
     --err: #f0766c; --err-soft: rgba(240, 118, 108, 0.12); --warn: #e0a84a; --warn-soft: rgba(224, 168, 74, 0.12); --ok: #6cc591;
@@ -72,7 +73,7 @@
   --kick: #4b4035; --metal: #7d878c;
   --fabric-1: #5d6f7a; --fabric-2: #485a65; --fabric-3: #6b7964;
   --dim: #82b5e4; --dim-soft: rgba(130, 181, 228, 0.12); --veil: rgba(0, 0, 0, 0.28); --hatch: #56646b;
-  --sheet-board: #1d2427; --edge: #2a1d0e; --cut-wood: #6e5130;
+  --sheet-board: #1d2427; --edge: #2a1d0e; --cut-wood: #6e5130; --cut-edge: #0b0f11;
   --hl-select: #ff7a3d; --hl-select-soft: rgba(255, 122, 61, 0.16); --hl-hover: #f5b469;
   --hl-step: #4cc495; --hl-step-soft: rgba(76, 196, 149, 0.14);
   --err: #f0766c; --err-soft: rgba(240, 118, 108, 0.12); --warn: #e0a84a; --warn-soft: rgba(224, 168, 74, 0.12); --ok: #6cc591;

@@ -1487,7 +1487,7 @@ Exit codes:
 | `wb cutlist [--phase] [--format text\|csv\|json]` | — | `CutList` (section 7.1) |
 | `wb sheets [--phase] [--svg <dir>]` | — | `Nesting[]` (section 7.2); every phase unless `--phase`. `--svg` writes one SVG per material and phase, named `sheets.<config>.<phase>.<material>.svg`, and the JSON becomes `{ nestings, files }`. Exit 1 when a part could not be placed. |
 | `wb shopping [--phase]` | — | section 7.5 |
-| `wb diff [--against last-good\|<git-ref>\|opt:key=value]` | — | `{ parts: { added, removed, changed: { id, field, from, to }[] }, cutlist: { added, removed, changed }, sheets: { from, to } }`. `--against opt:top=0.75` compares two configurations of the current model. |
+| `wb diff [--against last-good\|<git-ref>\|opt:key=value[,…]]` | — | `{ from: { config }, to: { config }, parts: { added, removed, changed: { id, field, from, to }[] }, cutlist: { added, removed, changed: { key, field, from, to }[] }, sheets: { from, to, same } }`. Part fields: `name`, `material`, `length`, `width`, `thickness`, `box@<phase>` and `in@<phase>`; cut-list rows are keyed by their ids. `--against opt:top=0.75` shows what switching the options would change (from the current model to the other one); a git ref or `last-good` (the default) shows what changed since (from the older model to the current one). `last-good` is `.diy-bench/last-good/<id>.json`, a serialised `DiffDoc` that `wb check` writes whenever the model checks without errors (for the configuration checked, or the default one with `--all-configs`). A git ref is read with `git archive` into a temporary folder and evaluated with today's `core/`. Implemented in `core/diff.ts` (`diffDoc`, `diff`, `diffText`). |
 | `wb state` | — | `ViewerState` (exit 3 when the viewer has not written state in 24 h) |
 | `wb show [--select ids] [--hover ids] [--phase] [--step] [--opt k=v] [--view id] [--tab name] [--frame]` | — | `{ delivered: boolean }`. Sends a `Control` to the open viewer (section 11.2). |
 | `wb render --view <viewId\|3d-front\|3d-iso\|3d-top\|sheets\|cutlist> [--phase] [--step] [--opt] [--select ids] [--size 1600x1000] [--out file.png]` | — | `{ file, width, height }`. Uses the running dev server if there is one, else starts a temporary one. Headless Chrome with `channel: "chrome"`; the URL has `?render=<target>`, which shows only that panel full-window. |
@@ -1675,6 +1675,8 @@ Order: M0 → M1 → M2 → M3 → M4 → (M5 and M6, in either order) → M7 �
 
 ### M7. Phases, steps, options, compare
 **Deliverables:** the Steps panel, the step stepper, option controls, compare mode (`core/diff.ts`, `./wb diff`), and URL state.
+
+Compare mode in the app: the ⇄ button beside an option control compares the model on screen with the other choice (a select picks among more than two). A bar under the top bar summarises the change ("2 parts change · 1 cut-list row · same sheet purchases"), lists the changes on demand (clicking one selects the part), selects every changed part, or switches to the other choice. The URL also carries `step`.
 
 **AC:**
 - **Steps:** the Steps panel lists 2 phases and 9 steps. Clicking step `p2-frame` sets the step state and selects `hamper-frame-side`, `hamper-frame-rail` and `hamper-frame-back`. At step `p1-stand`, the 3D view shows the parts of `p1-bench` (none), `p1-cleats` and `p1-stand`, and no top shelves.

@@ -24,6 +24,11 @@ tabbed pane below 700 px, so it works in half a VS Code window. Pane sizes and t
 dark or follow the system) are remembered per browser. The URL holds the project, options,
 phase, step and drawing view, so a reload comes back to the same state.
 
+The middle pane draws the project's declared views (elevations, sections, plan) with
+dimensions; wheel to zoom, drag to pan, double-click to fit. A section or plan view can cut the
+3D view at the same plane. The Steps tab and the `‹ ›` stepper (or `[` `]`) walk the build step
+by step in every view, and ⇄ next to an option compares the two choices.
+
 The app writes `.diy-bench/state.json` (what is selected, the phase, the view) for the agent's
 hooks; `GET /__wb/health` and `GET /__wb/state` serve the same to the CLI.
 
@@ -34,6 +39,7 @@ hooks; `GET /__wb/health` and `GET /__wb/state` serve the same to the CLI.
 ./wb cutlist --format text|csv|json           # the cut list
 ./wb shopping                                 # what to buy
 ./wb sheets [--svg out/]                      # sheet layouts, optionally as SVG
+./wb diff --against opt:top=0.75              # what switching an option changes (or --against HEAD~1, last-good)
 ./wb snapshot [--update]                      # compare or rewrite projects/<id>/expected/
 npm run typecheck && npm test                 # types, unit tests and golden files
 npm run e2e                                   # browser tests in Chrome (starts the dev server if needed)
@@ -76,8 +82,9 @@ The research (`research.md`) was written before the repo had a name, so it calls
 
 ## Verified on
 
-- macOS, Chrome 1xx through Playwright (`npm run e2e`): the live loop, selection across views,
-  state sync, layouts at 1500, 1000 and 600 px.
+- macOS, Chrome through Playwright (`npm run e2e`): the live loop, selection across views,
+  state sync, layouts at 1500, 1000 and 600 px, 3D picking with a section, drawings, steps,
+  compare and URL state.
 - Not yet verified by hand: VS Code's integrated browser (the M4 manual smoke test: render,
   live edit, and the Parts table's `vscode://file/…` link opening the file at the line).
 

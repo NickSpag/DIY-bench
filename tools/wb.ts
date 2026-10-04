@@ -1,9 +1,12 @@
 // The DIY-bench command-line tool (section 11.1 of the spec).
 // Exit codes: 0 ok; 1 model errors or failed checks of severity error; 2 usage error.
-import { mkdirSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { evaluate, EvaluationError, configKey, configsToCheck, normalizeConfig, optionEntries } from "../core/evaluate.ts";
+import { evaluate, EvaluationError, configKey, configsToCheck, defaultConfig, normalizeConfig, optionEntries } from "../core/evaluate.ts";
+import { diff, diffDoc, diffText, type DiffDoc } from "../core/diff.ts";
 import { fmtSrc } from "../core/model/builder.ts";
 import type { AnyProject, Config, Issue, Resolved } from "../core/model/types.ts";
 import { toJson } from "../core/json.ts";
@@ -16,7 +19,7 @@ import { sheetSvg, sheetTitle, stockLabel } from "../core/sheet-svg.ts";
 import { cutListCsv } from "../core/export/csv.ts";
 import { cutListText, fmtRowSize, shoppingText } from "../core/export/text.ts";
 import { snapshot } from "./golden.ts";
-import { listProjectIds, loadProject, pickProjectId, UsageError } from "./projects.ts";
+import { listProjectIds, loadProject, loadProjectFile, pickProjectId, ROOT, UsageError } from "./projects.ts";
 
 const USAGE = `usage: wb <command> [flags]
 
@@ -28,6 +31,7 @@ commands:
   cutlist [--format text|csv|json] [--phase p]   the cut list (all phases unless --phase)
   shopping [--phase p]         sheets, boards, hardware and banding to buy
   sheets [--phase p] [--svg dir]   sheet layouts (all phases unless --phase); --svg writes one SVG per phase and material
+  diff [--against a]           what changes: a = opt:key=value[,…] (switching options), a git ref, or last-good (default)
   snapshot [--update]          compare (or rewrite) projects/<id>/expected/ (all projects unless --project)
 
 common flags:
@@ -38,7 +42,7 @@ common flags:
 
 type Flags = {
   project?: string; opt?: string[]; phase?: string; json?: boolean; "all-configs"?: boolean;
-  kind?: string; format?: string; svg?: string; update?: boolean; help?: boolean;
+  kind?: string; format?: string; svg?: string; update?: boolean; help?: boolean; against?: string;
 };
 
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
@@ -126,6 +130,15 @@ async function cmdCheck(flags: Flags): Promise<number> {
       }
       results.push({ project: id, config, issues });
       const errors = issues.filter((i) => i.severity === "error").length;
+      // The last good model, for `wb diff --against last-good`: the configuration asked for,
+      // or the default one when checking them all.
+      if (errors === 0 && (!flags["all-configs"] || configKey(config) === configKey(defaultConfig(project)))) {
+        try {
+          writeLastGood(id, diffDoc(evaluate(project, config)));
+        } catch {
+          // a failed write only loses the diff baseline
+        }
+      }
       const warnings = issues.filter((i) => i.severity === "warning").length;
       if (errors) ok = false;
       lines.push(`${id} ${configKey(config)}: ${issues.length === 0 ? "ok, no issues" : `${errors} error${errors === 1 ? "" : "s"}, ${warnings} warning${warnings === 1 ? "" : "s"}`}`);
@@ -281,6 +294,75 @@ async function cmdSnapshot(flags: Flags): Promise<number> {
   return same || flags.update ? 0 : 1;
 }
 
+const lastGoodFile = (id: string) => join(ROOT, ".diy-bench", "last-good", `${id}.json`);
+
+function writeLastGood(id: string, doc: DiffDoc): void {
+  mkdirSync(join(ROOT, ".diy-bench", "last-good"), { recursive: true });
+  writeFileSync(lastGoodFile(id), JSON.stringify(doc) + "\n"); // full precision, unlike toJson
+}
+
+/** The project as it was at a git ref, evaluated with today's core/. */
+async function projectAtRef(id: string, ref: string): Promise<AnyProject> {
+  const dir = mkdtempSync(join(tmpdir(), "wb-diff-"));
+  try {
+    let tar: Buffer;
+    try {
+      tar = execFileSync("git", ["archive", "--format=tar", ref, `projects/${id}`], { cwd: ROOT, stdio: ["ignore", "pipe", "pipe"], maxBuffer: 1 << 28 });
+    } catch (e) {
+      throw new UsageError(`cannot read projects/${id} at "${ref}": ${String((e as { stderr?: Buffer }).stderr ?? e).trim()}`);
+    }
+    writeFileSync(join(dir, "p.tar"), tar);
+    execFileSync("tar", ["-xf", join(dir, "p.tar"), "-C", dir]);
+    symlinkSync(join(ROOT, "core"), join(dir, "core"));
+    return await loadProjectFile(join(dir, "projects", id, "project.ts"));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+async function cmdDiff(flags: Flags): Promise<number> {
+  const id = pickProjectId(flags.project);
+  const project = await loadProject(id);
+  const config = parseOpts(project, flags.opt);
+  const r = evaluate(project, config);
+  const here = diffDoc(r);
+  const against = flags.against ?? "last-good";
+  let d;
+  if (against.startsWith("opt:")) {
+    // What would change if the options were switched: from the current model to the other one.
+    const other: Config = { ...config };
+    for (const kv of against.slice(4).split(",").filter(Boolean)) {
+      const i = kv.indexOf("=");
+      if (i <= 0) throw new UsageError(`--against opt: expects key=value, got "${kv}"`);
+      other[kv.slice(0, i)] = kv.slice(i + 1);
+    }
+    let cfg: Config;
+    try {
+      cfg = normalizeConfig(project, other);
+    } catch (e) {
+      throw new UsageError((e as Error).message);
+    }
+    d = diff(here, diffDoc(evaluate(project, cfg)));
+  } else if (against === "last-good") {
+    // What changed since the last model that checked clean.
+    const file = lastGoodFile(id);
+    if (!existsSync(file)) throw new UsageError(`no last good model for ${id} yet; ./wb check records one when the model has no errors`);
+    d = diff(JSON.parse(readFileSync(file, "utf8")) as DiffDoc, here);
+  } else {
+    // What changed since a git ref.
+    const old = await projectAtRef(id, against);
+    let cfg: Config;
+    try {
+      cfg = normalizeConfig(old, config);
+    } catch {
+      cfg = defaultConfig(old);
+    }
+    d = diff(diffDoc(evaluate(old, cfg)), here);
+  }
+  out(flags.json ? toJson(d) : diffText(d, r.project.units));
+  return 0;
+}
+
 // ---------- text helpers ----------
 
 export function table(head: string[], rows: string[][]): string {
@@ -300,6 +382,7 @@ async function main(argv: string[]): Promise<number> {
       project: { type: "string" }, opt: { type: "string", multiple: true }, phase: { type: "string" },
       json: { type: "boolean" }, "all-configs": { type: "boolean" }, kind: { type: "string" },
       format: { type: "string" }, svg: { type: "string" }, update: { type: "boolean" }, help: { type: "boolean", short: "h" },
+      against: { type: "string" },
     },
   });
   const flags = values as Flags;
@@ -317,6 +400,7 @@ async function main(argv: string[]): Promise<number> {
     case "shopping": return cmdShopping(flags);
     case "sheets": return cmdSheets(flags);
     case "snapshot": return cmdSnapshot(flags);
+    case "diff": return cmdDiff(flags);
     default: throw new UsageError(`unknown command "${command}"\n\n${USAGE}`);
   }
 }
