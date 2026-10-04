@@ -123,6 +123,7 @@ Dependencies, exact versions as published on 2026-10-03:
 | react, react-dom | 19.3.0 | MIT | UI |
 | three | 0.186.1 | MIT | 3D |
 | @types/three | 0.186.0 | MIT | types |
+| @types/react, @types/react-dom | 19.3.0 | MIT | types (needed for JSX under `strict`) |
 | @react-three/fiber | 9.8.1 | MIT | 3D in React (peer `react >=19 <19.4`) |
 | @react-three/drei | 10.7.9 | MIT | CameraControls, Edges, Outlines, GizmoHelper, Bounds |
 | zustand | 5.0.15 | MIT | selection and UI store |
@@ -150,8 +151,10 @@ DIY-bench/
 ├── package.json                   "type": "module"; scripts in section 11.4
 ├── .npmrc                         save-exact=true
 ├── tsconfig.json                  strict, noEmit, allowImportingTsExtensions, erasableSyntaxOnly, verbatimModuleSyntax,
-│                                  module/moduleResolution nodenext, target es2023, lib es2023+dom, jsx react-jsx
-├── vite.config.ts                 react plugin + diyBenchPlugin(); server.host 127.0.0.1, port 5180, strictPort false
+│                                  module/moduleResolution nodenext, target es2023, lib es2023+dom+dom.iterable, jsx react-jsx,
+│                                  skipLibCheck
+├── vite.config.ts                 react plugin + diyBenchPlugin(); root app/, build.outDir ../dist;
+│                                  server.host 127.0.0.1, port 5180, strictPort false
 ├── wb                             executable shell script: exec node --experimental-strip-types
 │                                  --disable-warning=ExperimentalWarning "$(dirname "$0")/tools/wb.ts" "$@"
 ├── .gitignore                     node_modules, dist, .diy-bench/, test-results/
