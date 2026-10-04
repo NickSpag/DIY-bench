@@ -140,7 +140,7 @@ export function runInvariants(r: Resolved): Issue[] {
   const order = new Map(r.parts.map((p, i) => [p.id, i]));
   const found = new Map<string, { a: ResolvedPart; b: ResolvedPart; phases: string[]; amounts: number[] }>();
   for (const ph of r.phases) {
-    const state = r.stateAt(ph.id).parts.filter((s) => s.box && !badBox(s.box) && !(s.part.kind === "context" && s.part.role === "contents"));
+    const state = r.stateAt(ph.id).parts.filter((s) => s.box && !badBox(s.box) && !(s.part.kind === "context" && (s.part.role === "contents" || s.part.role === "space")));
     for (let i = 0; i < state.length; i++) {
       for (let j = i + 1; j < state.length; j++) {
         const a = state[i], b = state[j];

@@ -216,7 +216,7 @@
       "id": "console-space",
       "kind": "context",
       "name": "Space for a media console",
-      "role": "contents",
+      "role": "space",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [34, 94], "y": [0, 24], "z": [0, 18]}},
       "src": "projects/tv-wall-shelves/project.ts:114:7"

@@ -146,6 +146,26 @@ function useAnimated(target: number): number {
 
 // ---------- parts ----------
 
+/** A space kept for something not chosen yet: the box's twelve edges, dashed, with no faces. */
+function SpaceOutline({ e, offset, color, planes }: { e: Entry; offset: Vec3; color: string; planes: THREE.Plane[] }) {
+  const c = centreOf(e.box);
+  const size = sizeOf(e.box);
+  const lines = useMemo(() => {
+    const geometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(...size));
+    const material = new THREE.LineDashedMaterial({ color, dashSize: 1, gapSize: 0.6, transparent: true, opacity: 0.85, clippingPlanes: planes });
+    const l = new THREE.LineSegments(geometry, material);
+    l.computeLineDistances();
+    l.raycast = noRaycast;
+    return l;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [size[0], size[1], size[2], color, planes]);
+  useEffect(() => () => {
+    lines.geometry.dispose();
+    (lines.material as THREE.Material).dispose();
+  }, [lines]);
+  return <primitive object={lines} position={[c[0] + offset[0], c[1] + offset[1], c[2] + offset[2]]} />;
+}
+
 const meshes = new Map<string, THREE.Mesh>();
 const noRaycast = () => null;
 
@@ -261,6 +281,7 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
   const shown = entries.filter((e) => {
     if (e.part.kind !== "context") return true;
     if (e.part.role === "contents") return showContents;
+    if (e.part.role === "space") return true;                         // a dashed outline hides nothing
     if (!showRoom) return false;
     // The grid stands in for the lowest floor. Other floors (landings, stair treads, the
     // storey above or below) are drawn.
@@ -271,7 +292,9 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
   return (
     <group>
       {shown.map((e) => (
-        <PartMesh key={e.part.id} e={e} offset={explodeOffset(e, centre, k)} pal={pal} planes={planes}
+        e.part.kind === "context" && e.part.role === "space"
+          ? <SpaceOutline key={e.part.id} e={e} offset={explodeOffset(e, centre, k)} color={pal.ink} planes={planes} />
+          : <PartMesh key={e.part.id} e={e} offset={explodeOffset(e, centre, k)} pal={pal} planes={planes}
           selected={sel.has(e.part.id)} inStep={stepParts.has(e.part.id) && !sel.has(e.part.id)}
           section={section.enabled ? plane : null} />
       ))}

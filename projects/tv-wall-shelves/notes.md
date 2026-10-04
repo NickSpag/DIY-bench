@@ -35,7 +35,7 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
   a console only 20″ tall, lower than most. With the space under the AC cut from 19″ to 14″, the TV
   and the lowest shelves move up to 28″. The drawings show the space for a console as a dashed box;
   the option `console` puts a common size in it (48 × 20, 60 × 22, 60 × 24, 70 × 22, 72 × 26) and two
-  rules say whether that size fits. In 3D the dashed box shows with the Contents button. What to look
+  rules say whether that size fits. What to look
   for:
   - **height** 24″ or less, which leaves at least 4″ under the TV;
   - **width** up to 60″, the space between the lowest side shelves. A 60″ console's ends line up

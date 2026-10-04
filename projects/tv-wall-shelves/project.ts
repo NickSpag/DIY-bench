@@ -111,7 +111,7 @@ export default defineProject({
     // ---------- the media console: not bought yet, so the space for one, and a size to try in it ----------
     const spaceX: Range = [sides[0][1][1], sides[1][1][0]];          // between the lowest side shelves
     const spaceH = P.consoleSpace.height;
-    b.context({ id: "console-space", name: "Space for a media console", role: "contents", box: box(spaceX, [0, spaceH], [0, P.consoleSpace.depth]) });
+    b.context({ id: "console-space", name: "Space for a media console", role: "space", box: box(spaceX, [0, spaceH], [0, P.consoleSpace.depth]) });
     const con = opt.console === "none" ? null : P.consoles[opt.console];
     if (con) {
       const [cw, ch, cd] = con;
@@ -177,7 +177,7 @@ export default defineProject({
         { from: "ac.y0", to: "ceiling.y0", offset: W + 4 },
         { from: "tv.y0", to: "tv.y1", offset: -4 },
         { from: "floor.y1", to: "console-space.y1", offset: -4 },
-        { from: "console-space.x0", to: "console-space.x1", offset: spaceH - 3 },
+        { from: "console-space.x0", to: "console-space.x1", offset: 3 },
       ],
       labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" },
         con ? { part: "console", text: `console ${con[0]} × ${con[1]}` } : { part: "console-space", text: "space for a media console" }] });

@@ -342,7 +342,7 @@ export type HardwareSpec = Common & {
 };
 export type ContextSpec = {
   id: string; name: string; where?: string;
-  role: "wall" | "floor" | "fixture" | "contents";   // walls, floor and fixtures (a TV, an air conditioner) take part in overlap checks; contents never do
+  role: "wall" | "floor" | "fixture" | "contents" | "space";   // walls, floor and fixtures (a TV, an air conditioner) take part in overlap checks; contents and spaces (room kept for something not chosen yet, drawn as a dashed outline) never do
   box: Box; phase?: string; removedIn?: string; moves?: Record<string, Box>;
 };
 

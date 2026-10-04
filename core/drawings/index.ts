@@ -45,9 +45,10 @@ export function viewItems(r: Resolved, view: View, opts: { phase: string; step?:
     if (!box) continue;
     const isContents = part.kind === "context" && part.role === "contents";
     if (isContents && !showContents) continue;
+    const isSpace = part.kind === "context" && part.role === "space";
     if (view.depth && !(box[axis][1] > view.depth[0] && box[axis][0] < view.depth[1])) continue;
     const pb = projectBox(box, view.look);
-    const role = classify(view, pb.d, { veil: veil.has(part.id), contents: isContents });
+    const role = classify(view, pb.d, { veil: veil.has(part.id), contents: isContents || isSpace });
     const item: DrawItem = { id: part.id, part, role, u: pb.u, v: pb.v, d: pb.d, fill: fillClass(part) };
     if (part.kind === "hardware" && part.cylinder && part.cylinder.axis === axis) {
       item.circle = { u: (pb.u[0] + pb.u[1]) / 2, v: (pb.v[0] + pb.v[1]) / 2, r: part.cylinder.diameter / 2 };
@@ -161,8 +162,9 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
     else cutEls.push(`<path ${dp(i.id)} class="e e-cut" d="${segPath(rectEdges(i))}"/>`);
   }
 
-  // ---------- contents: translucent, dashed outline ----------
+  // ---------- contents: translucent, dashed outline; spaces: the outline alone ----------
   const contentEls = contents.map((i) => {
+    if (i.part.kind === "context" && i.part.role === "space") return `<g ${dp(i.id)}><rect class="c-line c-space" ${rectAttrs(i.u, i.v)}/></g>`;   // outline only
     const c = i.part.kind === "context" ? i.part.color : undefined;
     const fill = c && /^[#\w(),.% -]+$/.test(c) ? `class="f-contents f-mat-contents" style="--mat:${c}"` : `class="f-contents"`;
     return `<g ${dp(i.id)}><rect ${fill} ${rectAttrs(i.u, i.v)}/><rect class="c-line" ${rectAttrs(i.u, i.v)}/></g>`;
