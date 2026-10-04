@@ -24,8 +24,8 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
 - **The long shelf** is 36 + 48 + 36 by default. Its two seams then fall at 40″ and 88″, on the TV's
   edges, and the 48″ shelf sits centred over the TV. The option `span` compares 60 + 60, which has
   fewer seams but puts one in the middle of the wall.
-- **Vertical.** The heights come from three numbers: the console height (24″), the gap above it to
-  the TV (4″) and the space left under the air conditioner (14″). The TV's bottom edge and the lowest
+- **Vertical.** The heights come from three numbers: the height of the space for a console (24″),
+  the gap above it to the TV (4″) and the space left under the air conditioner (14″). The TV's bottom edge and the lowest
   shelf tops sit at 28″; the long shelf's top is 14″ under the AC at 67″; the upper side shelves split
   the height between, at 47½″, a 19½″ pitch. The TV's centre is at 42½″, the top of the usual seated
   range. The open heights between shelves are about 19⅜ / 19⅜″, there is 14″ over the long shelf, and
@@ -33,7 +33,10 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
   other things. The 2½″ flange stands up behind the books.
 - **Media console** (not bought yet). The first layout had the TV's bottom at 22″, which left room for
   a console only 20″ tall, lower than most. With the space under the AC cut from 19″ to 14″, the TV
-  and the lowest shelves move up to 28″. What to look for:
+  and the lowest shelves move up to 28″. The drawings show the space for a console as a dashed box;
+  the option `console` puts a common size in it (48 × 20, 60 × 22, 60 × 24, 70 × 22, 72 × 26) and two
+  rules say whether that size fits. In 3D the dashed box shows with the Contents button. What to look
+  for:
   - **height** 24″ or less, which leaves at least 4″ under the TV;
   - **width** up to 60″, the space between the lowest side shelves. A 60″ console's ends line up
     with the shelves' inner ends; anything wider runs under those shelves, which sit only about 4″
@@ -55,7 +58,8 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
 | `wallT` | 4½″ | for drawing only |
 | side walls | walls at both ends of the 128″ | the layout's 4″ end margins read as distance from corners |
 | `minTvGap` | 4″ | the least gap to the TV that still looks deliberate; the design has 6″ |
-| `console` | 60″ wide, 24″ tall, 16″ deep | not bought yet: the largest that fits, drawn so the space reads; see Summary |
+| `consoleSpace` | 24″ tall, 18″ deep | the tallest console the TV sits 4″ above; a usual depth. Its width is the 60″ between the lowest side shelves |
+| `consoles` | 16″ deep (18″ for the 72″) | common sizes to try; depths are typical, not from a particular product |
 | `consoleGap` | 4″ | from the console top to the TV's bottom edge; 2″ was too tight, 4–6″ is the usual advice |
 
 ## Open questions
@@ -78,3 +82,5 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
   (`consoleGap` now 4″). The stack is now derived from those two and the console height: TV and lowest
   shelves at 28″, long shelf at 67″, 19½″ pitch. The rule for even open heights now covers the spaces
   between shelves only, since the space over the long shelf is set by the AC.
+- 2026-10-04: The console is drawn as the space for one (dashed), with an option to try common sizes in it.
+  The space, not the console, sets the TV height.

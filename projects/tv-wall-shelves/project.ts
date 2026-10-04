@@ -19,8 +19,11 @@ export const P = {
   rows: 2,                                       // rows of side shelves on each side of the TV
   acHeadroom: 14,                                // from the long shelf's top to the air conditioner; the side rows share what is left
   minTvGap: 4,                                   // inferred: the least gap between a side shelf and the TV that still looks deliberate
-  console: { width: 60, height: 24, depth: 16 }, // inferred: not bought yet; the size to shop for, see notes.md
+  consoleSpace: { height: 24, depth: 18 },       // inferred: the tallest console the TV sits above, and a usual depth
   consoleGap: 4,                                 // inferred: from the console top up to the TV's bottom edge (2″ was too tight)
+  consoles: {                                    // common sizes to try in the space: width, height, depth
+    "48x20": [48, 20, 16], "60x22": [60, 22, 16], "60x24": [60, 24, 16], "70x22": [70, 22, 16], "72x26": [72, 26, 18],
+  } as Record<string, [number, number, number]>,
 };
 
 const r16 = (x: number) => Math.round(x * 16) / 16;
@@ -35,6 +38,18 @@ export default defineProject({
       label: "Long shelf above the TV",
       choices: { "36-48-36": "36 + 48 + 36: seams on the TV's edges", "60-60": "60 + 60: one seam, in the middle" },
       default: "36-48-36",
+    },
+    console: {
+      label: "Media console",
+      choices: {
+        none: "None: just the space for one",
+        "48x20": "48″ wide × 20″ tall",
+        "60x22": "60″ wide × 22″ tall",
+        "60x24": "60″ wide × 24″ tall, the most that fits",
+        "70x22": "70″ wide × 22″ tall, runs under the side shelves",
+        "72x26": "72″ wide × 26″ tall, too big",
+      },
+      default: "none",
     },
   },
   phases: [{ id: "p1", title: "Hang the shelves" }],
@@ -57,14 +72,11 @@ export default defineProject({
     b.context({ id: "wall-right", name: "Side wall", where: "right", role: "wall", box: box([W, W + wt], [-1, H + 1], [-wt, room]) });
 
     const tvX: Range = span(r16((W - P.tv.width) / 2), P.tv.width);
-    const bottomRowTop = P.console.height + P.consoleGap;         // the TV's bottom edge and the lowest shelf tops
+    const bottomRowTop = P.consoleSpace.height + P.consoleGap;    // the TV's bottom edge and the lowest shelf tops
     const tvY: Range = span(bottomRowTop, P.tv.height);
     b.context({ id: "tv", name: "TV", role: "fixture", color: "#1d1f23", box: box(tvX, tvY, span(P.tv.standoff, P.tv.depth)) });
     const acX: Range = [P.ac.fromLeft, W - P.ac.fromRight], acY: Range = [H - P.ac.drop, H];
     b.context({ id: "ac", name: "Air conditioner", role: "fixture", color: "#e4e7ea", box: box(acX, acY, [0, P.ac.depth]) });
-    const C = P.console;
-    const conX: Range = span(r16((W - C.width) / 2), C.width);
-    b.context({ id: "console", name: "Media console (to buy)", role: "fixture", color: "#7a5c43", box: box(conX, [0, C.height], [0, C.depth]) });
 
     // ---------- the long shelf above the TV, its ends setting where the side rows go ----------
     const pieces = P.spanPieces[opt.span];
@@ -95,6 +107,23 @@ export default defineProject({
     for (const [side, xr] of sides)
       rowTops.forEach((top, i) =>
         shelf(`side-${side}-${i + 1}`, `${side} of the TV, row ${i + 1} from the bottom`, "hang-sides", xr, top));
+
+    // ---------- the media console: not bought yet, so the space for one, and a size to try in it ----------
+    const spaceX: Range = [sides[0][1][1], sides[1][1][0]];          // between the lowest side shelves
+    const spaceH = P.consoleSpace.height;
+    b.context({ id: "console-space", name: "Space for a media console", role: "contents", box: box(spaceX, [0, spaceH], [0, P.consoleSpace.depth]) });
+    const con = opt.console === "none" ? null : P.consoles[opt.console];
+    if (con) {
+      const [cw, ch, cd] = con;
+      const conX: Range = span(r16((W - cw) / 2), cw);
+      b.context({ id: "console", name: `Media console, ${cw}″ × ${ch}″`, role: "fixture", color: "#7a5c43", box: box(conX, [0, ch], [0, cd]) });
+      // Two rules that say whether the size being tried fits the space.
+      b.check("console-under-tv", "The media console's top clears the TV's bottom edge", ch <= spaceH,
+        `console ${L(ch)} tall; ${L(P.consoleGap)} under the TV means no taller than ${L(spaceH)}`);
+      b.check("console-between-rows", "The media console fits between the lowest side shelves, so nothing on it sits under a shelf",
+        conX[0] >= spaceX[0] && conX[1] <= spaceX[1],
+        `console ${L(cw)} wide; ${L(spaceX[1] - spaceX[0])} between the side rows`);
+    }
 
     // ---------- steps ----------
     b.step({ id: "layout", phase: "p1", title: "Mark out the wall",
@@ -129,13 +158,6 @@ export default defineProject({
       `seams at ${seams.map(L).join(", ")}; TV edges at ${L(tvX[0])} and ${L(tvX[1])}`);
     b.check("ac-over-middle", "The air conditioner sits entirely over the TV, so tall things at the ends of the long shelf are clear of it",
       acX[0] >= tvX[0] && acX[1] <= tvX[1], `AC ${L(acX[0])} to ${L(acX[1])}; TV ${L(tvX[0])} to ${L(tvX[1])}`);
-    // The console is not bought yet: these two say what size to look for.
-    const maxConsoleH = tvY[0] - P.consoleGap, maxConsoleW = sides[1][1][0] - sides[0][1][1];
-    b.check("console-under-tv", "The media console's top clears the TV's bottom edge", C.height <= maxConsoleH,
-      `console ${L(C.height)} tall, TV bottom at ${L(tvY[0])}: look for a console no taller than ${L(maxConsoleH)}`);
-    b.check("console-between-rows", "The media console fits between the lowest side shelves, so nothing on it sits under a shelf",
-      conX[0] >= sides[0][1][1] && conX[1] <= sides[1][1][0],
-      `console ${L(C.width)} wide; ${L(maxConsoleW)} between the side rows (at that width its ends line up with the shelves' inner ends)`);
 
     // ---------- drawing views ----------
     b.view({ id: "front", title: "Elevation", kind: "elevation", look: "-z",
@@ -154,10 +176,11 @@ export default defineProject({
         { from: `${spanIds[spanIds.length - 1]}.y1` as const, to: "ac.y0", offset: W + 4 },
         { from: "ac.y0", to: "ceiling.y0", offset: W + 4 },
         { from: "tv.y0", to: "tv.y1", offset: -4 },
-        { from: "floor.y1", to: "console.y1", offset: -4 },
-        { from: "console.x0", to: "console.x1", offset: C.height - 5 },
+        { from: "floor.y1", to: "console-space.y1", offset: -4 },
+        { from: "console-space.x0", to: "console-space.x1", offset: spaceH - 3 },
       ],
-      labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" }, { part: "console", text: "media console" }] });
+      labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" },
+        con ? { part: "console", text: `console ${con[0]} × ${con[1]}` } : { part: "console-space", text: "space for a media console" }] });
     b.view({ id: "section", title: "Section through the middle", kind: "section", look: "+x", cut: W / 2,
       caption: "Cut through the TV, the long shelf and the air conditioner; wall on the left.",
       dims: [{ from: "wall.z1", to: "span-left.z1", offset: H + 3 }, { from: "span-left.y1", to: "ac.y0", offset: -3 }] });
