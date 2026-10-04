@@ -9,7 +9,7 @@ A climbing vine on the tall wall of the stairwell, above the second landing. The
 along the 102″ back wall to landing 2. Flight 3 goes on down to the lower floor beside flight 1,
 with the stairwell's open centre between them. The vine wall rises 165″ from landing 2 to the
 ceiling and is 45¼″ wide: 35½″ over the landing, and the rest over the top of flight 3. Facing it,
-the back wall is on the right and the stairs drop away on the left.
+the back wall is on the left and the stairs drop away on the right.
 
 The whole stairwell is modelled as room context (treads, landings, floors, walls), so the drawings
 and the 3D view show the trellis and planter in place. None of it appears in the cut list.
@@ -22,12 +22,12 @@ and the 3D view show the trellis and planter in place. None of it appears in the
   stud they cross; rails are at most 24″ apart. Paint the frame the wall colour.
 - **Planter:** built from your 2×10 for its looks: front, back and ends on edge, a plywood bottom
   inside, and a liner. It runs the full width of the vine wall, its back against the lattice, its
-  bottom 12″ off the landing, so its left end overhangs flight 3.
+  bottom 12″ off the landing, so its right end overhangs flight 3.
 - **Legs:** two square legs, ripped from the 2×10, directly under the back of the planter, so they
   take nothing from the walking area. They screw to the planter and through the lattice into the
-  frame. The right leg stands on the landing at the back-wall end. The left leg is a design option:
+  frame. The left leg stands on the landing at the back-wall end. The right leg is a design option:
   on the edge of the landing (both legs the same length, plus a 1×1 post in the frame behind it), or
-  at the planter's left end, running down to the first step of flight 3.
+  at the planter's right end, running down to the first step of flight 3.
 
 ## Assumptions
 
@@ -57,6 +57,6 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 
 - 2026-10-04: lattice ripped to width; the lower sheet runs full length and the upper is cut to the ceiling.
 - 2026-10-04: horizontal standoff rails rather than vertical, so every rail reaches studs.
-- 2026-10-04: planter widened to the full vine wall, legs moved under it; the stair-side leg's placement is an option. Model mirrored: facing the wall, the stairs are on the left.
+- 2026-10-04: planter widened to the full vine wall, legs moved under it; the stair-side (right) leg's placement is an option.
 - 2026-10-04: planter from the user's 2×10, raised on two back legs fixed to the lattice frame; lattice framed with 1×1s and run from the landing to the ceiling.
 - 2026-10-04: the whole stairwell modelled as context, from the 102″ back wall and the 37½ × 35½ landing.

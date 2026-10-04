@@ -93,7 +93,7 @@ export function DrawingPanel() {
       const p = toUser(e.clientX, e.clientY);
       if (!p) return;
       const c = current();
-      const k = Math.min(40, Math.max(0.5, c.k * Math.exp(-e.deltaY * 0.006)));
+      const k = Math.min(40, Math.max(0.5, c.k * Math.exp(-e.deltaY * 0.005)));
       const f = c.k / k;
       zooms.current.set(view.id, { k, cx: p.x - (p.x - c.cx) * f, cy: p.y - (p.y - c.cy) * f });
       applyZoom();
