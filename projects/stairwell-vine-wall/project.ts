@@ -23,7 +23,7 @@ export const P = {
   boardColor: "#4f7299",                 // the board is blue; for the 3D view and drawings
   resawKerf: 0.125,                      // inferred: the board is resawn in half through its thickness
   planter: { depth: 11, top: 38 },       // top 38″ above the landing; depth inferred
-  leg: 1.5,                              // inferred: square legs ripped from the 2×10
+  leg: 1.5,                              // inferred: square legs, 2×2 from other wood
   linerInset: 0.25,
 };
 
@@ -54,7 +54,7 @@ export default defineProject({
       stock: [{ id: "4x4", length: 48, width: 48, buy: true }, { id: "4x8", length: 96, width: 48, buy: true }] },
     "pine-1x1": { type: "board", name: "1×1", nominal: "1×1", thickness: S1, width: S1, finish: "paint", stockLengths: [96] },
     "wood-resawn": { type: "board", name: "Your blue 1½ × 9 board, resawn in half", thickness: (P.board2x10.t - P.resawKerf) / 2, width: P.board2x10.w, finish: "clear", color: P.boardColor },
-    "wood-legs": { type: "board", name: "Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs", thickness: P.leg, width: P.leg, finish: "clear", color: P.boardColor },
+    "wood-legs": { type: "board", name: "2×2 for the legs (other wood)", nominal: "2×2", thickness: P.leg, width: P.leg, finish: "clear", stockLengths: [96] },
   },
   banding: {},
   hardware: {
@@ -134,7 +134,6 @@ export default defineProject({
         material: "wood-legs", phase: "p1", step: "set-planter",
         box: box(xr, [foot, py[0]], span(pz[0], lg)), grain: "y",
         joins: [{ to: "planter-back", by: "screws" }] });
-    const legLen = Math.max(...legs.map(([, , foot]) => py[0] - foot));
     const li = P.linerInset;
     b.hardware({ id: "planter-liner", name: "Liner", item: "liner", qty: 1, phase: "p1", step: "set-planter",
       box: box([px[0] + bt + li, px[1] - bt - li], [py[0] + T, py[1] - 0.5], [pz[0] + T + li, pz[1] - bt - li]) });
@@ -172,9 +171,9 @@ export default defineProject({
 
     // ---------- steps ----------
     b.step({ id: "planter", phase: "p1", title: "Build the planter",
-      text: "Cut a leg-length piece off the blue board first and keep it full thickness. Resaw the rest in half through its thickness, then cut the fronts and ends. Screw the ends to the plywood back and the front to the ends; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
+      text: "Resaw the blue board in half through its thickness, then cut the fronts and ends. Screw the ends to the plywood back and the front to the ends; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
     b.step({ id: "set-planter", phase: "p1", title: "Legs and planter",
-      text: "Rip two legs from the 2×10 offcut and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
+      text: "Cut the two 2×2 legs and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
     b.step({ id: "frame-lower", phase: "p1", title: "Frame for the first sheet",
       text: "Paint the 1×1s the wall colour. Stand the bottom rail on the planter's back and screw every full-width rail into each stud it crosses, then fit the stiles and the rails between them." });
     b.step({ id: "trellis-lower", phase: "p1", title: "Hang the first sheet",
@@ -185,10 +184,10 @@ export default defineProject({
       text: "Rip it to width, cut it to fit to the ceiling, match its diamonds to the first sheet at the seam, and screw it on." });
 
     // ---------- design rules ----------
-    // One length is ripped for the legs at full thickness; the rest is resawn, so each length gives two pieces.
+    // The board is resawn, so each length gives two pieces: one course of the planter per half.
     const perLayer = (px[1] - px[0]) + 2 * (pz[1] - pz[0] - T - bt) + 3 * 0.125;   // a front and two ends
-    const need = legLen + 0.125 + (layers * perLayer) / 2;
-    b.check("board-enough", "The board is long enough for the planter and its legs", need <= P.board2x10.length,
+    const need = (layers * perLayer) / 2;
+    b.check("board-enough", "The blue board is long enough for the planter's front and ends", need <= P.board2x10.length,
       `needs about ${Math.round(need)}″ of the 1½ × 9 board; it is ${P.board2x10.length}″`, "error");
     b.check("two-sheets-cover", "The two lattice sheets reach from the planter to the ceiling",
       top - bottom <= 2 * P.lattice.sheet[0], `${top - bottom}″ to cover, ${2 * P.lattice.sheet[0]}″ of lattice`, "error");

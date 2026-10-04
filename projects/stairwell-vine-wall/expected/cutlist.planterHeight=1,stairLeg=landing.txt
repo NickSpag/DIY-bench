@@ -20,7 +20,7 @@ Your blue 1½ × 9 board, resawn in half
   1 × Planter front (front)  —  45⅛ × 9 × ¹¹⁄₁₆
   2 × Planter end (back-wall end; stair end)  —  9¹⁹⁄₃₂ × 9 × ¹¹⁄₁₆
 
-Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs
+2×2 for the legs (other wood)
   2 × Planter leg (back-wall end; edge of the landing)  —  29 × 1½ × 1½
 
 Hardware
@@ -46,4 +46,4 @@ Hardware
 BOARD TOTALS
   1×1: 12 pieces, 602¾ in all
   Your blue 1½ × 9 board, resawn in half: 3 pieces, 64⁵⁄₁₆ in all
-  Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs: 2 pieces, 58 in all
+  2×2 for the legs (other wood): 2 pieces, 58 in all

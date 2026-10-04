@@ -145,7 +145,7 @@
       "phase": "p1",
       "cutPhase": "p1",
       "material": "wood-legs",
-      "materialName": "Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs",
+      "materialName": "2×2 for the legs (other wood)",
       "kind": "board",
       "name": "Planter leg",
       "qty": 1,
@@ -162,7 +162,7 @@
       "phase": "p1",
       "cutPhase": "p1",
       "material": "wood-legs",
-      "materialName": "Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs",
+      "materialName": "2×2 for the legs (other wood)",
       "kind": "board",
       "name": "Planter leg",
       "qty": 1,
@@ -254,7 +254,7 @@
     },
     {
       "material": "wood-legs",
-      "name": "Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs",
+      "name": "2×2 for the legs (other wood)",
       "pieces": 2,
       "totalLength": 65.5
     }

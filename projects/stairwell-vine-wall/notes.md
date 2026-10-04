@@ -29,7 +29,7 @@ and the 3D view show the trellis and planter in place. None of it appears in the
   from the same sheet as the bottom, which saves the board. A liner goes inside. Its top is 38″ above the landing. It runs the full width of the vine wall with its back
   against the wall, so its right end overhangs flight 3, and sticks out 11″ into the landing.
   One board high or two is a design option; two (18″) gives about 16¾″ of soil, one (9″) about 7¾″.
-- **Legs:** two square legs, ripped full thickness from the same board before it is resawn, directly under the back of the planter, so they
+- **Legs:** two 2×2 legs from other wood, directly under the back of the planter, so they
   take nothing from the walking area, and carry the planter and the trellis on it to the floor. The
   left leg stands on the landing at the back-wall end. The right leg is a design option: on the edge
   of the landing, or at the planter's right end, running down to the first step of flight 3 (7½″
@@ -49,7 +49,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 | Resawn thickness | 11/16″ | Half of 1½″ after a ⅛″ saw kerf. |
 | 1×1 | ¾ × ¾ actual | Standard size. |
 | Planter depth | 11″ front to back | Not specified yet. |
-| Legs | 1½ × 1½, ripped from the 2×10 | Matches the planter. |
+| Legs | 2×2, 1½ × 1½ actual | Other wood; size not specified. |
 | Clearance | ⅛″ at the back wall and the ceiling | Room to fit the lattice without binding. |
 | Frame spacing | rails at most 24″ apart | Lattice this thin needs support every couple of feet. |
 | Side wall thickness | 4½″ | Drawing only. |
@@ -57,8 +57,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 ## Open questions
 
 - The stair counts, rise and run are read from photos; count the steps in each flight to confirm.
-- The board's length. With the back in plywood, it needs about 85″ for a two-high planter with
-  both legs on the landing (92″ with the right leg down to the step), or about 61″ one high.
+- The blue board's length: about 65″ for a two-high planter, about 32″ one high.
 - One board high or two (the planter option).
 - Which plant? It sets the soil depth.
 
@@ -66,7 +65,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 
 - 2026-10-04: lattice ripped to width; the lower sheet runs full length and the upper is cut to the ceiling.
 - 2026-10-04: horizontal standoff rails rather than vertical, so every rail reaches studs.
-- 2026-10-04: the blue board only on the planter's front and ends; the back is plywood.
+- 2026-10-04: the blue board only on the planter's front and ends; the back is plywood; the legs are 2×2 from other wood.
 - 2026-10-04: planter top at 38″; the board is resawn in half; one or two boards high is an option.
 - 2026-10-04: the lattice and frame stand on the planter instead of reaching the landing; the planter's back goes against the wall; the second sheet moves to a phase 2.
 - 2026-10-04: planter widened to the full vine wall, legs moved under it; the stair-side (right) leg's placement is an option.
