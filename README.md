@@ -16,8 +16,8 @@ Nothing is built yet. This repo holds the research and the first project.
 | `docs/research/spikes/` | Throwaway experiments that settled facts the docs couldn't (see its README) |
 | `projects/closet-built-in/concept-sheet.html` | The closet design as a standalone page: elevation, sections, plan, phases, cut list, sheet layouts. Open it in a browser. |
 
-The research was written before the repo had a name, so it calls the tool
-`workbench`. Read that as DIY-bench.
+The research (`research.md`) was written before the repo had a name, so it calls the tool
+`workbench`. Read that as DIY-bench. The spec and decisions use DIY-bench.
 
 ## Decided since the research
 
@@ -25,18 +25,20 @@ The research was written before the repo had a name, so it calls the tool
 - **Selection:** clicking a part in any view to highlight it everywhere is enough.
   Hover is optional, not required.
 - **Plywood:** "¾″" sheet goods are 23/32″; "½″" Baltic birch is 12 mm.
-- **Closet project:** three drawers above a floor-level hamper frame with a
-  rolling hamper that exits to the left; built in two phases. The concept sheet
-  is the current design. The closet model encoded in `spec.md` §8 predates these
-  changes:
-  - it still uses ¾″ plywood;
-  - it still has the hamper frame's top rail at 21½″ (now 24″, with the frame raised to 27″);
-  - it still includes the two-drawer option.
+- **App shell:** a local Vite web app shown in VS Code's integrated browser, with
+  Claude Code in the VS Code terminal on the right. Tauri may wrap it later.
+- **UI framework:** React.
+- **Outputs:** printed plans (PDF) and a CSV/text cut list. DXF waits until you use a
+  CNC or cutting service; GLB, STL and STEP are deferred too.
+- **Baseboard:** 5½″ tall, about ¾″ thick.
+- **Closet project:** three drawers above a floor-level hamper frame (27″ tall, top
+  rail at 24″ to 27″) with a rolling hamper that exits to the left; built in two
+  phases. The only design option is the hardwood top thickness, 1″ or ¾″. `spec.md`
+  §8 now matches the concept sheet.
 - **The owned 48 × 56 sheet:** its grain runs along the 56″ side.
 
 ## Still open
 
-- **App shell:** a local web app shown in VS Code, a Tauri app, or something else.
-- **UI framework:** React (as the spec has it) or Svelte.
-- **Outputs needed:** DXF for a CNC or cutting service, printed plans.
-- **Baseboard height and thickness:** for the closet partitions' notches.
+- **Baltic birch sheet count:** the model needs two 5×5 sheets (the second holds only
+  two drawer sides); the concept sheet says one.
+- **Baseboard thickness:** confirm ¾″.

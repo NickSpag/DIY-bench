@@ -57,6 +57,7 @@ Each entry gives the decision, the reasoning, the alternatives rejected and why,
 - **Display:**
   - Imperial values show as whole inches plus a fraction rounded to 1/16″. Halves, quarters and eighths use the single-character fractions (`23¼`). Sixteenths use superscript and subscript digits (`1⁵⁄₁₆`), as the reference does.
   - A value that is not a multiple of 1/16 gets a `≈` prefix.
+  - A part's thickness is displayed from its material: to 1/32″ when the material thickness is a multiple of 1/32 (`23/32`), and in the material's `thicknessLabel` when it has one (`12 mm` for metric stock). So 23/32″ plywood does not print as `≈¾`, and 12 mm Baltic birch does not print as `≈½` (spec.md section 5.6).
   - Metric shows millimetres to 0.5 mm.
   - The UI can switch display units independently of the model unit.
 - **Input parsing** (CLI and UI): accepts `23 1/4`, `23-1/4`, `23.25`, `23¼`, `2' 3-1/2"` and `590mm`.
@@ -145,7 +146,7 @@ The browser recomputes on every model change. The CLI and hooks call the same fu
 - *Plain three.js without React.* It works, as the spike shows [S], but the surrounding UI would be hand-rolled.
 - *xeokit.* AGPL, own renderer [V].
 
-**Revisit if.** React 19/r3f version coupling becomes painful: r3f 9.8.1 requires `react >=19 <19.4`, and postprocessing caps `three <0.187` [V]. In that case drop to plain three.js for the viewport, keeping React for the panels. The user's own preference for React or Svelte may also settle this (open question).
+**Revisit if.** React 19/r3f version coupling becomes painful: r3f 9.8.1 requires `react >=19 <19.4`, and postprocessing caps `three <0.187` [V]. In that case drop to plain three.js for the viewport, keeping React for the panels. The user confirmed React on 2026-10-03, so a switch to Svelte is no longer on the table.
 
 ---
 
@@ -245,9 +246,9 @@ The browser recomputes on every model change. The CLI and hooks call the same fu
 - **Design options** are declared in `options`: id → label, choices and default. They are passed to `build(b, opt)`, where ordinary code branches on them.
   - A configuration is one choice per option.
   - The UI has a control per option.
-  - The CLI takes `--opt drawers=2`.
+  - The CLI takes `--opt top=0.75`.
   - A compare mode diffs two configurations' parts, cut lists and sheet counts.
-- **Fixture:** the closet's "2 drawers vs 3" is one option. It evaluates both ways [S].
+- **Fixture:** the closet's one option is the hardwood top thickness (1″ or ¾″). It evaluates both ways (D21).
 
 **Reasoning.** It separates what changes over time (phases) from what is undecided (options). The reference mixed them: "Phase 1", "Phase 2 · 2 drawers", "Phase 2 · 3 drawers" were one switcher. Shelves that move between phases are real (the adjustable shelves move from 55¾″ to 59⅝″), and `moves` plus `removedIn` express them without duplicate parts. The cut list therefore counts each board once.
 
@@ -272,7 +273,7 @@ How each surface uses it:
 - **2D highlight:** one generated `<style>` element turns the IDs into CSS rules (`[data-part~="id"]`).
 - **3D highlight:** the viewport reads the same fields to tint or outline meshes.
 - **Driving the 3D view from 2D:** hovering a section view in the drawing panel puts the same clip plane on the 3D view.
-- **Viewer state for the agent:** the store's selection-related fields are posted to the dev server (debounced 150 ms) and written to `.workbench/state.json` for the agent (D14).
+- **Viewer state for the agent:** the store's selection-related fields are posted to the dev server (debounced 150 ms) and written to `.diy-bench/state.json` for the agent (D14).
 
 **Reasoning.**
 - A single source of hover state avoids feedback loops between views.
@@ -304,13 +305,15 @@ How each surface uses it:
 
 **Rejected.**
 - *A VS Code extension with a webview.* More code (CSP, message passing, packaging) for what the integrated browser already gives. It remains the upgrade path if tighter integration is wanted.
-- *Tauri.* Rust toolchain, WebKit only, community pty plugin [V].
+- *Tauri as the primary shell.* Rust toolchain, WebKit only, community pty plugin [V]. It remains possible as a later wrapper around the same Vite app.
 - *Electron.* 130 MB, packaging work, and it duplicates what VS Code already is [V].
 - *ttyd or wetty.* You get their page, not your layout [V].
 
+**Confirmed by the user on 2026-10-03:** the VS Code layout, with the app in the integrated browser and Claude Code in the terminal on the right. Tauri may wrap the app later.
+
 **Revisit if:**
 - The integrated browser's WebGL proves slow or buggy (checked in M4's smoke test).
-- The user wants the workbench without VS Code open.
+- The user wants DIY-bench without VS Code open (wrap the Vite app in Tauri).
 - A VS Code update changes the integrated browser.
 
 ---
@@ -340,7 +343,7 @@ How each surface uses it:
 **Decision.**
 - **Instructions:** `AGENTS.md` holds the instructions, and `CLAUDE.md` is one line: `@AGENTS.md`. This matches the user's existing repos [V: kitchen-sink].
 - **Selection context:** a `UserPromptSubmit` hook prints the viewer's current selection, hover, configuration, phase and view on every prompt.
-  - It reads `.workbench/state.json` and does no evaluation, so it is fast.
+  - It reads `.diy-bench/state.json` and does no evaluation, so it is fast.
   - "Make this one 2 inches shorter" therefore arrives with `selected: drawer-face-2 "Drawer face (drawer 2)" … defined at projects/closet-built-in/project.ts:186`.
 - **Edit checks:** a `PostToolUse` hook on `Edit|Write` runs `./wb check --changed <file> --hook`.
   - It evaluates every configuration of the affected project and runs the invariants and design-rule checks.
@@ -366,14 +369,14 @@ How each surface uses it:
 - *Imitating the VS Code extension's internal `ide` protocol.* Undocumented [V].
 
 **Revisit if:**
-- The user wants to drive the workbench from a non-Claude agent or from Claude Desktop. Then wrap the same core functions in a stdio MCP server, as in spec.md section 11.3.
+- The user wants to drive DIY-bench from a non-Claude agent or from Claude Desktop. Then wrap the same core functions in a stdio MCP server, as in spec.md section 11.3.
 - Bash permission prompts for `./wb` become a nuisance and allow-rules do not solve it.
 
 ---
 
 ## D15. Exports
 
-**Decision.**
+**Decision.** Printed plans and the cut list come first. GLB, STL, DXF and STEP are deferred (D19); their designs below are kept for when they are needed.
 - **CSV and text cut list:** own code.
 - **GLB:** written directly from the resolved boxes, with node name = part ID and `extras` = part metadata. Validated with Khronos `gltf-validator` in tests.
 - **STL:** one file per part, binary.
@@ -448,14 +451,14 @@ How each surface uses it:
 ## D18. Repository shape: one repo, projects as folders
 
 **Decision.**
-- **Repo:** a new git repo, outside kitchen-sink, owned by the user. Its name is an open question.
+- **Repo:** a new git repo, outside kitchen-sink, owned by the user. Its name is DIY-bench.
 - **Layout:** the tool code (`core/`, `app/`, `tools/`) and the projects (`projects/<id>/`) live together.
 - **Each project holds:**
   - `project.ts`
   - `notes.md` (design reasoning, measurements, decisions in prose)
   - `expected/` (golden files)
 - **Repo-level files:**
-  - `.workbench/` is gitignored runtime state.
+  - `.diy-bench/` is gitignored runtime state.
   - `.claude/` holds hooks, settings and skills.
 
 **Reasoning.**
@@ -469,3 +472,44 @@ How each surface uses it:
 
 **Revisit if:**
 - The tool is shared with other people. Then split the tool into a package and keep projects in their own repos.
+
+---
+
+## D19. Outputs for v1: printed plans and a cut list
+
+**Decision.** v1 produces a PDF plan set and a CSV/text cut list. GLB, STL, DXF and STEP are deferred (D15 keeps their designs).
+
+**Reasoning.** The user prints plans and does not use a CNC. The CSV/text cut list is cheap, so it stays.
+
+**Rejected.** *Building every export in M9.* It adds dependencies and tests for formats nobody uses yet.
+
+**Revisit if.** The user starts using a CNC, a laser or a cutting service (DXF first), or wants a 3D file for another tool.
+
+---
+
+## D20. Selection by click; hover is optional
+
+**Decision.** Clicking a part selects it and highlights it in every view. Hover highlighting is an optional later addition that uses the same store field, `hovered`.
+
+**Reasoning.** The user said click-to-select is enough. Fewer required tests depend on pointer movement.
+
+**Revisit if.** The user asks for hover.
+
+---
+
+## D21. The closet fixture follows the concept sheet
+
+**Decision.**
+- The fixture encodes the concept sheet as committed (c10ee19).
+- The only design option is the hardwood top thickness, 1″ (default) or ¾″. The two-drawer option is dropped.
+- Materials use their real thicknesses: plywood 23/32″, Baltic birch 12 mm.
+- The baseboard is modelled as 5½ × ¾ (thickness approximate) on the back and side walls, and the partitions are notched over the back baseboard.
+
+**Reasoning.**
+- The earlier fixture encoded a superseded sheet, so its expected values no longer matched the design.
+- Real thicknesses make the cut list match what the user will cut and buy.
+- The overlap check keeps testing real clashes: the notch, the nosing and the frame back fit only because the sheet now has the fixes.
+
+**Rejected.** *Keeping the two-drawer option.* The user dropped it.
+
+**Revisit if.** The sheet changes, or the baseboard thickness turns out not to be ¾″.
