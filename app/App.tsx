@@ -135,6 +135,8 @@ function Workspace() {
     mode === 3 ? [] : [...(mode === 1 ? [{ id: "3d" as PaneTab, label: "3D" }] : []), { id: "drawing", label: "Drawing" }, ...SIDE_TABS];
   let active: PaneTab = paneTab;
   if (mode === 2 && active === "3d") active = "drawing";
+  // A drawings column collapsed in the wide layout stays out of the way here too: the tabbed pane opens on the side tab.
+  if (mode === 2 && active === "drawing" && collapsedAll.draw) active = sideTab;
   const show3d = mode !== 1 || active === "3d";
   const showDraw = mode === 3 || active === "drawing";
   const showSidePane = mode === 3 || (active !== "3d" && active !== "drawing");
@@ -168,7 +170,10 @@ function Workspace() {
         {stripTabs.map((t) => (
           <TabButton key={t.id} id={t.id} label={t.label} active={t.id === active}
             count={t.id === "checks" ? issues.n : undefined} bad={issues.bad}
-            onClick={() => useWb.setState(t.id === "3d" || t.id === "drawing" ? { paneTab: t.id } : { paneTab: t.id, sideTab: t.id })} />
+            onClick={() => {
+              if (t.id === "drawing" && collapsedAll.draw) toggle("draw");   // asking for the drawings opens their column again
+              useWb.setState(t.id === "3d" || t.id === "drawing" ? { paneTab: t.id } : { paneTab: t.id, sideTab: t.id });
+            }} />
         ))}
       </div>
       <section className="pane pane-3d" data-off={!show3d} data-collapsed={collapsed["3d"]} aria-label="3D view">

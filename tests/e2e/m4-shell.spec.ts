@@ -153,3 +153,16 @@ test("layout: three panes when wide, two under 1100 px, one tabbed pane under 70
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test("layout: drawings collapsed in the wide layout stay hidden in the two-pane one until asked for", async ({ page }) => {
+  await openApp(page);
+  await page.getByRole("button", { name: "Collapse the drawings" }).click();
+  await page.setViewportSize({ width: 1000, height: 800 });
+  await expect(page.getByTestId("workspace")).toHaveAttribute("data-mode", "2");
+  await expect(page.locator(".pane-draw")).toHaveAttribute("data-off", "true");
+  await expect(page.locator(".pane-side")).toHaveAttribute("data-off", "false");
+  await page.locator('.tabstrip [data-tab="drawing"]').click();
+  await expect(page.locator(".pane-draw")).toHaveAttribute("data-off", "false");
+  await page.setViewportSize({ width: 1400, height: 800 });
+  await expect(page.locator(".pane-draw")).toHaveAttribute("data-collapsed", "false");
+});
