@@ -7,6 +7,12 @@ list, sheet layouts and build steps.
 The model, its checks, the cut list, the shopping list and the sheet layouts work from the
 command line (milestones M0–M3 of `docs/research/spec.md`), and in the browser app (M4 on).
 
+![The closet in phase 2: 3D view, front elevation and cut list, with a drawer face selected in all three](docs/screenshots/workbench-light.png)
+
+| Dark theme: section B cutting the 3D view, and the sheet layouts | Phase 1: section A and the build steps |
+|---|---|
+| ![Dark theme with section B and sheet layouts](docs/screenshots/workbench-dark.png) | ![Phase 1 with section A and the steps panel](docs/screenshots/steps-phase1.png) |
+
 ## The app
 
 ```sh
