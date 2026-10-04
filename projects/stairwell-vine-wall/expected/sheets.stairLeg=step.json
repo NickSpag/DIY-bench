@@ -1,0 +1,91 @@
+[
+  {
+    "phase": "p1",
+    "material": "lattice",
+    "materialName": "Wood lattice, ¼″ slats (two layers, ½″ thick)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "½",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "4x8",
+        "owned": true,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["trellis-lower"],
+            "name": "Trellis panel",
+            "x": 0,
+            "y": 0,
+            "l": 96,
+            "w": 45.125,
+            "turned": false,
+            "needsFinish": true
+          }
+        ],
+        "offcuts": []
+      },
+      {
+        "stock": "4x8",
+        "owned": true,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["trellis-upper"],
+            "name": "Trellis panel",
+            "x": 0,
+            "y": 0,
+            "l": 68.375,
+            "w": 45.125,
+            "turned": false,
+            "needsFinish": true
+          }
+        ],
+        "offcuts": [{"x": 68.5, "y": 0, "l": 27.5, "w": 48}]
+      }
+    ],
+    "unplaced": [],
+    "bought": {},
+    "owned": {"4x8": 2},
+    "strategy": "area/shorterLeftover/prefer=none"
+  },
+  {
+    "phase": "p1",
+    "material": "ply",
+    "materialName": "23/32″ plywood (sold as ¾″)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "23/32",
+    "finished": true,
+    "sheets": [
+      {
+        "stock": "4x4",
+        "owned": false,
+        "length": 48,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["planter-bottom"],
+            "name": "Planter bottom",
+            "x": 0,
+            "y": 0,
+            "l": 42.125,
+            "w": 8,
+            "turned": false,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [{"x": 0, "y": 8.125, "l": 48, "w": 39.875}, {"x": 42.25, "y": 0, "l": 5.75, "w": 8}]
+      }
+    ],
+    "unplaced": [],
+    "bought": {"4x4": 1},
+    "owned": {},
+    "strategy": "area/shorterLeftover/prefer=none"
+  }
+]
