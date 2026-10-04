@@ -387,7 +387,7 @@ export class Builder {
 }
 ```
 
-Each builder method records its call site as `src`. Each method parses `new Error().stack` and takes the first frame outside `core/`, which is the caller of the builder method; under type stripping that frame points at the exact line and column (verified), and under Vitest the stack is source-mapped to the same position (verified in M1). `src.file` is repo-relative everywhere: in Node the repo root (two levels above `core/model/builder.ts`) is stripped from the path; in the browser, Vite serves the module with a URL path, so the dev-server origin and any `?t=` query are stripped. A file outside the repo keeps its absolute path. When stack parsing fails, `src` is `null`, and nothing may depend on it being present. The CLI prints `src` as the string `file:line:col`.
+Each builder method records its call site as `src`. Each method parses `new Error().stack` and takes the first frame outside `core/`, which is the caller of the builder method; under type stripping that frame points at the exact line and column (verified), and under Vitest the stack is source-mapped to the same position (verified in M1). `src.file` is repo-relative everywhere: in Node the repo root (two levels above `core/model/builder.ts`) is stripped from the path; in the browser, Vite serves files outside `app/` at `/@fs/<absolute path>`, so the dev-server origin, the `/@fs` prefix and any `?t=` query are stripped (a frame URL may contain `@`; a bare path may not). Vite also rewrites `new URL("../../", import.meta.url)` at transform time and drops its trailing slash, so the builder normalises both directories to end in `/`. A file outside the repo keeps its absolute path. Browser stacks point into Vite's transformed modules (stripping types moves `project.ts:193` to `:599`), so after each evaluation `app/srcmap.ts` maps every `src` back through the module's inline source map; the error bar, the Parts table, the tooltip and `state.json` therefore name the line on disk (verified in M4). When stack parsing fails, `src` is `null`, and nothing may depend on it being present. The CLI prints `src` as the string `file:line:col`.
 
 The builder also throws on a duplicate step, check or view id.
 
@@ -728,11 +728,16 @@ Every row was derived from the camera basis: right = forward × up, with up = +y
 
 ### 7.4 Build steps (`core/steps.ts`)
 ```ts
-export function buildSteps(r: Resolved): { phase: Phase; steps: { id: string; title: string; text: string; parts: string[]; src: Src }[] }[];
+export function buildSteps(r: Resolved): { phase: Phase; steps: BuildStep[] }[];
+type BuildStep = { id: string; title: string; text: string; phase: string; parts: string[]; src: Src;
+                   number: number;                               // 1-based within the phase
+                   takeOut: string[];                            // first step of a phase only
+                   moves: { id: string; from?: Box; to: Box }[] }; // first step of a phase only
+export function neighbourStep(groups, phase, step, dir: -1 | 1): { phase; step } | null; // the stepper's walk across phases
 ```
 - Each step's parts are `step.parts`, or else the parts whose `step` is this step.
-- Parts that are removed in a phase are listed under that phase's first step as "Take out: …".
-- Parts that move in a phase are listed under that phase's first step as "Move: … to …".
+- Parts that are removed in a phase are listed under that phase's first step as "Take out: …" (`takeOut`).
+- Parts that move in a phase are listed under that phase's first step as "Move: … to …" (`moves`, with the box in the previous phase as `from`).
 
 ### 7.5 Shopping list (`core/shopping.ts`)
 ```ts
@@ -1182,8 +1187,8 @@ Part selection is by clicking. Hover highlighting is optional and may be added l
 ### 9.2 Top bar
 - **Project picker:** lists `projects/*`.
 - **Option controls:** one segmented control per option, labelled by `label`, with the choice labels as tooltips.
-- **Phase selector:** a segmented control, plus a step stepper (`‹ step 3/5 ›`) when a phase is selected. "All" shows the final phase.
-- **Toggles:** explode (a slider from 0 to 1.5), section (off / x / y / z, plus a position slider), in/mm display.
+- **Phase selector:** a segmented control with one button per phase, plus a step stepper (`‹ step 3/5 ›`; its label reads "all steps" when the whole phase is shown, and clicking it returns there). There is no separate "All" button: the final phase already shows everything.
+- **Toggles:** in/mm display, theme (follow the system, light, dark) and compare (section 12, M7). Explode (a slider from 0 to 1.5) and section (off / x / y / z, a position slider and a flip) only affect the 3D view, so they sit in a toolbar on the viewport rather than in the top bar; the keyboard shortcuts still work from anywhere.
 - **Issue counter:** opens the Checks tab.
 - The URL query mirrors `project`, `opt.*`, `phase`, `step` and `view`, so reloading or bookmarking returns to the same state.
 
@@ -1416,7 +1421,7 @@ type ViewerState = {
 type PartSummary = {
   id: string; name: string; where?: string; kind: string; material?: string;
   size?: string;                                       // "6⅞ × 23⁵⁄₁₆ × 23/32", formatted in display units
-  box?: Box; src?: string;                             // "projects/closet-built-in/project.ts:193"
+  box?: Box; src?: string;                             // "projects/closet-built-in/project.ts:193" (file:line, no column)
 };
 ```
 The app computes the summaries, so the hook does no evaluation. The Vite plugin writes the file atomically (temporary file, then rename).
@@ -1491,6 +1496,7 @@ Implementation notes:
 
 ### 11.2 Dev-server plugin (`tools/vite-plugin.ts`)
 **Startup:**
+- Defines `__WB_ROOT__` (the repo's absolute path) for the app, which needs it for `vscode://file/…` links and for fetching source maps.
 - Writes `.diy-bench/server.json`: `{ url, pid, startedAt, token }`. `token` is 32 random hex characters, new on each start.
 - On close, removes the file.
 
@@ -1498,7 +1504,7 @@ Implementation notes:
 
 | Method and path | Who calls it | Body | Behaviour |
 |---|---|---|---|
-| `POST /__wb/state` | the app | `ViewerState` | Rejected unless `Origin` equals the server's own origin. Writes `.diy-bench/state.json` atomically. Returns 204. |
+| `POST /__wb/state` | the app | `ViewerState` | Rejected with 403 unless `Origin` is present and equals one of the server's own origins (`http://127.0.0.1:<port>` or `http://localhost:<port>`). Rejected with 400 unless the body is JSON with `version: 1`. Writes `.diy-bench/state.json` atomically. Returns 204. |
 | `GET /__wb/state` | CLI | — | The current `ViewerState`, or 404. |
 | `POST /__wb/control` | CLI | `Control` | Requires the header `x-wb-token: <token>`. Broadcasts `server.ws.send({ type: "custom", event: "wb:control", data })` [V: Vite HMR API], then waits up to 2 s for a `wb:ack` with the same `id`, sent by the app through `import.meta.hot.send`. Returns `{ delivered }`. |
 | `GET /__wb/health` | CLI | — | `{ ok: true, projects: string[] }` |

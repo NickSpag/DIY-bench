@@ -87,3 +87,10 @@ test("stack parsing handles V8, Firefox and dev-server URLs", () => {
   expect(srcFromStack("f@http://127.0.0.1:5180/projects/x/project.ts?t=123:7:9")).toEqual({ file: "/projects/x/project.ts", line: 7, col: 9 });
   expect(srcFromStack("nothing here")).toBeNull();
 });
+
+test("stack frames served by Vite through /@fs keep the @ and resolve to the repo-relative file", () => {
+  const root = new URL("../../", import.meta.url).pathname; // the repo root, with a trailing slash
+  const url = `http://127.0.0.1:5180/@fs${root}projects/x/project.ts?t=1791130257886`;
+  expect(parseStack(`Error\n    at Object.build (${url}:599:5)`)[0]).toMatchObject({ file: "projects/x/project.ts", line: 599, col: 5 });
+  expect(parseStack(`build@${url}:3:4`)[0]).toMatchObject({ file: "projects/x/project.ts", line: 3, col: 4 });
+});

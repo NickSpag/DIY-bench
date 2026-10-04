@@ -21,13 +21,17 @@ export const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 // Paths are made relative to the repo root, which is two levels above this file.
 // In Node that is a file:// URL; in the browser it is the dev server's origin, so a
 // module served as /projects/x/project.ts becomes projects/x/project.ts.
-const CORE_DIR = pathOf(new URL("../", import.meta.url).href);
-const REPO_ROOT = pathOf(new URL("../../", import.meta.url).href);
+// Vite rewrites `new URL("../", import.meta.url)` at transform time and drops the trailing
+// slash, so both are normalised to end in "/".
+const dirOf = (p: string): string => (p.endsWith("/") ? p : `${p}/`);
+const CORE_DIR = dirOf(pathOf(new URL("../", import.meta.url).href));
+const REPO_ROOT = dirOf(pathOf(new URL("../../", import.meta.url).href));
 
 function pathOf(file: string): string {
   if (/^[a-z][a-z0-9+.-]*:\/\//i.test(file)) {
     try {
-      return decodeURIComponent(new URL(file).pathname);
+      // Vite serves files outside its root at /@fs/<absolute path>; drop that prefix.
+      return decodeURIComponent(new URL(file).pathname).replace(/^\/@fs(?=\/)/, "");
     } catch {
       return file;
     }
@@ -39,8 +43,9 @@ function pathOf(file: string): string {
 export type Frame = { file: string; path: string; line: number; col: number };
 
 // Matches the location at the end of a V8 frame ("at f (file:1:2)", "at file:1:2")
-// and of a SpiderMonkey/JavaScriptCore frame ("f@file:1:2").
-const FRAME = /(?:\(|@|\s)((?:[a-z][a-z0-9+.-]*:\/\/)?[^\s()@]+?):(\d+):(\d+)\)?\s*$/i;
+// and of a SpiderMonkey/JavaScriptCore frame ("f@file:1:2"). A URL may contain "@"
+// (Vite serves files outside its root at /@fs/...), a bare path may not.
+const FRAME = /(?:\(|@|\s)([a-z][a-z0-9+.-]*:\/\/[^\s()]+?|[^\s()@]+?):(\d+):(\d+)\)?\s*$/i;
 
 export function parseStack(stack: string | undefined): Frame[] {
   const frames: Frame[] = [];

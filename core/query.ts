@@ -70,16 +70,20 @@ export function partDetail(r: Resolved, id: string): PartDetail {
   };
 }
 
-/** "84 × 23¼ × 23/32" for a panel or board, using the thickness display rule. */
-export function fmtPartSize(r: Resolved, p: ResolvedPart): string {
+/** "84 × 23¼ × 23/32" for a panel or board, using the thickness display rule. Other parts: their bounds, x × y × z. */
+export function fmtPartSize(r: Resolved, p: ResolvedPart, display?: "in" | "mm"): string {
+  const u = r.project.units;
+  const o = { units: u, display: display ?? u };
   if ((p.kind === "panel" || p.kind === "board") && p.sizes && p.materialDef) {
-    const u = r.project.units;
-    return `${fmtLength(p.sizes.l, { units: u })} × ${fmtLength(p.sizes.w, { units: u })} × ${fmtThickness(p.materialDef, { units: u })}`;
+    return `${fmtLength(p.sizes.l, o)} × ${fmtLength(p.sizes.w, o)} × ${fmtThickness(p.materialDef, o)}`;
+  }
+  if (p.kind === "hardware" && p.cylinder) {
+    const c = p.cylinder;
+    return `⌀${fmtLength(c.diameter, o)} × ${fmtLength(c.to - c.from, o)}`;
   }
   if (p.bounds) {
-    const u = r.project.units;
     const b = p.bounds;
-    return (["x", "y", "z"] as const).map((a) => fmtLength(b[a][1] - b[a][0], { units: u })).join(" × ") + " (x × y × z)";
+    return (["x", "y", "z"] as const).map((a) => fmtLength(b[a][1] - b[a][0], o)).join(" × ") + " (x × y × z)";
   }
   return "";
 }

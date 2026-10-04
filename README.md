@@ -5,7 +5,27 @@ coding agent in a terminal and see it change live as a 3D model, drawings, a cut
 list, sheet layouts and build steps.
 
 The model, its checks, the cut list, the shopping list and the sheet layouts work from the
-command line (milestones M0–M3 of `docs/research/spec.md`). The browser app comes next.
+command line (milestones M0–M3 of `docs/research/spec.md`), and in the browser app (M4 on).
+
+## The app
+
+```sh
+npm run dev        # http://127.0.0.1:5180 — open it in VS Code's integrated browser or in Chrome
+```
+
+Edit `projects/<id>/project.ts` (or ask the agent to) and every view updates in place, keeping
+the camera and the selection. A model that throws shows a red bar with the message and the
+`project.ts:line`, while the views keep the last good model; a syntax error shows Vite's overlay.
+Click a part anywhere (a cut-list row, a sheet placement, a step chip, a row in Parts) to select
+it everywhere; shift-click adds or removes. `?` lists the keyboard shortcuts.
+
+The layout has three panes above 1100 px, two below that (3D beside a tabbed pane) and one
+tabbed pane below 700 px, so it works in half a VS Code window. Pane sizes and the theme (light,
+dark or follow the system) are remembered per browser. The URL holds the project, options,
+phase, step and drawing view, so a reload comes back to the same state.
+
+The app writes `.diy-bench/state.json` (what is selected, the phase, the view) for the agent's
+hooks; `GET /__wb/health` and `GET /__wb/state` serve the same to the CLI.
 
 ```sh
 ./wb check --all-configs                      # evaluate every project and configuration; report issues
@@ -16,6 +36,7 @@ command line (milestones M0–M3 of `docs/research/spec.md`). The browser app co
 ./wb sheets [--svg out/]                      # sheet layouts, optionally as SVG
 ./wb snapshot [--update]                      # compare or rewrite projects/<id>/expected/
 npm run typecheck && npm test                 # types, unit tests and golden files
+npm run e2e                                   # browser tests in Chrome (starts the dev server if needed)
 ```
 
 ## What's here
@@ -52,6 +73,13 @@ The research (`research.md`) was written before the repo had a name, so it calls
   phases. The only design option is the hardwood top thickness, 1″ or ¾″. `spec.md`
   §8 now matches the concept sheet.
 - **The owned 48 × 56 sheet:** its grain runs along the 56″ side.
+
+## Verified on
+
+- macOS, Chrome 1xx through Playwright (`npm run e2e`): the live loop, selection across views,
+  state sync, layouts at 1500, 1000 and 600 px.
+- Not yet verified by hand: VS Code's integrated browser (the M4 manual smoke test: render,
+  live edit, and the Parts table's `vscode://file/…` link opening the file at the line).
 
 ## Still open
 
