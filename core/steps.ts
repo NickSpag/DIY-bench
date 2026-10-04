@@ -39,18 +39,19 @@ export function buildSteps(r: Resolved): PhaseSteps[] {
   });
 }
 
-/** The step before or after `step` across phases, for a stepper; null at either end. */
-export function neighbourStep(groups: PhaseSteps[], phase: string, step: string | null, dir: -1 | 1): { phase: string; step: string } | null {
-  const flat = groups.flatMap((g) => g.steps.map((s) => ({ phase: g.phase.id, step: s.id })));
+/** The step before or after `step` across phases, for a stepper. Past either end it stops at "all steps" (step null:
+ *  the whole phase, nothing highlighted); from there it goes to the phase's first or last step. Null when there are no steps. */
+export function neighbourStep(groups: PhaseSteps[], phase: string, step: string | null, dir: -1 | 1): { phase: string; step: string | null } | null {
+  const flat = groups.flatMap((g) => g.steps.map((s) => ({ phase: g.phase.id, step: s.id as string | null })));
   if (flat.length === 0) return null;
   if (step === null) {
-    // From "the whole phase": forward goes to the phase's first step, backward to the previous phase's last step.
-    const i = flat.findIndex((f) => f.phase === phase);
-    if (dir === 1) return i >= 0 ? flat[i] : null;
-    const j = i < 0 ? -1 : i - 1;
-    return j >= 0 ? flat[j] : null;
+    // From "the whole phase": forward goes to the phase's first step, backward to its last.
+    const own = flat.filter((f) => f.phase === phase);
+    return own.length ? own[dir === 1 ? 0 : own.length - 1] : null;
   }
   const k = flat.findIndex((f) => f.step === step);
+  if (k < 0) return null;
   const n = k + dir;
-  return k < 0 || n < 0 || n >= flat.length ? null : flat[n];
+  // Past either end of the steps is "all steps": the whole phase, with nothing highlighted.
+  return n < 0 || n >= flat.length ? { phase: flat[k].phase, step: null } : flat[n];
 }

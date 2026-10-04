@@ -37,7 +37,8 @@ test("the stepper walks forward and back across phases", () => {
   expect(neighbourStep(groups, "p1", null, 1)).toEqual({ phase: "p1", step: "p1-bench" });
   expect(neighbourStep(groups, "p1", "p1-finish", 1)).toEqual({ phase: "p2", step: "p2-frame" });
   expect(neighbourStep(groups, "p2", "p2-frame", -1)).toEqual({ phase: "p1", step: "p1-finish" });
-  expect(neighbourStep(groups, "p2", null, -1)).toEqual({ phase: "p1", step: "p1-finish" });
-  expect(neighbourStep(groups, "p2", "p2-faces", 1)).toBeNull();
-  expect(neighbourStep(groups, "p1", "p1-bench", -1)).toBeNull();
+  expect(neighbourStep(groups, "p2", null, -1)).toEqual({ phase: "p2", step: "p2-faces" });
+  // past either end: all steps, the whole phase with nothing highlighted
+  expect(neighbourStep(groups, "p2", "p2-faces", 1)).toEqual({ phase: "p2", step: null });
+  expect(neighbourStep(groups, "p1", "p1-bench", -1)).toEqual({ phase: "p1", step: null });
 });

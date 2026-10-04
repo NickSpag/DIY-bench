@@ -7,7 +7,7 @@ const KEYS: [string, string][] = [
   ["F", "frame the selection (everything if none)"],
   ["E", "explode on / off"],
   ["S", "section on / off"],
-  ["[  ]", "previous / next build step"],
+  ["[  ]", "previous / next build step; past either end, all steps"],
   ["Esc", "clear the selection, then the step"],
   ["Shift-click", "add or remove a part from the selection"],
   ["?", "this card"],

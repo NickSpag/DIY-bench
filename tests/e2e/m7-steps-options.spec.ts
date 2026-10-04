@@ -71,6 +71,15 @@ test("the stepper and the [ ] keys walk the steps across phases", async ({ page 
   expect(await storeState(page, "s.step")).toBeNull();
 });
 
+test("past the last step the stepper shows all steps, and back from there is the last step again", async ({ page }) => {
+  await openApp(page, "?phase=p2&step=p2-faces");
+  await page.getByRole("button", { name: "Next step" }).click();
+  expect(await storeState(page, "[s.phase, s.step]")).toEqual(["p2", null]);
+  await expect(page.getByTestId("step-label")).toHaveText("all steps");
+  await page.keyboard.press("[");
+  expect(await storeState(page, "[s.phase, s.step]")).toEqual(["p2", "p2-faces"]);
+});
+
 test("compare mode: the ¾″ top changes 2 parts and 1 cut-list row and keeps the sheet purchases", async ({ page }) => {
   await openApp(page);
   await page.getByTestId("compare-toggle").click();
