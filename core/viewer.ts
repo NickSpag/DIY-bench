@@ -14,7 +14,7 @@ export type ViewerPartSummary = {
 
 export type ViewerState = {
   version: 1; updatedAt: string;
-  project: string; title: string; config: Config;
+  project: string; title: string; units: "in" | "mm"; config: Config; // units: of `box` below
   phase: string; step: string | null; drawingView: string; viewTitle: string;
   hovered?: ViewerPartSummary[]; selected: ViewerPartSummary[];
   issues: { errors: number; warnings: number };
@@ -57,6 +57,7 @@ export function viewerState(
     updatedAt: now.toISOString(),
     project: r.project.id,
     title: r.project.title,
+    units: r.project.units,
     config: r.config,
     phase: ui.phase,
     step: ui.step,
@@ -72,3 +73,4 @@ export function viewerState(
   if (ui.hovered && ui.hovered.length) st.hovered = sums(ui.hovered);
   return st;
 }
+

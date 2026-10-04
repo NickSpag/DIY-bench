@@ -345,7 +345,8 @@ How each surface uses it:
 - **Selection context:** a `UserPromptSubmit` hook prints the viewer's current selection, hover, configuration, phase and view on every prompt.
   - It reads `.diy-bench/state.json` and does no evaluation, so it is fast.
   - "Make this one 2 inches shorter" therefore arrives with `selected: drawer-face-2 "Drawer face (drawer 2)" … defined at projects/closet-built-in/project.ts:186`.
-- **Edit checks:** a `PostToolUse` hook on `Edit|Write` runs `./wb check --changed <file> --hook`.
+- **Edit checks:** a `PostToolUse` hook on `Edit|Write` checks the project the edited file belongs to (the same code as `./wb check --changed <file> --hook`).
+  - It acts only on a project's `project.ts` and the helper modules it imports. Edits to the tool itself (`core/`, `app/`, `tools/`, docs) pass silently: this repo is also where the tool is developed, and those folders have their own tests.
   - It evaluates every configuration of the affected project and runs the invariants and design-rule checks.
   - On failure it exits 2 with the errors on stderr.
   - On success it prints a short summary of derived changes as `additionalContext`, for example "partition-left 84 → 82; cut list: 1 row changed; sheets unchanged".
@@ -353,7 +354,7 @@ How each surface uses it:
 - **MCP:** no MCP server in v1.
 
 **Reasoning.**
-- **Both hook routes were tested** with Claude Code 2.1.288 [S]:
+- **Both hook routes were tested** with Claude Code 2.1.288 [S], and the M8 hooks in `.claude/settings.json` (with `$CLAUDE_PROJECT_DIR`) with 2.1.289 (`tests/hooks.test.ts`, `RUN_CLAUDE_TESTS=1`):
   - The prompt hook's stdout reached the model. It answered with the selected and hovered IDs; without the hook it answered "UNKNOWN".
   - The edit hook's exit-2 stderr reached the model, which quoted it verbatim.
 - **Why hooks:** they make the selection automatic, which is the point of hovering. Nothing else does that: no surveyed CAD MCP server routes the on-screen selection to the agent [V].

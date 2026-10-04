@@ -1,0 +1,7 @@
+{
+  "workbench.panel.defaultLocation": "right",
+  "workbench.browser.newTabPlacement": "activeGroup",
+  "workbench.browser.autoReloadOnFileChange": false,
+  "workbench.browser.openLocalhostLinks": true,
+  "files.watcherExclude": { "**/.diy-bench/**": true }
+}

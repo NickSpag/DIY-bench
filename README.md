@@ -5,7 +5,8 @@ coding agent in a terminal and see it change live as a 3D model, drawings, a cut
 list, sheet layouts and build steps.
 
 The model, its checks, the cut list, the shopping list and the sheet layouts work from the
-command line (milestones M0–M3 of `docs/research/spec.md`), and in the browser app (M4 on).
+command line (milestones M0–M3 of `docs/research/spec.md`), in the browser app (M4–M7), and
+with Claude Code in this folder (M8).
 
 ![The closet in phase 2: 3D view, front elevation and cut list, with a drawer face selected in all three](docs/screenshots/workbench-light.png)
 
@@ -38,6 +39,23 @@ by step in every view, and ⇄ next to an option compares the two choices.
 The app writes `.diy-bench/state.json` (what is selected, the phase, the view) for the agent's
 hooks; `GET /__wb/health` and `GET /__wb/state` serve the same to the CLI.
 
+## With Claude Code
+
+Run `claude` in this folder (in VS Code: the app in the integrated browser, the terminal on the
+right; the task "diy-bench: dev" starts the server). `AGENTS.md` holds the agent's
+instructions, and `.claude/settings.json` adds two hooks:
+
+- **Before every prompt** the agent sees what you have selected in the viewer, for example
+  `[diy-bench] selected: drawer-face-2 "Drawer face" (drawer 2) · 6⅞ × 23⁵⁄₁₆ × 23/32 ply-raw · … · projects/closet-built-in/project.ts:193`,
+  so "make this one 2″ shorter" needs no part name.
+- **After every edit to a project** the hook checks every configuration. Errors go back to
+  the agent to fix; otherwise it gets a summary of what changed (parts, cut-list rows,
+  sheets bought). Edits to the tool itself (`core/`, `app/`, `tools/`, docs) are not checked.
+
+Claude Code reads hooks when a session starts: restart `claude` (or review them under
+`/hooks`) after pulling this. Two skills come with it: `new-project` (an interview for
+measurements, then `./wb new`) and `review-design`.
+
 ```sh
 ./wb check --all-configs                      # evaluate every project and configuration; report issues
 ./wb parts --kind panel                       # the parts
@@ -47,6 +65,11 @@ hooks; `GET /__wb/health` and `GET /__wb/state` serve the same to the CLI.
 ./wb sheets [--svg out/]                      # sheet layouts, optionally as SVG
 ./wb diff --against opt:top=0.75              # what switching an option changes (or --against HEAD~1, last-good)
 ./wb snapshot [--update]                      # compare or rewrite projects/<id>/expected/
+./wb status                                   # is the dev server running; what does the viewer show
+./wb state                                    # what is selected, as the agent sees it
+./wb show --select partition-left --phase p1  # point the open viewer at something
+./wb render --view front --out /tmp/front.png # one panel as a PNG (front, 3d-iso, sheets, cutlist, …)
+./wb new hall-closet --template closet        # start a project (blank, shelf, cabinet, closet)
 npm run typecheck && npm test                 # types, unit tests and golden files
 npm run e2e                                   # browser tests in Chrome (starts the dev server if needed)
 ```
@@ -61,6 +84,7 @@ npm run e2e                                   # browser tests in Chrome (starts 
 | `docs/research/spikes/` | Throwaway experiments that settled facts the docs couldn't (see its README) |
 | `core/` | The model, evaluation, checks, cut list, shopping list and sheet layouts: pure TypeScript, shared by the CLI and the app |
 | `tools/wb.ts` | The `./wb` command-line tool |
+| `AGENTS.md`, `.claude/` | Instructions, hooks and skills for Claude Code |
 | `projects/closet-built-in/project.ts` | The closet as a model; `notes.md` beside it holds the design reasoning, `expected/` the golden files |
 | `projects/closet-built-in/concept-sheet.html` | The closet design as a standalone page: elevation, sections, plan, phases, cut list, sheet layouts. Open it in a browser. |
 
@@ -90,7 +114,9 @@ The research (`research.md`) was written before the repo had a name, so it calls
 
 - macOS, Chrome through Playwright (`npm run e2e`): the live loop, selection across views,
   state sync, layouts at 1500, 1000 and 600 px, 3D picking with a section, drawings, steps,
-  compare and URL state.
+  compare and URL state, `wb show` and `wb render`.
+- Claude Code 2.1.289: both hooks run as configured, and `claude -p` names the selected part
+  (`RUN_CLAUDE_TESTS=1 npm test -- tests/hooks.test.ts`).
 - Not yet verified by hand: VS Code's integrated browser (the M4 manual smoke test: render,
   live edit, and the Parts table's `vscode://file/…` link opening the file at the line).
 

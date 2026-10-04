@@ -1,0 +1,92 @@
+// __TITLE__: a frameless base cabinet. Two sides, a bottom, two top stretchers, a ¼″ back, an
+// adjustable shelf on pins, a toe kick and one full-overlay door.
+// Axes: x from the left (facing the back wall), y up from the floor, z out from the back wall. Inches.
+// Values marked "inferred" are placeholders, not measurements: replace them and list them in notes.md.
+import { defineProject, span, box } from "../../core/model/index.ts";
+
+const T = 23 / 32;   // plywood sold as ¾″
+const BT = 0.25;     // ¼″ back
+
+export const P = {
+  width: 24,         // inferred: case width
+  height: 34.5,      // inferred: case height without a countertop (36″ with a 1½″ top)
+  depth: 23.25,      // inferred: case depth, back included
+  kick: { h: 4, setback: 3 },  // inferred: a common toe kick
+  stretcher: 4,      // top stretcher width
+  reveal: 0.0625,    // inferred: gap around the door
+};
+
+export default defineProject({
+  id: "__ID__",
+  title: "__TITLE__",
+  units: "in",
+  options: {},
+  phases: [{ id: "p1", title: "Build" }],
+  materials: {
+    ply: { type: "sheet", name: "23/32″ prefinished plywood (sold as ¾″)", thickness: T, grained: true, finish: "prefinished", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
+    back: { type: "sheet", name: "¼″ prefinished plywood", thickness: BT, grained: true, finish: "prefinished", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
+  },
+  banding: {
+    edge: { name: "Iron-on edge banding, ¾″", thickness: 0.02, width: 0.8125, reducesCutSize: false },
+  },
+  hardware: {
+    hinge: { name: "Concealed hinges, full overlay", unit: "pair" },
+    pin: { name: "Shelf pins, 5 mm", unit: "each" },
+    pull: { name: "Pull", unit: "each" },
+  },
+
+  build(b) {
+    const x0 = T, x1 = P.width - T;
+    const z: [number, number] = [BT, P.depth];
+    const zFront = P.depth;
+    for (const [side, x] of [["left", 0], ["right", P.width - T]] as const) {
+      b.panel({ id: `side-${side}`, name: "Side", where: side, material: "ply", phase: "p1", step: "p1-case",
+        box: box(span(x, T), [0, P.height], z), grain: "y", band: { front: "edge" },
+        notes: `Notch the front bottom corner ${P.kick.h} × ${P.kick.setback} for the toe kick. Drill shelf pin holes on the inner face.` });
+    }
+    const join2 = [{ to: "side-left", by: "screws" as const }, { to: "side-right", by: "screws" as const }];
+    b.panel({ id: "bottom", name: "Bottom", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], span(P.kick.h, T), z), grain: "x", band: { front: "edge" }, joins: join2 });
+    b.panel({ id: "stretcher-front", name: "Top stretcher", where: "front", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], [P.height - T, P.height], [zFront - P.stretcher, zFront]), grain: "x", exposure: "hidden", joins: join2 });
+    b.panel({ id: "stretcher-back", name: "Top stretcher", where: "back", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], [P.height - T, P.height], span(BT, P.stretcher)), grain: "x", exposure: "hidden", joins: join2 });
+    b.panel({ id: "toe-kick", name: "Toe kick", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], [0, P.kick.h], span(zFront - P.kick.setback - T, T)), grain: "x", grainLock: false, joins: join2,
+      notes: "Turned across the grain if that nests better; it is painted or covered." , finish: "paint" });
+    b.panel({ id: "back", name: "Back", material: "back", phase: "p1", step: "p1-case",
+      box: box([0, P.width], [P.kick.h, P.height], [0, BT]), grain: "y", exposure: "limited", exposureNote: "Seen inside the cabinet",
+      joins: [{ to: "side-left", by: "nails" }, { to: "side-right", by: "nails" }] });
+
+    // The shelf halfway up the inside, ⅛″ shorter than the opening so it drops in.
+    const inside = P.height - T - (P.kick.h + T);
+    const shelfY = Math.round((P.kick.h + T + inside / 2) * 16) / 16;
+    b.panel({ id: "shelf", name: "Adjustable shelf", material: "ply", phase: "p1", step: "p1-door",
+      box: box([x0 + 0.0625, x1 - 0.0625], span(shelfY, T), [BT + 0.5, zFront - 0.5]), grain: "x", band: { front: "edge" },
+      joins: [{ to: "side-left", by: "pins" }, { to: "side-right", by: "pins" }] });
+    b.hardware({ id: "shelf-pins", name: "Shelf pins", item: "pin", qty: 4, phase: "p1", step: "p1-door" });
+
+    // One door over the whole front, less the reveal.
+    const r = P.reveal;
+    b.panel({ id: "door", name: "Door", material: "ply", phase: "p1", step: "p1-door",
+      box: box([r, P.width - r], [P.kick.h + r, P.height - r], [zFront, zFront + T]), grain: "y",
+      band: { left: "edge", right: "edge", top: "edge", bottom: "edge" },
+      joins: [{ to: "side-left", by: "screws", note: "Concealed hinges" }] });
+    b.hardware({ id: "hinges", name: "Hinges", item: "hinge", qty: 1, phase: "p1", step: "p1-door" });
+    b.hardware({ id: "door-pull", name: "Pull", item: "pull", qty: 1, phase: "p1", step: "p1-door" });
+
+    b.step({ id: "p1-case", phase: "p1", title: "Assemble the case",
+      text: "Band the side and bottom fronts, notch the sides for the toe kick and drill the shelf pin holes while the parts are flat. Screw the bottom, stretchers and toe kick between the sides; nail on the back, squaring the case to it." });
+    b.step({ id: "p1-door", phase: "p1", title: "Hang the door", text: "Mount the hinges, hang and adjust the door, fit the pull, and drop in the shelf." });
+
+    b.check("door-width", "A single door is no wider than 24″, so it does not sag on two hinges",
+      P.width - 2 * r <= 24, `door ${(P.width - 2 * r).toFixed(3)}″ wide`);
+
+    b.view({ id: "front", title: "Front elevation", kind: "elevation", look: "-z",
+      dims: [{ from: "side-left.x0", to: "side-right.x1", offset: -3 }, { from: "side-left.y0", to: "side-left.y1", offset: -3 }] });
+    b.view({ id: "section", title: "Section · through the middle", kind: "section", look: "+x", cut: P.width / 2,
+      dims: [{ from: "back.z0", to: "door.z1", offset: -3 }] });
+  },
+});

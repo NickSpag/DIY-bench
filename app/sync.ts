@@ -1,10 +1,12 @@
 // Posts the agent-relevant part of the store to the dev server (section 9.8), which writes
 // .diy-bench/state.json for the hooks. Debounced 150 ms, and only when something the agent
-// cares about changed.
+// cares about changed; also every 5 minutes and whenever the page comes back into view, so
+// `updatedAt` says the viewer is still open and this page's state wins over a closed one's.
 import { useWb, type WbState } from "./store.ts";
 import { viewerState } from "../core/viewer.ts";
 
 const DEBOUNCE_MS = 150;
+const HEARTBEAT_MS = 5 * 60_000;
 
 function payload(s: WbState) {
   const r = s.resolved;
@@ -37,10 +39,27 @@ function installSync(): () => void {
     timer = setTimeout(flush, DEBOUNCE_MS);
   };
   schedule();
-  return useWb.subscribe((s, p) => {
+  const repost = () => {
+    last = "";
+    schedule();
+  };
+  const onVisible = () => {
+    if (document.visibilityState === "visible") repost();
+  };
+  const beat = setInterval(repost, HEARTBEAT_MS);
+  document.addEventListener("visibilitychange", onVisible);
+  window.addEventListener("focus", repost);
+  const unsub = useWb.subscribe((s, p) => {
     if (s.resolved !== p.resolved || s.phase !== p.phase || s.step !== p.step || s.drawingView !== p.drawingView ||
       s.selected !== p.selected || s.hovered !== p.hovered || s.error !== p.error || s.display !== p.display) schedule();
   });
+  return () => {
+    unsub();
+    clearInterval(beat);
+    if (timer) clearTimeout(timer);
+    document.removeEventListener("visibilitychange", onVisible);
+    window.removeEventListener("focus", repost);
+  };
 }
 
 const uninstall = installSync();

@@ -149,3 +149,116 @@ export function diffText(d: Diff, units: "in" | "mm"): string {
   lines.push(d.sheets.same ? `sheets: same purchases (${purchasesText(d.sheets.to)})` : `sheets: ${purchasesText(d.sheets.from)} → ${purchasesText(d.sheets.to)}`);
   return lines.join("\n");
 }
+
+// ---------- a short summary, for the check hook ----------
+
+const AXIS_WORDS = { x: ["right", "left"], y: ["up", "down"], z: ["forward", "back"] } as const;
+const extentOf = (b: Box, a: "x" | "y" | "z") => b[a][1] - b[a][0];
+
+/** "moved down 2" when the box only moved, else the box change as text. */
+function boxMoveText(from: Box, to: Box, L: (n: number) => string): string {
+  const sameSize = (["x", "y", "z"] as const).every((a) => Math.abs(extentOf(from, a) - extentOf(to, a)) < 1e-6);
+  if (!sameSize) return boxChange(from, to, L);
+  const moves = (["x", "y", "z"] as const)
+    .map((a) => ({ a, d: to[a][0] - from[a][0] }))
+    .filter(({ d }) => Math.abs(d) > 1e-6)
+    .map(({ a, d }) => `${AXIS_WORDS[a][d > 0 ? 0 : 1]} ${L(Math.abs(d))}`);
+  return `moved ${moves.join(", ")}`;
+}
+
+/** What changed for one part, as one phrase: "length 84 → 82", "moved down 2", "p2: moved up ¾". */
+function partChangeText(changes: Change[], units: "in" | "mm", phasesIn: number): string {
+  const L = (n: number) => fmtLength(n, { units });
+  const out: string[] = [];
+  const sized = changes.some((c) => c.field === "length" || c.field === "width" || c.field === "thickness");
+  for (const c of changes) {
+    if (c.field.startsWith("box@") || c.field.startsWith("in@")) continue;
+    out.push(changeText(c, units));
+  }
+  // A resized part's box changes with it; only a part that kept its size is described as moved.
+  if (!sized) {
+    const byPhase = changes.filter((c) => c.field.startsWith("box@")).map((c) => ({ phase: c.field.slice(4), text: boxMoveText(c.from as Box, c.to as Box, L) }));
+    if (byPhase.length) {
+      const texts = [...new Set(byPhase.map((b) => b.text))];
+      if (texts.length === 1 && byPhase.length >= phasesIn) out.push(texts[0]);
+      else out.push(byPhase.map((b) => `${b.phase}: ${b.text}`).join(", "));
+    }
+  }
+  for (const c of changes) if (c.field.startsWith("in@")) out.push(c.to ? `now in ${c.field.slice(3)}` : `no longer in ${c.field.slice(3)}`);
+  return out.join(", ");
+}
+
+const listIds = (ids: string[], max = 4) => (ids.length <= max ? ids.join(", ") : `${ids.slice(0, max).join(", ")} and ${ids.length - max} more`);
+const clip = (s: string, max: number) => (s.length > max ? `${s.slice(0, max - 1)}… (./wb diff has the rest)` : s);
+
+/**
+ * A diff as three short lines for the agent: parts, cut list, sheets. Parts with the same change
+ * are grouped ("partition-left, partition-right length 84 → 82"). `same` is true when nothing changed.
+ */
+export function diffSummary(d: Diff, to: DiffDoc): { same: boolean; parts: string; cutlist: string; sheets: string } {
+  const units = to.units;
+  const L = (n: number) => fmtLength(n, { units });
+  const byPart = new Map<string, Change[]>();
+  for (const c of d.parts.changed) byPart.set(c.id, [...(byPart.get(c.id) ?? []), c]);
+  const groups = new Map<string, string[]>();
+  for (const [id, cs] of byPart) {
+    const t = partChangeText(cs, units, Object.keys(to.parts[id]?.boxes ?? {}).length);
+    groups.set(t, [...(groups.get(t) ?? []), id]);
+  }
+  const partBits = [
+    ...[...groups].map(([t, ids]) => `${listIds(ids)} ${t}`),
+    ...(d.parts.added.length ? [`added ${listIds(d.parts.added)}`] : []),
+    ...(d.parts.removed.length ? [`removed ${listIds(d.parts.removed)}`] : []),
+  ];
+
+  const cl = d.cutlist;
+  const size = (c: { l: number; w: number; t: number }) => `${L(c.l)} × ${L(c.w)}`;
+  const rowChanges = new Map<string, string[]>();
+  for (const c of cl.changed) {
+    const t = c.field === "cut"
+      ? `${size(c.from as DiffRow["cut"])} → ${size(c.to as DiffRow["cut"])}`
+      : c.field === "qty" ? `qty ${String(c.from)} → ${String(c.to)}` : `${c.field} ${String(c.from)} → ${String(c.to)}`;
+    rowChanges.set(c.key, [...(rowChanges.get(c.key) ?? []), t]);
+  }
+  const rowName = (key: string) => to.cutRows.find((r) => r.key === key)?.name ?? key;
+  const changedRows = [...rowChanges].map(([key, ts]) => ({ key, text: ts.join(", ") }));
+  const nRows = changedRows.length + cl.added.length + cl.removed.length;
+  let cutlist = "cut list: unchanged";
+  if (nRows) {
+    const details = [
+      ...changedRows.map((r) => `${rowName(r.key)} ${r.text}`),
+      ...cl.added.map((r) => `+ ${r.qty} × ${r.name} ${size(r.cut)}`),
+      ...cl.removed.map((r) => `− ${r.qty} × ${r.name} ${size(r.cut)}`),
+    ];
+    const parts = [
+      changedRows.length ? `${changedRows.length} row${changedRows.length === 1 ? "" : "s"} changed` : "",
+      cl.added.length ? `${cl.added.length} added` : "",
+      cl.removed.length ? `${cl.removed.length} removed` : "",
+    ].filter(Boolean).join(", ");
+    cutlist = `cut list: ${parts} (${details.slice(0, 3).join("; ")}${details.length > 3 ? `; and ${details.length - 3} more` : ""})`;
+  }
+
+  let sheets = "sheets: unchanged";
+  if (!d.sheets.same) {
+    const key = (p: Purchases[number]) => `${p.phase} ${p.material}`;
+    const text = (p: Purchases[number] | undefined) => {
+      if (!p) return "nothing";
+      const bits = [...Object.entries(p.bought).map(([k, v]) => `buy ${v} × ${k}`), ...Object.entries(p.owned).map(([k, v]) => `use ${v} × ${k}`)];
+      return bits.length ? bits.join(" + ") : "nothing";
+    };
+    const was = new Map(d.sheets.from.map((p) => [key(p), p])), now = new Map(d.sheets.to.map((p) => [key(p), p]));
+    const changes: string[] = [];
+    for (const k of new Set([...was.keys(), ...now.keys()])) {
+      const a = text(was.get(k)), b = text(now.get(k));
+      if (a !== b) changes.push(`${k}: ${a} → ${b}`);
+    }
+    sheets = `sheets CHANGED: ${changes.join("; ")}`;
+  }
+
+  return {
+    same: partBits.length === 0 && nRows === 0 && d.sheets.same,
+    parts: clip(partBits.length ? `changed vs last good: ${partBits.join("; ")}` : "parts: unchanged", 400),
+    cutlist: clip(cutlist, 300),
+    sheets: clip(sheets, 300),
+  };
+}

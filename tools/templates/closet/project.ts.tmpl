@@ -1,0 +1,78 @@
+// __TITLE__: a reach-in closet. The room as context (floor and walls), one shelf on cleats
+// across the back with a hardwood nosing, and a rod below it.
+// Axes: x from the left wall (looking at the back wall), y up from the floor, z out from the back wall. Inches.
+// Values marked "inferred" are placeholders, not measurements: replace them and list them in notes.md.
+// projects/closet-built-in/project.ts is a complete closet to learn from.
+import { defineProject, span, box } from "../../core/model/index.ts";
+
+const T = 23 / 32;   // plywood sold as ¾″
+const B = 0.75;      // 1× pine
+
+export const P = {
+  room: { width: 60, depth: 24, height: 96, wall: 4.5 },  // inferred: measure at three heights and both ends
+  shelfAt: 84,         // inferred: bottom face of the shelf
+  shelfDepth: 11.25,   // plus the ¾″ nosing = 12″
+  rod: { at: 81.5, fromBack: 12, dia: 1.3125, socket: 0.125 },  // inferred
+  cleat: { h: 3.5, sideLength: 10.5 },
+  nosing: { t: 0.75, h: 1.5 },
+};
+
+export default defineProject({
+  id: "__ID__",
+  title: "__TITLE__",
+  units: "in",
+  options: {},
+  phases: [{ id: "p1", title: "Shelf and rod" }],
+  materials: {
+    ply: { type: "sheet", name: "23/32″ plywood (sold as ¾″)", thickness: T, grained: true, finish: "paint", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
+    "pine-1x4": { type: "board", name: "1×4", nominal: "1×4", thickness: B, width: 3.5, finish: "none" },
+    "hw-nosing": { type: "board", name: "Hardwood nosing ¾ × 1½", thickness: 0.75, width: 1.5, finish: "clear" },
+  },
+  banding: {},
+  hardware: {
+    rod: { name: "Closet rod, 1⁵⁄₁₆″", unit: "each" },
+    "rod-socket": { name: "Rod sockets", unit: "pair" },
+  },
+
+  build(b) {
+    const R = P.room;
+    b.context({ id: "floor", name: "Floor", role: "floor", box: box([-R.wall, R.width + R.wall], [-1, 0], [-R.wall, R.depth + R.wall]) });
+    b.context({ id: "wall-back", name: "Back wall", role: "wall", box: box([-R.wall, R.width + R.wall], [0, R.height], [-R.wall, 0]) });
+    b.context({ id: "wall-left", name: "Left wall", role: "wall", box: box([-R.wall, 0], [0, R.height], [0, R.depth]) });
+    b.context({ id: "wall-right", name: "Right wall", role: "wall", box: box([R.width, R.width + R.wall], [0, R.height], [0, R.depth]) });
+
+    const y = P.shelfAt;
+    const zs = span(B, P.cleat.sideLength);
+    b.board({ id: "cleat-left", name: "Side cleat", where: "left", material: "pine-1x4", phase: "p1", step: "p1-cleats",
+      box: box([0, B], [y - P.cleat.h, y], zs), grain: "z", exposure: "hidden" });
+    b.board({ id: "cleat-right", name: "Side cleat", where: "right", material: "pine-1x4", phase: "p1", step: "p1-cleats",
+      box: box([R.width - B, R.width], [y - P.cleat.h, y], zs), grain: "z", exposure: "hidden" });
+    b.board({ id: "cleat-back", name: "Back cleat", material: "pine-1x4", phase: "p1", step: "p1-cleats",
+      box: box([B, R.width - B], [y - P.cleat.h, y], [0, B]), grain: "x", exposure: "hidden", fitToSite: true });
+    b.panel({ id: "shelf", name: "Shelf", material: "ply", phase: "p1", step: "p1-shelf",
+      box: box([0, R.width], span(y, T), [0, P.shelfDepth]), grain: "x", fitToSite: true,
+      joins: [{ to: "cleat-left", by: "rests-on" }, { to: "cleat-right", by: "rests-on" }, { to: "cleat-back", by: "rests-on" }] });
+    b.board({ id: "shelf-nosing", name: "Shelf nosing", material: "hw-nosing", phase: "p1", step: "p1-shelf",
+      box: box([0, R.width], [y + T - P.nosing.h, y + T], span(P.shelfDepth, P.nosing.t)), grain: "x",
+      joins: [{ to: "shelf", by: "glue" }] });
+
+    const s = P.rod.socket;
+    b.hardware({ id: "rod", name: "Rod", item: "rod", qty: 1, phase: "p1", step: "p1-rod", fitToSite: true, length: R.width - 2 * (B + s),
+      cylinder: { axis: "x", from: B + s, to: R.width - B - s, center: [P.rod.at, P.rod.fromBack], diameter: P.rod.dia } });
+    b.hardware({ id: "rod-sockets", name: "Rod sockets", item: "rod-socket", qty: 1, phase: "p1", step: "p1-rod" });
+
+    b.step({ id: "p1-cleats", phase: "p1", title: "Cleats", text: "Level a line at the shelf height and screw the cleats into the studs." });
+    b.step({ id: "p1-shelf", phase: "p1", title: "Shelf", text: "Glue the nosing to the shelf's front edge, then set the shelf on the cleats." });
+    b.step({ id: "p1-rod", phase: "p1", title: "Rod", text: "Screw the sockets to the side cleats and drop in the rod, cut to fit." });
+
+    b.check("rod-below-shelf", "The rod hangs at least 2″ below the shelf, so hangers lift off",
+      P.shelfAt - P.rod.at >= 2, `rod ${P.rod.at}″, shelf underside ${P.shelfAt}″`);
+
+    b.view({ id: "front", title: "Front elevation", kind: "elevation", look: "-z",
+      dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: -6 }, { from: "floor.y1", to: "shelf.y0", offset: -6 }],
+      labels: [{ part: "rod", text: "rod {y}" }] });
+    b.view({ id: "section", title: "Section · through the middle", kind: "section", look: "+x", cut: R.width / 2,
+      dims: [{ from: "wall-back.z1", to: "shelf-nosing.z1", offset: R.height + 4 }] });
+  },
+});

@@ -12,5 +12,5 @@
     "jsx": "react-jsx",
     "skipLibCheck": true
   },
-  "include": ["app", "core", "tools", "tests", "projects", "*.ts"]
+  "include": ["app", "core", "tools", "tests", "projects", ".claude/hooks", "*.ts"]
 }

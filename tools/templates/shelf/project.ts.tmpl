@@ -1,0 +1,83 @@
+// __TITLE__: a freestanding shelf unit. Two sides, a top, a bottom on a toe kick, fixed shelves
+// spaced evenly between them, and a ¼″ back.
+// Axes: x from the left (facing the back wall), y up from the floor, z out from the back wall. Inches.
+// Values marked "inferred" are placeholders, not measurements: replace them and list them in notes.md.
+import { defineProject, span, box } from "../../core/model/index.ts";
+
+const T = 23 / 32;   // plywood sold as ¾″
+const BT = 0.25;     // ¼″ back
+
+export const P = {
+  width: 30,         // inferred: outside width
+  height: 72,        // inferred: outside height
+  depth: 12,         // inferred: outside depth, back included
+  shelves: 4,        // inferred: fixed shelves between the bottom and the top
+  kick: 3,           // inferred: toe kick height
+};
+
+export default defineProject({
+  id: "__ID__",
+  title: "__TITLE__",
+  units: "in",
+  options: {},
+  phases: [{ id: "p1", title: "Build" }],
+  materials: {
+    ply: { type: "sheet", name: "23/32″ plywood (sold as ¾″)", thickness: T, grained: true, finish: "paint", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
+    back: { type: "sheet", name: "¼″ plywood", thickness: BT, grained: true, finish: "paint", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
+  },
+  banding: {
+    edge: { name: "Iron-on edge banding, ¾″", thickness: 0.02, width: 0.8125, reducesCutSize: false },
+  },
+  hardware: {
+    screws: { name: "1¼″ cabinet screws", unit: "set" },
+  },
+
+  build(b) {
+    const x0 = T, x1 = P.width - T;                 // inside faces of the sides
+    const z: [number, number] = [BT, P.depth];      // carcass parts sit in front of the back
+    for (const [side, x] of [["left", 0], ["right", P.width - T]] as const) {
+      b.panel({ id: `side-${side}`, name: "Side", where: side, material: "ply", phase: "p1", step: "p1-case",
+        box: box(span(x, T), [0, P.height], z), grain: "y", band: { front: "edge" } });
+    }
+    b.panel({ id: "top", name: "Top", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], [P.height - T, P.height], z), grain: "x", band: { front: "edge" },
+      joins: [{ to: "side-left", by: "screws" }, { to: "side-right", by: "screws" }] });
+    b.panel({ id: "bottom", name: "Bottom", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], span(P.kick, T), z), grain: "x", band: { front: "edge" },
+      joins: [{ to: "side-left", by: "screws" }, { to: "side-right", by: "screws" }] });
+    b.panel({ id: "toe-kick", name: "Toe kick", material: "ply", phase: "p1", step: "p1-case",
+      box: box([x0, x1], [0, P.kick], span(P.depth - 2 - T, T)), grain: "x", grainLock: false,
+      joins: [{ to: "side-left", by: "screws" }, { to: "side-right", by: "screws" }],
+      notes: "Set back 2″ from the front. Turned across the grain if that nests better." });
+
+    // Shelves evenly spaced between the bottom and the top, each bottom face rounded to 1/16″.
+    const lo = P.kick + T, hi = P.height - T;
+    const gap = (hi - lo - P.shelves * T) / (P.shelves + 1);
+    for (let i = 1; i <= P.shelves; i++) {
+      const y = Math.round((lo + i * gap + (i - 1) * T) * 16) / 16;
+      b.panel({ id: `shelf-${i}`, name: "Shelf", where: `#${i} from the bottom`, material: "ply", phase: "p1", step: "p1-shelves",
+        box: box([x0, x1], span(y, T), z), grain: "x", band: { front: "edge" },
+        joins: [{ to: "side-left", by: "screws" }, { to: "side-right", by: "screws" }] });
+    }
+    b.panel({ id: "back", name: "Back", material: "back", phase: "p1", step: "p1-back",
+      box: box([0, P.width], [P.kick, P.height], [0, BT]), grain: "y", exposure: "limited", exposureNote: "Seen between the shelves",
+      joins: [{ to: "side-left", by: "nails" }, { to: "side-right", by: "nails" }] });
+    b.hardware({ id: "case-screws", name: "Case screws", item: "screws", qty: 1, phase: "p1", step: "p1-case" });
+
+    b.step({ id: "p1-case", phase: "p1", title: "Assemble the case",
+      text: "Band the front edges first. Screw the top, bottom and toe kick between the sides, then check the diagonals for square." });
+    b.step({ id: "p1-shelves", phase: "p1", title: "Fix the shelves", text: "Mark the shelf lines on both sides from the bottom and screw through the sides." });
+    b.step({ id: "p1-back", phase: "p1", title: "Nail on the back", text: "Square the case to the back as you nail it on." });
+
+    const span_ = x1 - x0;
+    b.check("shelf-span", "Shelves span no more than 32″, so ¾″ plywood does not sag under books",
+      span_ <= 32, `shelf span ${span_.toFixed(2)}″`);
+
+    b.view({ id: "front", title: "Front elevation", kind: "elevation", look: "-z",
+      dims: [{ from: "side-left.x0", to: "side-right.x1", offset: -4 }, { from: "side-left.y0", to: "side-left.y1", offset: -4 }] });
+    b.view({ id: "section", title: "Section · through the middle", kind: "section", look: "+x", cut: P.width / 2,
+      dims: [{ from: "back.z0", to: "side-left.z1", offset: -4 }] });
+  },
+});

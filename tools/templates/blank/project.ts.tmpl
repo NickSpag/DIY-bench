@@ -1,0 +1,35 @@
+// __TITLE__.
+// Axes: x from the left (facing the back wall), y up from the floor, z out from the back wall. Inches.
+// Values marked "inferred" are placeholders, not measurements: replace them and list them in notes.md.
+import { defineProject, box } from "../../core/model/index.ts";
+
+const T = 23 / 32; // plywood sold as ¾″
+
+export const P = {
+  width: 36,  // inferred
+  height: 30, // inferred
+};
+
+export default defineProject({
+  id: "__ID__",
+  title: "__TITLE__",
+  units: "in",
+  options: {},
+  phases: [{ id: "p1", title: "Build" }],
+  materials: {
+    ply: { type: "sheet", name: "23/32″ plywood (sold as ¾″)", thickness: T, grained: true, finish: "paint", kerf: 0.125,
+      stock: [{ id: "4x8", length: 96, width: 48, buy: true }, { id: "4x4", length: 48, width: 48, buy: true }] },
+  },
+  banding: {},
+  hardware: {},
+
+  build(b) {
+    b.panel({ id: "panel", name: "Panel", material: "ply", phase: "p1", step: "p1-build",
+      box: box([0, P.width], [0, P.height], [0, T]), grain: "x" });
+
+    b.step({ id: "p1-build", phase: "p1", title: "Build", text: "Describe how to build it." });
+
+    b.view({ id: "front", title: "Front elevation", kind: "elevation", look: "-z",
+      dims: [{ from: "panel.x0", to: "panel.x1", offset: -3 }, { from: "panel.y0", to: "panel.y1", offset: -3 }] });
+  },
+});

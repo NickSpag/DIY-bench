@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "diy-bench: dev",
+      "detail": "The DIY-bench dev server on http://127.0.0.1:5180 (check ./wb status first; one server is enough)",
+      "type": "shell",
+      "command": "npm run dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "silent", "panel": "dedicated", "group": "diy-bench" }
+    },
+    {
+      "label": "diy-bench: check",
+      "detail": "./wb check --all-configs",
+      "type": "shell",
+      "command": "./wb check --all-configs",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared", "group": "diy-bench" }
+    }
+  ]
+}

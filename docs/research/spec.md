@@ -82,8 +82,8 @@ Contents:
         │                                                     │
         │      UserPromptSubmit hook ◄────────────────────────┘ (prints selection into the prompt)
         │
-        └──► PostToolUse hook → ./wb check --changed → core/evaluate (Node, type stripping)
-                                   exit 2 + errors on stderr │ or additionalContext summary
+        └──► PostToolUse hook → tools/check-hook.ts → core/evaluate (Node, type stripping)
+             (also ./wb check --changed <file> --hook)  exit 2 + errors on stderr │ or additionalContext summary
 
  ./wb show …  → POST /__wb/control → server.ws.send("wb:control") → app applies (select, phase, view)
  ./wb render … → headless Chrome (playwright-core, channel "chrome") → PNG → agent reads it
@@ -100,7 +100,7 @@ Data flow, in order:
 6. Selection goes to a single store. Every view reads it. The store's agent-relevant fields are posted to the dev server, which writes `.diy-bench/state.json`.
 7. Two hooks talk to Claude Code:
    - On each prompt, the `UserPromptSubmit` hook prints the current selection. The model sees it with the prompt (verified).
-   - After each `Edit`/`Write`, the `PostToolUse` hook runs `./wb check`. On failure it exits 2 and the model sees the errors (verified). On success it prints a summary of what changed in the derived outputs.
+   - After each `Edit`/`Write` of a project file, the `PostToolUse` hook checks the project (the same code as `./wb check --changed <file> --hook`). On failure it exits 2 and the model sees the errors (verified). On success it prints a summary of what changed in the derived outputs.
 8. The agent uses `./wb` to query the model, drive the viewer and render views to PNG.
 
 Nothing in `core/` touches the DOM or Node APIs, so the same code runs in the browser and in Node. `tools/` (CLI, hooks) uses Node APIs; `app/` uses the DOM.
@@ -160,7 +160,8 @@ DIY-bench/
 ├── .gitignore                     node_modules, dist, .diy-bench/, test-results/
 ├── .vscode/
 │   ├── settings.json              section 10.5
-│   ├── tasks.json                 "diy-bench: dev" runs npm run dev (isBackground, problemMatcher none)
+│   ├── tasks.json                 "diy-bench: dev" runs npm run dev (isBackground, problemMatcher none);
+│   │                              "diy-bench: check" runs ./wb check --all-configs
 │   └── extensions.json            recommends anthropic.claude-code
 ├── .claude/
 │   ├── settings.json              hooks + permissions (section 10.3)
@@ -193,14 +194,19 @@ DIY-bench/
 │   │   └── svg.ts                 deterministic SVG writer
 │   ├── steps.ts                   section 7.4
 │   ├── shopping.ts                section 7.5
-│   ├── diff.ts                    compare two Resolved (parts, cut list, sheets)
+│   ├── diff.ts                    compare two Resolved (parts, cut list, sheets); diffSummary for the hook
+│   ├── viewer.ts                  ViewerState for state.json (section 10.4)
+│   ├── viewer-text.ts             the selection hook's lines (also `wb state`)
+│   ├── control.ts                 the Control type for `wb show`; no imports (the Vite config uses it)
 │   └── export/                    csv.ts and text.ts now; glb.ts, stl.ts, dxf.ts, step.ts deferred (section 7.6)
 ├── app/                           the browser UI (React)
 │   ├── index.html
 │   ├── main.tsx                   mounts <App/>; imports store then loader
 │   ├── loader.ts                  import.meta.glob of projects; self-accepting (section 9.9)
 │   ├── store.ts                   zustand store (section 9.8)
-│   ├── sync.ts                    posts state to /__wb/state; listens for wb:control
+│   ├── sync.ts                    posts state to /__wb/state (on change, every 5 min, on focus)
+│   ├── control.ts                 applies wb:control from `wb show` and answers wb:ack
+│   ├── render.tsx                 ?render=<target>: one panel full-window for `wb render`
 │   ├── App.tsx                    layout (section 9.1)
 │   ├── panels/                    Viewport3D.tsx, DrawingPanel.tsx, CutListPanel.tsx, SheetsPanel.tsx,
 │   │                              StepsPanel.tsx, PartsPanel.tsx, ChecksPanel.tsx, NotesPanel.tsx
@@ -212,7 +218,12 @@ DIY-bench/
 │   ├── projects.ts                finding and loading projects from Node
 │   ├── golden.ts                  golden files and `wb snapshot` (section 13.2)
 │   ├── vite-plugin.ts             diyBenchPlugin(): endpoints, state file, control relay (section 11.2)
-│   └── render.ts                  headless Chrome rendering for ./wb render and PDF
+│   ├── render.ts                  headless Chrome rendering for ./wb render and PDF
+│   ├── check-hook.ts              the edit check shared by the PostToolUse hook and `wb check --hook`
+│   ├── hook-scope.ts              which projects an edited file belongs to (no core/ imports)
+│   ├── server.ts                  finding the dev server (server.json) and the viewer state
+│   ├── last-good.ts, files.ts     .diy-bench/last-good/<id>.json; atomic writes; WB_DIR
+│   └── templates/<t>/             project.ts.tmpl and notes.md.tmpl for `wb new` (blank, shelf, cabinet, closet)
 ├── projects/
 │   └── closet-built-in/
 │       ├── project.ts             section 8
@@ -221,9 +232,10 @@ DIY-bench/
 ├── tests/
 │   ├── unit/                      vitest: units, geometry, evaluate, invariants, cutlist, nesting, drawings, diff, export
 │   ├── golden.test.ts             every project × every configuration against expected/
-│   ├── hooks.test.ts              runs both hooks with fixture inputs
+│   ├── hooks.test.ts              runs both hooks with fixture inputs (and, with RUN_CLAUDE_TESTS=1, claude -p)
 │   └── e2e/                       Playwright: cross-highlight, picking with section, HMR, state, control, render
-└── .diy-bench/                    gitignored runtime state: state.json, server.json, last-good/<project>.json
+└── .diy-bench/                    gitignored runtime state: state.json, server.json, last-good/<project>.json,
+                                   renders/ (WB_DIR moves it; tests use that to run their own server)
 ```
 
 ---
@@ -1272,7 +1284,7 @@ type WbState = {
   ```
   The SVG and table styles read `--hl`, for example `fill: color-mix(in oklab, var(--fill) 60%, var(--hl, transparent))`.
 - The 3D viewport subscribes to the same fields.
-- `app/sync.ts` posts `{ projectId, config, phase, step, drawingView, selected }` (plus `hovered` if hover exists) plus summaries (section 10.4) to `/__wb/state`, debounced 150 ms, but only when one of those fields changed.
+- `app/sync.ts` posts `{ projectId, config, phase, step, drawingView, selected }` (plus `hovered` if hover exists) plus summaries (section 10.4) to `/__wb/state`, debounced 150 ms, when one of those fields changed. It also re-posts every 5 minutes and whenever the page regains focus or becomes visible, so `updatedAt` means "the viewer was open and showing this" and the user's own page takes the state back from any other page (a test browser, a second tab).
 
 ### 9.9 Live reload (`app/loader.ts`)
 ```ts
@@ -1340,14 +1352,16 @@ Keys are ignored while a text field has focus.
    - `options` express undecided choices.
    - Never create a second project to compare a variant; add an option.
 8. **Seeing your work.**
-   - `./wb render <project> --view front --out /tmp/x.png`, then read the PNG.
+   - `./wb render --view front --out /tmp/x.png`, then read the PNG.
    - `./wb show --select id1,id2 --phase p2` points the user at something in their open viewer.
 9. **Materials, stock and cost.** Ask before changing a material, a stock list or anything that changes what the user buys. Report sheet-count changes explicitly.
 10. **Starting a project.** Use the `new-project` skill. It asks for measurements and creates `projects/<id>/` from the template. Never invent room measurements; use placeholders marked `// inferred` and list them as questions.
 11. **Model API cheat sheet.** The builder methods and the field reference from spec section 5, condensed to one screen, with the closet's `shelfOnCleats` and drawer loop as examples.
 12. **When the hook fails.** A table of invariant codes (spec section 6.4), each with its usual fix.
 13. **Working on the tool itself** (`core/`, `app/`, `tools/`).
+    - The edit hook ignores these folders (section 10.2).
     - Run `npm test` and `npm run e2e`.
+    - Editing `tools/vite-plugin.ts` or what it imports restarts the dev server.
     - Golden files change only through `./wb snapshot --update <project>`, and only after you have looked at the diff and can explain each change.
     - Keep `core/` free of DOM and Node APIs.
 14. **Do not:**
@@ -1362,63 +1376,73 @@ Keys are ignored while a text field has focus.
 
 **`UserPromptSubmit` → `.claude/hooks/selection-context.ts`**
 - **Input:** the hook's stdin JSON. Only `cwd` is used.
-- **What it reads:** `.diy-bench/state.json`. If the file is missing, it prints nothing and exits 0. The hook must never fail a prompt.
-- **Output:** plain stdout, at most 8 lines (verified to reach the model). A `hovered:` line follows only if hover highlighting is added later:
+- **What it reads:** `<root>/.diy-bench/state.json`, where the root is `$CLAUDE_PROJECT_DIR`, else the input's `cwd`, else the repo the script sits in (a session started in `projects/` still finds the state). If the file is missing, corrupt or not version 1, it prints nothing and exits 0. The hook must never fail a prompt: every failure exits 0 with no output, and a timer exits after 1 s whatever happens.
+- **Output:** plain stdout, at most 8 lines (verified to reach the model), formatted by `core/viewer-text.ts`:
   ```
   [diy-bench] closet-built-in · top=1 · phase p2 · view: front elevation (state 40 s old)
   [diy-bench] selected: drawer-face-2 "Drawer face" (drawer 2) · 6⅞ × 23⁵⁄₁₆ × 23/32 ply-raw · x ≈28⅜–≈51¹¹⁄₁₆ y 36–42⅞ z 23¼–≈24 · projects/closet-built-in/project.ts:193
   ```
-- **Selection size:** more than 5 selected parts are summarised: `selected: 6 parts (drawer-1-side-l, …)`.
+  - The first line adds `, step <id>` after the phase when a step is on screen, and `· N errors in the model` when the model has errors.
+  - When the viewer is showing the last good model, a second line says so with the evaluation error: `[diy-bench] the file fails to evaluate, so the viewer shows the last good model: <message>`.
+  - With nothing selected the selection line is `[diy-bench] selected: nothing`; one line per selected part otherwise.
+  - A `hovered:` line follows the selection only if hover highlighting is added later (D20).
+- **Selection size:** more than 5 selected parts are summarised: `selected: 6 parts (drawer-1-side-l, …)`, listing the ids up to about 240 characters.
 - **Staleness:**
   - If the state is older than 2 hours, it prints one line: `[diy-bench] viewer state is 3 h old; confirm which part the user means`.
   - It prints nothing at all if the state is older than 24 hours.
-- **Budget:** under 100 ms. It is plain JSON reading with no evaluation, run as `node --experimental-strip-types`.
+  - The app re-posts the state every 5 minutes and on focus (section 9.8), so the age is how long ago the viewer was last open, not how long ago the selection last changed.
+- **Budget:** under 300 ms, measured by the test (about 140 ms, nearly all of it Node's start-up). It is plain JSON reading with no evaluation, run as `node --experimental-strip-types`.
 
 **`PostToolUse` (matcher `Edit|Write`) → `.claude/hooks/check-after-edit.ts`**
-- **Input:** stdin JSON. Uses `tool_input.file_path`.
-- **Scope:**
-  - If the path is not under `projects/` or `core/`, exit 0 silently.
-  - For `projects/<id>/…`, check that project. For `core/…`, check every project.
-- **Run:** `evaluate` for every configuration (section 6.1), `nest` for the default configuration, then compare with `.diy-bench/last-good/<id>.json`.
+- **Input:** stdin JSON. Uses `tool_input.file_path` (relative paths resolve against `cwd`).
+- **Scope** (`tools/hook-scope.ts`):
+  - A file is checked when it is a project's `project.ts`, or a module that `project.ts` imports, directly or through other helpers, by relative imports. The check covers each project the file belongs to.
+  - Everything else exits 0 at once with no output: `core/`, `app/`, `tools/`, `tests/`, `docs/`, `.claude/`, `notes.md`, `expected/`, files outside the repo, and code in `projects/` that no project imports. A first test on the path settles most of these before any model code is loaded.
+  - Edits to `core/` do not check every project. The hooks run in the session where the tool itself is developed, and `core/` has its own unit and golden tests; checking every project on every `core/` edit would put a project summary into every tool change.
+- **Run** (`tools/check-hook.ts`): `evaluate` for every configuration (section 6.1), merging issues that recur across configurations, then `nest` and `diffDoc` for the default configuration, compared with `.diy-bench/last-good/<id>.json`.
 - **On any error:**
-  - Exit 2. Errors go to stderr (verified to reach the model), at most 15 lines, worst first. Format: `wb check failed: closet-built-in (top=1): ERROR overlap: p2: center-top overlaps drawer-face-3 by … — projects/closet-built-in/project.ts:224`.
-  - A thrown `EvaluationError` prints its message and `src`.
+  - Exit 2. Errors go to stderr (verified to reach the model), at most 15 lines, errors before warnings. Format: `wb check failed: closet-built-in (top=1): ERROR overlap: p2: drawer-face-3 overlaps center-top by 22⁹⁄₁₆ × ⅞ × ²³⁄₃₂ — projects/closet-built-in/project.ts:230`. An issue found in every configuration says `(every configuration)`.
+  - A thrown `EvaluationError` prints its message and `src` (`ERROR evaluation: …`).
+  - A project that does not load prints `cannot load:` with the file and line. Node's type-stripping error names the line but not the file, so the hook finds the file by stripping each module of the project with `module.stripTypeScriptTypes`, and adds the two-line code frame from Node's message.
+  - A failure of the hook itself exits 1, which Claude Code shows to the user without blocking.
 - **On success:**
   - Exit 0 with `{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"<summary>"}}` on stdout.
-  - The summary is at most 10 lines:
+  - The summary is at most 10 lines (`diffSummary` in `core/diff.ts` groups parts with the same change):
     ```
     [diy-bench] closet-built-in ok in 2 configurations · no issues
-    changed vs last good: partition-left, partition-right 84 → 82 tall; top-shelf-* down 2
-    cut list: 2 rows changed (Partition 84 × 23¼ → 82 × 23¼); sheets: unchanged (prefinished plywood: 4×8 + 4×4)
+    changed vs last good: partition-left, partition-right length 84 → 82; top-shelf-left, top-shelf-left-nosing, top-shelf-center, top-shelf-center-nosing and 14 more moved down 2
+    cut list: 1 row changed (Partition 84 × 23¼ → 82 × 23¼); sheets: unchanged
     ```
-  - Then it writes the new last-good snapshot.
-- **Budget:** under 3 s for the closet; the target is under 1 s. Type checking is not part of the hook. `npm run typecheck` covers it, and runtime errors still surface through evaluation.
+  - Warnings, up to three, follow the first line. With no change the second line is `no change in parts, cut list or sheets vs the last good model`; with no baseline yet, `no earlier good model to compare with; this one is now the baseline`. A change in purchases reads `sheets CHANGED: p1 ply-pre: buy 1 × 4x8 + 1 × 4x4 → buy 2 × 4x8`.
+  - Then it writes the new last-good snapshot (default configuration).
+- **Budget:** under 3 s for the closet; it takes about 0.3 s, and an out-of-scope edit about 0.15 s. Type checking is not part of the hook. `npm run typecheck` covers it, and runtime errors still surface through evaluation.
 - **Concurrency:** if two edits land back to back, the second run sees the latest file. No locking is needed beyond an atomic write of the snapshot (write to a temporary file, then rename).
+- `./wb check --changed <file> --hook` runs the same check from a shell.
 
 ### 10.3 `.claude/settings.json`
 ```json
 {
   "hooks": {
     "UserPromptSubmit": [
-      { "hooks": [ { "type": "command", "command": "node --experimental-strip-types --disable-warning=ExperimentalWarning \"$CLAUDE_PROJECT_DIR/.claude/hooks/selection-context.ts\"" } ] }
+      { "hooks": [ { "type": "command", "command": "node --experimental-strip-types --disable-warning=ExperimentalWarning \"$CLAUDE_PROJECT_DIR/.claude/hooks/selection-context.ts\"", "timeout": 5 } ] }
     ],
     "PostToolUse": [
       { "matcher": "Edit|Write",
-        "hooks": [ { "type": "command", "command": "node --experimental-strip-types --disable-warning=ExperimentalWarning \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-after-edit.ts\"" } ] }
+        "hooks": [ { "type": "command", "command": "node --experimental-strip-types --disable-warning=ExperimentalWarning \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-after-edit.ts\"", "timeout": 30 } ] }
     ]
   },
   "permissions": {
-    "allow": [ "Bash(./wb *)", "Bash(npm test *)", "Bash(npm run *)", "Edit(projects/**)", "Write(projects/**)" ]
+    "allow": [ "Bash(./wb *)", "Bash(npm test)", "Bash(npm test *)", "Bash(npm run *)", "Edit(projects/**)", "Write(projects/**)" ]
   }
 }
 ```
-The hook command format and `$CLAUDE_PROJECT_DIR` follow the hooks documentation [V]. The spike used absolute paths, so the `$CLAUDE_PROJECT_DIR` form is inferred from the docs. M8's acceptance test runs it for real.
+The hook command format and `$CLAUDE_PROJECT_DIR` follow the hooks documentation [V]. The `$CLAUDE_PROJECT_DIR` form was verified with Claude Code 2.1.289 by the live test in `tests/hooks.test.ts` (`RUN_CLAUDE_TESTS=1`): `claude -p` with `--model haiku`, in a temporary copy of the repo, named the part in the fixture state. The `timeout`s (seconds) are a backstop; the hooks take well under a second. `.claude/settings.local.json` is gitignored for personal settings.
 
 ### 10.4 `.diy-bench/state.json`
 ```ts
 type ViewerState = {
   version: 1; updatedAt: string;                       // ISO time
-  project: string; title: string; config: Record<string, string>;
+  project: string; title: string; units: "in" | "mm"; config: Record<string, string>; // units: of each `box`
   phase: string; step: string | null; drawingView: string; viewTitle: string;
   hovered?: PartSummary[]; selected: PartSummary[];       // hovered: optional, later
   issues: { errors: number; warnings: number };
@@ -1430,7 +1454,7 @@ type PartSummary = {
   box?: Box; src?: string;                             // "projects/closet-built-in/project.ts:193" (file:line, no column)
 };
 ```
-The app computes the summaries, so the hook does no evaluation. The Vite plugin writes the file atomically (temporary file, then rename).
+The app computes the summaries, so the hook does no evaluation. `units` was added in M8 so the hook can format `box` without loading the project. The Vite plugin writes the file atomically (temporary file, then rename). The type is `ViewerState` in `core/viewer.ts`.
 
 ### 10.5 `.vscode/settings.json`
 ```json
@@ -1445,7 +1469,8 @@ The app computes the summaries, so the hook does no evaluation. The Vite plugin 
 All four `workbench.*` settings exist in VS Code 1.139.1 (verified in the installed bundle). `autoReloadOnFileChange` defaults to `true`; it is turned off so that HMR alone updates the page.
 
 ### 10.6 Skills
-- **`.claude/skills/new-project/SKILL.md`** (`description`: "Start a new DIY-bench project from room measurements"). The steps:
+Each skill has `name` and `description` frontmatter.
+- **`.claude/skills/new-project/SKILL.md`** (`description`: "Start a new DIY-bench project from room measurements…"). The steps:
   1. Ask for the project type and name.
   2. Ask for the measurement checklist for that type. For a closet or built-in: width at three heights, depth at both ends, ceiling at four points, opening width and height, return widths, wall thickness, baseboard height and thickness, plumb, square, stud locations, outlets and switches.
   3. Run `./wb new <id> --template <type>`.
@@ -1475,25 +1500,29 @@ Exit codes:
 - 0: ok
 - 1: model errors or failed checks of severity error
 - 2: usage error
-- 3: viewer not running (for `show` and `state` only)
+- 3: viewer not running (for `show` and `state` only): no dev server, no open viewer to acknowledge a `show`, or no state written in 24 h
+
+`check --hook` is the exception: it exits 2 on errors, as hooks do (section 10.2).
+
+`WB_DIR` moves `.diy-bench/` (server.json, state.json, last-good/, renders/). The M8 browser tests use it to run their own dev server and viewer, so `wb show` and the state they write never reach the user's.
 
 | Command | Inputs | Output (`--json` shape) |
 |---|---|---|
 | `wb list` | — | `{ projects: { id, title, options, phases }[] }` |
-| `wb status` | — | `{ server: { url, pid, startedAt } \| null, state: ViewerState \| null }` |
-| `wb check [--all-configs] [--changed <file>] [--hook]` | project or file | `{ ok, results: { project, config, issues: Issue[] }[] }`. Without `--project` it checks every project. With `--hook`, behaves as in section 10.2. |
+| `wb status` | — | `{ server: { url, pid, startedAt } \| null, state: ViewerState \| null }`. The server counts as running when `server.json` names a live process that answers `/__wb/health`; the state when it is under 24 h old. The token is never printed. |
+| `wb check [--all-configs] [--changed <file>] [--hook]` | project or file | `{ ok, results: { project, config, issues: Issue[] }[] }`. Without `--project` it checks every project. `--changed` checks only the projects the file belongs to (section 10.2, scope); a file in none is not an error. With `--hook` (needs `--changed`), behaves as the edit hook in section 10.2. |
 | `wb parts [--kind panel\|board\|hardware\|context] [--phase]` | — | `{ parts: { id, name, where, kind, material, size: {l,w,t}, box, phase, step, src }[] }` |
 | `wb part <id>` | part id | `{ part, joints: { to, from }, step, stepsListing, phases: { phase, box }[], src, cutRow, placement }`: the part, its joints (both directions), its step, its box in each phase, its src, its cut-list row (from M2) and its sheet placement (from M3) |
 | `wb cutlist [--phase] [--format text\|csv\|json]` | — | `CutList` (section 7.1) |
 | `wb sheets [--phase] [--svg <dir>]` | — | `Nesting[]` (section 7.2); every phase unless `--phase`. `--svg` writes one SVG per material and phase, named `sheets.<config>.<phase>.<material>.svg`, and the JSON becomes `{ nestings, files }`. Exit 1 when a part could not be placed. |
 | `wb shopping [--phase]` | — | section 7.5 |
 | `wb diff [--against last-good\|<git-ref>\|opt:key=value[,…]]` | — | `{ from: { config }, to: { config }, parts: { added, removed, changed: { id, field, from, to }[] }, cutlist: { added, removed, changed: { key, field, from, to }[] }, sheets: { from, to, same } }`. Part fields: `name`, `material`, `length`, `width`, `thickness`, `box@<phase>` and `in@<phase>`; cut-list rows are keyed by their ids. `--against opt:top=0.75` shows what switching the options would change (from the current model to the other one); a git ref or `last-good` (the default) shows what changed since (from the older model to the current one). `last-good` is `.diy-bench/last-good/<id>.json`, a serialised `DiffDoc` that `wb check` writes whenever the model checks without errors (for the configuration checked, or the default one with `--all-configs`). A git ref is read with `git archive` into a temporary folder and evaluated with today's `core/`. Implemented in `core/diff.ts` (`diffDoc`, `diff`, `diffText`). |
-| `wb state` | — | `ViewerState` (exit 3 when the viewer has not written state in 24 h) |
-| `wb show [--select ids] [--hover ids] [--phase] [--step] [--opt k=v] [--view id] [--tab name] [--frame]` | — | `{ delivered: boolean }`. Sends a `Control` to the open viewer (section 11.2). |
-| `wb render --view <viewId\|3d-front\|3d-iso\|3d-top\|sheets\|cutlist> [--phase] [--step] [--opt] [--select ids] [--size 1600x1000] [--out file.png]` | — | `{ file, width, height }`. Uses the running dev server if there is one, else starts a temporary one. Headless Chrome with `channel: "chrome"`; the URL has `?render=<target>`, which shows only that panel full-window. |
+| `wb state` | — | `ViewerState` (exit 3 when the viewer has not written state in 24 h). Without `--json`, the selection hook's lines whatever their age. |
+| `wb show [--select ids] [--hover ids] [--phase] [--step] [--opt k=v] [--view id] [--tab name] [--frame] [--project]` | — | `{ delivered: boolean }` with `--json`; a sentence without. Sends a `Control` to the open viewer (section 11.2). The project is `--project`, else the viewer's. Ids, phase, step, view and tab are checked against the model first (exit 2 naming the bad one); `--step` implies its phase, and `--phase` alone clears the step. `--tab` is `3d`, `drawing` or a side tab. Exit 3 when the dev server is not running or no viewer acknowledges within 2 s. |
+| `wb render --view <viewId\|3d-front\|3d-iso\|3d-top\|sheets\|cutlist> [--phase] [--step] [--opt] [--select ids] [--size 1600x1000] [--out file.png]` | — | `{ file, width, height }` with `--json`. Default `--out`: `.diy-bench/renders/<project>.<target>[.<phase>].png`. Uses the running dev server if there is one, else starts a temporary one (with `WB_EPHEMERAL=1`, so it leaves `server.json` alone, and its own dependency cache `node_modules/.vite-wb`, so it never re-optimizes under a server the user runs). Headless Chrome with `channel: "chrome"`, device scale 1; the URL has `?render=<target>` plus the project, options, phase, step and `select`, which shows only that panel full-window (`app/render.tsx`) and sets `window.__wbRender.ready` once drawn. A render page posts no state and ignores `wb show`. `3d-front` and `3d-top` use the orthographic camera; `sheets` and `cutlist` are full-page, so taller than `--size`. About 2–3 s. |
 | `wb export --format csv\|pdf (glb, stl, dxf, step are deferred) [--out dir] [--page letter\|tabloid] [--with-context]` | — | `{ files: string[] }` |
 | `wb snapshot [--update]` | project (every project without `--project`) | writes or compares `expected/` (section 13.2); exit 1 on differences without `--update` |
-| `wb new <id> --template closet\|shelf\|cabinet\|blank [--title]` | — | creates `projects/<id>/` with `project.ts`, `notes.md` and `expected/`, and prints the path |
+| `wb new <id> --template closet\|shelf\|cabinet\|blank [--title]` | — | creates `projects/<id>/` with `project.ts`, `notes.md` and `expected/` (golden files written at once, so `npm test` stays green), and prints the path. Templates live in `tools/templates/<t>/`; each checks with no issues, and every placeholder value is marked `// inferred`. `closet` is a room with one shelf on cleats and a rod (the closet fixture is the full example); `shelf` a bookcase; `cabinet` a frameless base cabinet with one door; `blank` one panel. |
 
 Implementation notes:
 - `tools/wb.ts` uses `node:util` `parseArgs`, with no CLI library.
@@ -1503,8 +1532,10 @@ Implementation notes:
 ### 11.2 Dev-server plugin (`tools/vite-plugin.ts`)
 **Startup:**
 - Defines `__WB_ROOT__` (the repo's absolute path) for the app, which needs it for `vscode://file/…` links and for fetching source maps.
-- Writes `.diy-bench/server.json`: `{ url, pid, startedAt, token }`. `token` is 32 random hex characters, new on each start.
+- Writes `.diy-bench/server.json`: `{ url, pid, startedAt, token }`. `token` is 32 random hex characters, new on each start (and on each in-process restart, which Vite does whenever `vite.config.ts` or a module it imports changes).
 - On close, removes the file.
+- With `WB_EPHEMERAL=1` (the temporary server of `wb render`) it neither writes nor removes `server.json`. `WB_DIR` moves the folder.
+- The plugin imports only `tools/files.ts`, `tools/projects.ts` and `core/control.ts` (which has no imports), so ordinary edits to `core/` are hot updates, not server restarts.
 
 **Endpoints**, all on the Vite server, which listens on 127.0.0.1:
 
@@ -1512,14 +1543,16 @@ Implementation notes:
 |---|---|---|---|
 | `POST /__wb/state` | the app | `ViewerState` | Rejected with 403 unless `Origin` is present and equals one of the server's own origins (`http://127.0.0.1:<port>` or `http://localhost:<port>`). Rejected with 400 unless the body is JSON with `version: 1`. Writes `.diy-bench/state.json` atomically. Returns 204. |
 | `GET /__wb/state` | CLI | — | The current `ViewerState`, or 404. |
-| `POST /__wb/control` | CLI | `Control` | Requires the header `x-wb-token: <token>`. Broadcasts `server.ws.send({ type: "custom", event: "wb:control", data })` [V: Vite HMR API], then waits up to 2 s for a `wb:ack` with the same `id`, sent by the app through `import.meta.hot.send`. Returns `{ delivered }`. |
+| `POST /__wb/control` | CLI | `Control` | Requires the header `x-wb-token: <token>` (403 otherwise, compared in constant time). Rejected with 400 unless the body is a well-formed `Control` (`controlProblem` in `core/control.ts`); a missing `id` is filled in. Broadcasts `server.ws.send({ type: "custom", event: "wb:control", data })` [V: Vite HMR API], then waits up to 2 s for a `wb:ack` with the same `id`, sent by the app (`app/control.ts`) through `import.meta.hot.send` after applying it. Returns `{ delivered: true, ok, message? }` (`message` names anything the viewer could not apply, such as an unknown part) or `{ delivered: false }`. Verified by the M8 browser tests. |
 | `GET /__wb/health` | CLI | — | `{ ok: true, projects: string[] }` |
 
-The `Control` message:
+The `Control` message (`core/control.ts`):
 ```ts
 type Control = { id: string; select?: string[]; hover?: string[]; phase?: string; step?: string | null;
                  config?: Record<string, string>; view?: string; tab?: string; frame?: boolean; project?: string };
+type ControlAck = { id: string; ok: boolean; message?: string };
 ```
+The app applies the project and options first and waits (up to 1.5 s) for the new model, then phase and step, view, tab, selection (source `"agent"`), hover and frame. Every open viewer applies it; the first acknowledgement answers the CLI.
 
 **Why the token and Origin checks [I]:** browsers do not apply CORS to simple cross-origin POSTs in a way that prevents side effects. Without them, any web page could drive the viewer or overwrite the state file the agent trusts.
 
@@ -1703,9 +1736,9 @@ Compare mode in the app: the ⇄ button beside an option control compares the mo
 - **Check hook tests:**
   - On a temporary copy of the closet with an overlap introduced, it exits 2. Stderr contains `overlap` and `project.ts:`.
   - On the valid closet, it exits 0 with stdout JSON whose `hookSpecificOutput.additionalContext` starts with `[diy-bench] closet-built-in ok`.
-  - After changing `partitionHeight` to 82, the summary mentions `partition-left` and `84 → 82`.
+  - After changing `partitionHeight` to 82, the summary mentions `partition-left` and `84 → 82`. The test also lowers `rods.leftUpper` from 81½ to 79½: with only the partitions lowered, the left top shelf's nosing comes down onto the upper rod, and the hook correctly fails with an `overlap`.
   - A full run on the closet takes under 3 s.
-- **`./wb show`:** with the dev server running, `./wb show --select partition-left --phase p1` returns `{ "delivered": true }`, and the viewer's store matches. With the server stopped, it exits 3.
+- **`./wb show`:** with the dev server running, `./wb show --select partition-left --phase p1 --json` returns `{ "delivered": true }`, and the viewer's store matches. With the server stopped, it exits 3. (`tests/e2e/m8-agent.spec.ts` starts its own dev server with `WB_DIR` set, so it never drives or stops the user's.)
 - **`./wb render`:** `./wb render --view front --out /tmp/front.png` writes a PNG at least 1200 px wide, and its centre pixel region is not uniform.
 - **Live test** (skipped unless `RUN_CLAUDE_TESTS=1`): `claude -p` with `--model haiku`, in a temporary copy of the repo, replicating the two hook spikes in `spikes/hook/`. It asks which part is selected, and asserts the answer contains the id from the state file.
 

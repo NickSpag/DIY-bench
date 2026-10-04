@@ -384,3 +384,11 @@ table.t tr[data-part] td:first-child { box-shadow: inset 3px 0 0 var(--hl, trans
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* Render mode (?render=…, for `wb render`): one panel, full window, no tools. */
+.render-root { position: fixed; inset: 0; display: flex; flex-direction: column; background: var(--sheet); }
+.render-root > .pane { flex: 1 1 auto; }
+.render-root .vp-tools, .render-root .vp-hint, .render-root .tooltip-card, .render-root .pane-draw .pane-head, .render-root .drawing-tools { display: none; }
+html.render-flow, html.render-flow body, html.render-flow #root { height: auto; }
+html.render-flow .render-root { position: static; }
+html.render-flow .render-root .pane-body { overflow: visible; }
