@@ -231,7 +231,8 @@ function useKeys() {
       else if (k === "]") stepBy(1);
       else if (k === "Escape") {
         if (s.help) s.set({ help: false });
-        else s.clearSelection();
+        else if (s.selected.length) s.clearSelection();
+        else if (s.step) s.setStep(null);   // a second Esc lets go of the step too
       } else if (k === "?") s.set({ help: !s.help });
       else return;
       e.preventDefault();

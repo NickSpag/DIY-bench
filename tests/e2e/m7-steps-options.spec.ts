@@ -22,6 +22,24 @@ test("the Steps panel lists 2 phases and 9 steps; clicking p2-frame shows that s
   await expect(page.locator('[data-testid="drawing"] svg')).toHaveAttribute("data-step", "p2-frame");
 });
 
+test("a step can be let go: a second click on it, the ✕ by its title, or Esc after the selection", async ({ page }) => {
+  await openApp(page);
+  await sideTab(page, "steps");
+  const step = page.getByTestId("steps").locator('.step[data-step="p2-frame"] .ti');
+  await step.click();
+  await step.click();
+  expect(await storeState(page, "[s.step, s.selected.length]")).toEqual([null, 0]);
+  await step.click();
+  await page.getByTestId("step-clear").click();
+  expect(await storeState(page, "s.step")).toBe(null);
+  await expect(page.getByTestId("step-clear")).toHaveCount(0);
+  await step.click();
+  await page.keyboard.press("Escape");
+  expect(await storeState(page, "[s.step, s.selected.length]")).toEqual(["p2-frame", 0]);
+  await page.keyboard.press("Escape");
+  expect(await storeState(page, "s.step")).toBe(null);
+});
+
 test("at step p1-stand the 3D view shows the bench, cleat and stand parts and no top shelves", async ({ page }) => {
   await openApp(page);
   await sideTab(page, "steps");

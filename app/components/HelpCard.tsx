@@ -8,7 +8,7 @@ const KEYS: [string, string][] = [
   ["E", "explode on / off"],
   ["S", "section on / off"],
   ["[  ]", "previous / next build step"],
-  ["Esc", "clear the selection"],
+  ["Esc", "clear the selection, then the step"],
   ["Shift-click", "add or remove a part from the selection"],
   ["?", "this card"],
 ];

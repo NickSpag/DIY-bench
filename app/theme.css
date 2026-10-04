@@ -144,6 +144,8 @@ select.ctl, .ctl-select {
 .stepper button { border: 0; background: transparent; padding: 3px 8px; cursor: pointer; color: var(--ink-soft); font: 500 0.85rem var(--f-mono); }
 .stepper button:hover:not(:disabled) { color: var(--ink); background: var(--sheet-2); }
 .stepper button:disabled { opacity: 0.35; cursor: default; }
+.step-clear { border: 1px solid var(--rule); background: var(--sheet); padding: 2px 7px; cursor: pointer; color: var(--ink-soft); font: 500 0.8rem var(--f-mono); }
+.step-clear:hover { color: var(--ink); background: var(--sheet-2); }
 .stepper .lbl { font: 500 0.75rem var(--f-mono); padding: 0 6px; min-width: 7.5em; text-align: center; white-space: nowrap; cursor: pointer; }
 input[type="range"] { accent-color: var(--dim); width: 84px; }
 

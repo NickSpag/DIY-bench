@@ -26,6 +26,10 @@ export function StepsPanel() {
     return axes.map((a) => `${a} ${f.L(from[a][0], true)} → ${f.L(m.to[a][0], true)}`).join(", ");
   };
   const s = useWb.getState();
+  const clearStep = () => {
+    s.setStep(null);
+    s.clearSelection();
+  };
   const chip = (id: string) => {
     const p = r.part(id);
     return (
@@ -48,11 +52,13 @@ export function StepsPanel() {
           {g.steps.map((st) => (
             <div key={st.id} className="step" data-step={st.id} aria-current={st.id === step} role="button" tabIndex={0}
               onClick={(e) => {
+                if (st.id === step && !e.shiftKey) return clearStep();   // a second click on the current step lets it go
                 s.setPhase(g.phase.id, st.id);
                 s.select(st.parts, { toggle: e.shiftKey, source: "steps" });
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
+                  if (st.id === step) return clearStep();
                   s.setPhase(g.phase.id, st.id);
                   s.select(st.parts, { source: "steps" });
                 }

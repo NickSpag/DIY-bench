@@ -114,6 +114,10 @@ export function TopBar() {
           <button type="button" aria-label="Next step" title="Next step  ]" onClick={() => stepBy(1)}>›</button>
         </div>
         {stepIdx >= 0 && <span className="muted" style={{ fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 220 }}>{stepTitle}</span>}
+        {stepIdx >= 0 && (
+          <button type="button" className="step-clear" data-testid="step-clear" aria-label="Show the whole phase" title="Show the whole phase  Esc"
+            onClick={() => useWb.getState().setStep(null)}>✕</button>
+        )}
       </div>
       <span className="tb-spacer" />
       <div className="tb-group">
