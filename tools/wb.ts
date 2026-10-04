@@ -7,6 +7,10 @@ import type { AnyProject, Config, Issue, Resolved } from "../core/model/types.ts
 import { toJson } from "../core/json.ts";
 import { fmtPartSize, partDetail, partSummary } from "../core/query.ts";
 import { fmtLength } from "../core/units.ts";
+import { cutList, rowOf } from "../core/cutlist.ts";
+import { shoppingList } from "../core/shopping.ts";
+import { cutListCsv } from "../core/export/csv.ts";
+import { cutListText, fmtRowSize, shoppingText } from "../core/export/text.ts";
 import { snapshot } from "./golden.ts";
 import { listProjectIds, loadProject, pickProjectId, UsageError } from "./projects.ts";
 
@@ -17,6 +21,8 @@ commands:
   check [--all-configs]        evaluate and report issues (all projects unless --project)
   parts [--kind k] [--phase p] the parts, or the parts in the build at a phase
   part <id>                    one part: its joints, step, phases and source line
+  cutlist [--format text|csv|json] [--phase p]   the cut list (all phases unless --phase)
+  shopping [--phase p]         sheets, boards, hardware and banding to buy
   snapshot [--update]          compare (or rewrite) projects/<id>/expected/ (all projects unless --project)
 
 common flags:
@@ -150,7 +156,9 @@ async function cmdPart(flags: Flags, id: string | undefined): Promise<number> {
   if (!id) throw new UsageError("usage: wb part <id>");
   const { resolved: r } = await loadAndEvaluate(flags);
   if (!r.part(id)) throw new UsageError(`no part "${id}" in ${r.project.id}`);
-  const d = partDetail(r, id);
+  const cl = cutList(r);
+  const row = rowOf(cl, id);
+  const d = { ...partDetail(r, id), cutRow: row ?? null };
   if (flags.json) {
     out(toJson(d));
     return 0;
@@ -173,9 +181,30 @@ async function cmdPart(flags: Flags, id: string | undefined): Promise<number> {
   }
   for (const j of d.joints.to) lines.push(`  joins ${j.part} by ${j.by}${j.note ? ` (${j.note})` : ""}`);
   for (const j of d.joints.from) lines.push(`  joined by ${j.part} (${j.by})${j.note ? ` (${j.note})` : ""}`);
+  if (row) lines.push(`  cut list: ${row.qty} × ${row.name}  —  ${fmtRowSize(r, row)}${row.tags.length ? `  [${row.tags.join("; ")}]` : ""} (phase ${row.phase})`);
   if (p.kind !== "context" && p.notes) lines.push(`  notes: ${p.notes}`);
   lines.push(`  src: ${d.src}`);
   out(lines.join("\n"));
+  return 0;
+}
+
+async function cmdCutlist(flags: Flags): Promise<number> {
+  const { resolved: r } = await loadAndEvaluate(flags);
+  const phase = flags.phase === undefined ? undefined : pickPhase(r, flags.phase);
+  const cl = cutList(r, { phase });
+  const format = flags.json ? "json" : flags.format ?? "text";
+  if (format === "json") out(toJson(cl));
+  else if (format === "csv") out(cutListCsv(r, cl));
+  else if (format === "text") out(cutListText(r, cl));
+  else throw new UsageError(`--format must be text, csv or json`);
+  return 0;
+}
+
+async function cmdShopping(flags: Flags): Promise<number> {
+  const { resolved: r } = await loadAndEvaluate(flags);
+  const phase = flags.phase === undefined ? undefined : pickPhase(r, flags.phase);
+  const list = shoppingList(r, { phase });
+  out(flags.json ? toJson(list) : shoppingText(r, list));
   return 0;
 }
 
@@ -233,23 +262,28 @@ async function main(argv: string[]): Promise<number> {
     case "check": return cmdCheck(flags);
     case "parts": return cmdParts(flags);
     case "part": return cmdPart(flags, args[0]);
+    case "cutlist": return cmdCutlist(flags);
+    case "shopping": return cmdShopping(flags);
     case "snapshot": return cmdSnapshot(flags);
     default: throw new UsageError(`unknown command "${command}"\n\n${USAGE}`);
   }
 }
 
+// Set exitCode rather than calling process.exit, so piped output is flushed in full.
 main(process.argv.slice(2)).then(
-  (code) => process.exit(code),
+  (code) => {
+    process.exitCode = code;
+  },
   (e: unknown) => {
     if (e instanceof UsageError || (e instanceof TypeError && "code" in e && String(e.code).startsWith("ERR_PARSE_ARGS"))) {
       process.stderr.write(`wb: ${(e as Error).message}\n`);
-      process.exit(2);
-    }
-    if (e instanceof EvaluationError) {
+      process.exitCode = 2;
+    } else if (e instanceof EvaluationError) {
       process.stderr.write(`wb: the project failed to evaluate: ${e.message}${e.src ? `\n  at ${fmtSrc(e.src)}` : ""}\n`);
-      process.exit(1);
+      process.exitCode = 1;
+    } else {
+      process.stderr.write(`wb: ${(e as Error)?.stack ?? String(e)}\n`);
+      process.exitCode = 1;
     }
-    process.stderr.write(`wb: ${(e as Error)?.stack ?? String(e)}\n`);
-    process.exit(1);
   },
 );

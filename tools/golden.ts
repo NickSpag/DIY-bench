@@ -4,6 +4,8 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { allConfigs, configKey, evaluate } from "../core/evaluate.ts";
 import { toJson } from "../core/json.ts";
+import { cutList } from "../core/cutlist.ts";
+import { cutListText } from "../core/export/text.ts";
 import { fmtSrc } from "../core/model/builder.ts";
 import type { AnyProject, Box, Resolved } from "../core/model/types.ts";
 import { loadProject, projectDir } from "./projects.ts";
@@ -44,6 +46,9 @@ export function goldenFiles(project: AnyProject): Map<string, string> {
     const key = configKey(config);
     const r = evaluate(project, config);
     files.set(`resolved.${key}.json`, toJson(resolvedDoc(r)));
+    const cl = cutList(r);
+    files.set(`cutlist.${key}.json`, toJson(cl));
+    files.set(`cutlist.${key}.txt`, cutListText(r, cl));
   }
   return files;
 }

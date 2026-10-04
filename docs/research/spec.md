@@ -193,7 +193,7 @@ DIY-bench/
 │   ├── steps.ts                   section 7.4
 │   ├── shopping.ts                section 7.5
 │   ├── diff.ts                    compare two Resolved (parts, cut list, sheets)
-│   └── export/                    csv.ts now; glb.ts, stl.ts, dxf.ts, step.ts deferred (section 7.6)
+│   └── export/                    csv.ts and text.ts now; glb.ts, stl.ts, dxf.ts, step.ts deferred (section 7.6)
 ├── app/                           the browser UI (React)
 │   ├── index.html
 │   ├── main.tsx                   mounts <App/>; imports store then loader
@@ -532,14 +532,16 @@ All functions below take a `Resolved`, plus a phase or step where stated. They a
 ```ts
 export function cutList(r: Resolved, opts?: { phase?: string }): CutList;
 type CutList = {
-  rows: CutRow[];            // panels and boards
+  rows: CutRow[];            // panels and boards, and one row per strip
   strips: Strip[];
   boards: { material: string; name: string; pieces: number; totalLength: number }[];
-  hardware: { item: string; name: string; unit: string; qty: number; ids: string[]; spec?: string }[];
+  hardware: { item: string; name: string; unit: string; qty: number; ids: string[]; spec?: string; notes: string[] }[];
   banding: { banding: string; name: string; length: number; ids: string[] }[];
 };
 type CutRow = {
-  phase: string;             // cut phase
+  type: "part" | "strip";    // a strip row is the one piece that the strip's members are later cut from
+  phase: string;             // the phase the row is listed in: the cut phase, except strip members (their install phase)
+  cutPhase: string;          // the phase the pieces are cut in
   material: string; materialName: string; kind: "panel" | "board";
   name: string; qty: number; ids: string[]; where: string[];
   finished: { l: number; w: number; t: number };
@@ -566,19 +568,29 @@ How rows are built:
   - `grain free`
   - `band <faces>`
   - `from strip <name>`
-- **Sorting:** by cut phase order, then sheet materials before boards, then material key, then descending `cut.l × cut.w`, then name.
+- **Sorting:** by the phase the row is listed in, then sheet materials before boards, then the order the materials are declared in the project, then descending `cut.l × cut.w`, then name. (Declaration order rather than the material key, so the author controls the order of the printed list.)
 - **Boards:** total length is the sum of `cut.l` per board material.
-- **Hardware:** quantities are summed per catalogue item. For the length of a hardware part with `length` (rods), list each length in the row's `notes`: "2 @ 26¼, 1 @ 27".
+- **Hardware:** quantities are summed per catalogue item, in catalogue order. For the length of a hardware part with `length` (rods), list each length in the row's `notes`, first: "2 @ 26¼, 1 @ 27". Other notes of the hardware parts follow.
 - **Banding:** the length per banding id is the sum of the banded edges' lengths.
-- **Strips** appear in their cut phase as one row ("Strip for the phase 2 faces", qty 1, `l × w`), and each member also appears as its own row in its install phase with the tag `from strip …`.
+- **Strips** appear in their cut phase as one row (`type: "strip"`, "Strip for the phase 2 faces", qty 1, `l × w`, `ids` = the members in order, a note naming them), and each member also appears as its own row (`type: "part"`) in its install phase, with `cutPhase` set to the cut phase and the tag `from strip <strip name>`.
 
-Text export (`./wb cutlist --format text`), modelled on the reference's "Copy as text":
+Text export (`./wb cutlist --format text`, `core/export/text.ts`), modelled on the reference's "Copy as text". Per phase: one block per material (rows with up to three `where` values in parentheses, tags in brackets, `cut in phase N` for strip members, each note on its own indented line), then that phase's hardware. Then edge banding totals and board totals:
 ```
 CLOSET BUILT-IN · CUT LIST (in) · top=1
 
 PHASE 1 · SHELL, RODS AND SHELVES
 23/32″ prefinished maple plywood (sold as ¾″)
-  2 × Partition  —  84 × 23¼ × 23/32  [band front]
+  2 × Partition (left; right)  —  84 × 23¼ × 23/32  [band front]
+      Shelf pin holes on the inner face only, 27″ to 68″. Notch for the baseboard.
+…
+Hardware
+  3 × Closet rod, 1⁵⁄₁₆″  —  2 @ 26¼, 1 @ 27
+…
+EDGE BANDING
+  Iron-on maple edge banding, ¾″: 257⅞ (6 parts)
+
+BOARD TOTALS
+  1×4: 8 pieces, 91⁹⁄₁₆ in all
 …
 ```
 
@@ -714,15 +726,19 @@ export function buildSteps(r: Resolved): { phase: Phase; steps: { id: string; ti
 
 ### 7.5 Shopping list (`core/shopping.ts`)
 ```ts
-export function shoppingList(r: Resolved, opts?: { phase?: string }): {
-  sheets: { material: string; stock: string; count: number; cost?: number }[];   // purchased only, from nest()
-  owned: { material: string; stock: string; used: number }[];
-  boards: { material: string; totalLength: number; suggested: { length: number; count: number }[] }[]; // first-fit into stockLengths
-  hardware: { item: string; name: string; qty: number; unit: string }[];
-  banding: { banding: string; length: number; withWaste: number }[];               // +10 %
-  total?: number;
+export function shoppingList(r: Resolved, opts?: { phase?: string; nestings?: Nesting[] }): {
+  sheets: { material: string; materialName: string; stock: string; count: number; cost?: number }[]; // purchased only, from nest()
+  owned: { material: string; materialName: string; stock: string; used: number }[];
+  boards: { material: string; name: string; pieces: number; totalLength: number;
+            suggested: { length: number; count: number }[] }[];                     // first-fit into stockLengths
+  hardware: { item: string; name: string; qty: number; unit: string; spec?: string; notes: string[]; cost?: number }[];
+  banding: { banding: string; name: string; length: number; withWaste: number }[]; // +10 %
+  total?: number;                                                                    // when any cost is known
 };
 ```
+- `nestings` lets a caller that already ran `nest()` pass the result in.
+- **Board suggestions:** first-fit decreasing of the cut lengths into boards of the longest stock length, with the material's `kerf` between pieces; each board is then shortened to the shortest stock length that still holds its pieces. A piece longer than every stock length gets a board of its own length. A material with no `stockLengths` gets no suggestions.
+- `shoppingList` needs the sheet layouts, so `core/nesting.ts` (the packer) landed in M2; M3 added `sheetSvg`, `wb sheets`, the `nesting:unplaced` invariant and the nesting tests.
 
 ### 7.6 Exports (`core/export/`)
 
@@ -733,7 +749,8 @@ In scope now: the CSV/text cut list and the PDF plan set. GLB, STL, DXF and STEP
 - STEP and STL are written Z-up through the rotation (x, y, z) → (x, −z, y) from section 7.3.1, because CAD tools and slicers usually assume Z-up [I].
 - The M9 STEP test re-imports the file in build123d and checks bounding boxes in the rotated frame.
 
-- **`csv.ts`** — the cut list as CSV. Columns: phase, material, name, qty, cut length, cut width, thickness, tags, ids, notes.
+- **`csv.ts`** — the cut list as CSV. Columns: phase, material, name, qty, cut length, cut width, thickness, tags, ids, notes. Lengths are written as display fractions (`23¼`) and the thickness by the rule in section 5.6 (`23/32`); tags are joined with `; ` and ids with spaces. `parseCsv` reads it back.
+- **`text.ts`** — the plain-text cut list (section 7.1) and shopping list.
 - **`glb.ts`** — writes glTF 2.0 binary directly:
   - one node per built part, named by id, with an `extras` object carrying `{ name, where, kind, material, phase, step }`;
   - box meshes with positions and normals;

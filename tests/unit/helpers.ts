@@ -1,8 +1,8 @@
 // Small projects for unit tests.
 import { defineProject } from "../../core/model/index.ts";
-import type { AnyProject, Material, ModelBuilder, Project } from "../../core/model/index.ts";
+import type { AnyProject, ModelBuilder, Project, SheetMaterial } from "../../core/model/index.ts";
 
-export const SHEET: Material = {
+export const SHEET: SheetMaterial = {
   type: "sheet", name: "¾ ply", thickness: 0.75, grained: true, finish: "prefinished", kerf: 0.125,
   stock: [{ id: "4x8", length: 96, width: 48, buy: true }],
 };
