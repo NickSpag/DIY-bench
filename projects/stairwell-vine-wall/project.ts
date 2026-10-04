@@ -54,7 +54,7 @@ export default defineProject({
       stock: [{ id: "4x4", length: 48, width: 48, buy: true }, { id: "4x8", length: 96, width: 48, buy: true }] },
     "pine-1x1": { type: "board", name: "1×1", nominal: "1×1", thickness: S1, width: S1, finish: "paint", stockLengths: [96] },
     "wood-resawn": { type: "board", name: "Your blue 1½ × 9 board, resawn in half", thickness: (P.board2x10.t - P.resawKerf) / 2, width: P.board2x10.w, finish: "clear", color: P.boardColor },
-    "wood-legs": { type: "board", name: "2×2 for the legs (other wood)", nominal: "2×2", thickness: P.leg, width: P.leg, finish: "clear", stockLengths: [96] },
+    "wood-legs": { type: "board", name: "2×2 for the legs (other wood), painted white", nominal: "2×2", thickness: P.leg, width: P.leg, finish: "paint", color: "#f3f1ec", stockLengths: [96] },
   },
   banding: {},
   hardware: {

@@ -145,7 +145,7 @@
       "phase": "p1",
       "cutPhase": "p1",
       "material": "wood-legs",
-      "materialName": "2×2 for the legs (other wood)",
+      "materialName": "2×2 for the legs (other wood), painted white",
       "kind": "board",
       "name": "Planter leg",
       "qty": 2,
@@ -154,7 +154,7 @@
       "finished": {"l": 20, "w": 1.5, "t": 1.5},
       "cut": {"l": 20, "w": 1.5, "t": 1.5},
       "band": {},
-      "tags": [],
+      "tags": ["paint"],
       "notes": []
     },
     {
@@ -237,7 +237,7 @@
     },
     {
       "material": "wood-legs",
-      "name": "2×2 for the legs (other wood)",
+      "name": "2×2 for the legs (other wood), painted white",
       "pieces": 2,
       "totalLength": 40
     }

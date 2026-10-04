@@ -49,7 +49,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 | Resawn thickness | 11/16″ | Half of 1½″ after a ⅛″ saw kerf. |
 | 1×1 | ¾ × ¾ actual | Standard size. |
 | Planter depth | 11″ front to back | Not specified yet. |
-| Legs | 2×2, 1½ × 1½ actual | Other wood; size not specified. |
+| Legs | 2×2, 1½ × 1½ actual, painted white | Other wood; size not specified. |
 | Clearance | ⅛″ at the back wall and the ceiling | Room to fit the lattice without binding. |
 | Frame spacing | rails at most 24″ apart | Lattice this thin needs support every couple of feet. |
 | Side wall thickness | 4½″ | Drawing only. |
