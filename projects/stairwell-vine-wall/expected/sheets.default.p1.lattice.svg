@@ -27,7 +27,7 @@
 <text class="wb-title" x="0" y="-1.68" font-size="2.277">4×8 (owned) · Wood lattice, ¼″ slats (two layers, ½″ thick), 96 × 48</text>
 <g class="wb-grain-arrow"><path class="wb-grain" d="M76.8 50.64H96M94.56 49.8L96 50.64L94.56 51.48"/><text class="wb-grain-label" x="75.84" y="51.36" font-size="1.92" text-anchor="end">grain</text></g>
 <rect class="wb-sheet-board" x="0" y="0" width="96" height="48"/>
-<g class="wb-offcut-g"><rect class="wb-offcut" x="53" y="0" width="43" height="48"/><text class="wb-offcut-label" x="74.5" y="24.576" font-size="1.92" text-anchor="middle">offcut 43 × 48</text></g>
-<g class="wb-placement" data-part="trellis-upper"><title>Trellis panel · 52⅞ × 45⅛ · trellis-upper</title><rect class="wb-part k-raw k-needs-finish" x="0" y="0" width="52.875" height="45.125" fill="url(#wb-raw-p1-lattice)"/><text class="wb-label" x="26.4375" y="21.8425" font-size="2.4" text-anchor="middle">Trellis panel</text><text class="wb-size" x="26.4375" y="24.7225" font-size="2.4" text-anchor="middle">52⅞ × 45⅛</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="68.5" y="0" width="27.5" height="48"/><g transform="rotate(-90 82.25 24)"><text class="wb-offcut-label" x="82.25" y="24.576" font-size="1.92" text-anchor="middle">offcut 27½ × 48</text></g></g>
+<g class="wb-placement" data-part="trellis-upper"><title>Trellis panel · 68⅜ × 45⅛ · trellis-upper</title><rect class="wb-part k-raw k-needs-finish" x="0" y="0" width="68.375" height="45.125" fill="url(#wb-raw-p1-lattice)"/><text class="wb-label" x="34.1875" y="21.8425" font-size="2.4" text-anchor="middle">Trellis panel</text><text class="wb-size" x="34.1875" y="24.7225" font-size="2.4" text-anchor="middle">68⅜ × 45⅛</text></g>
 </g>
 </svg>

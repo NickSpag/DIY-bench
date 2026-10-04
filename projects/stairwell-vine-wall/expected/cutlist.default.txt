@@ -4,24 +4,35 @@ PHASE 1 · PLANTER AND TRELLIS
 Wood lattice, ¼″ slats (two layers, ½″ thick)
   1 × Trellis panel (lower)  —  96 × 45⅛ × ½  [needs finish]
       Rip to width; keep the factory end at the bottom.
-  1 × Trellis panel (upper)  —  52⅞ × 45⅛ × ½  [needs finish; cut to fit]
+  1 × Trellis panel (upper)  —  68⅜ × 45⅛ × ½  [needs finish; cut to fit]
       Rip to width and cut to length; line up its diamonds with the lower sheet at the seam.
 
 23/32″ plywood (sold as ¾″)
-  1 × Planter front or back (front)  —  35¼ × 16 × 23/32
-  1 × Planter front or back (back)  —  35¼ × 16 × 23/32  [hidden]
-  1 × Planter bottom  —  33¹³⁄₁₆ × 7⁹⁄₁₆ × 23/32  [hidden]
-      Sits inside the four sides. Drill a few weep holes in case the liner overflows.
-  2 × Planter end (left; right)  —  16 × 7⁹⁄₁₆ × 23/32
+  1 × Planter bottom  —  32¼ × 8 × 23/32  [hidden]
+      Sits inside the four sides, screwed through them. Drill a few weep holes in case the liner overflows.
 
-1×2
-  5 × Standoff rail  —  45⅛ × 1½ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
+1×1
+  2 × Frame stile (lower sheet, left; lower sheet, right)  —  94½ × ¾ × ¾  [Behind the lattice edge; paint; cut to fit]
+  2 × Frame stile (upper sheet, left; upper sheet, right)  —  66⅞ × ¾ × ¾  [Behind the lattice edge; paint; cut to fit]
+  4 × Frame rail, full width (lower sheet; upper sheet)  —  45⅛ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
+  5 × Frame rail, between stiles (lower sheet; upper sheet)  —  43⅝ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
+  1 × Frame post behind the right leg  —  22⅞ × ¾ × ¾  [Behind the lattice and the leg; paint]
+
+2×10 (the board you have)
+  1 × Planter front or back (front)  —  35¼ × 9¼ × 1½
+  1 × Planter front or back (back)  —  35¼ × 9¼ × 1½  [Faces the lattice]
+  2 × Planter end (left; right)  —  8 × 9¼ × 1½
+
+2×10 ripped to 1½ × 1½, for legs
+  2 × Planter leg (left; right)  —  21¼ × 1½ × 1½
 
 Hardware
   1 × Planter liner or tray  —  Waterproof; sized to the planter's inside
-  20 × Screws into studs, #8 × 2½″
-  25 × Screws for the lattice, #6 × 1¼″, with finish washers
+  27 × Screws into studs, #8 × 2½″
+  45 × Screws for the lattice, #6 × 1¼″, with finish washers
   1 set × Felt or rubber feet
 
 BOARD TOTALS
-  1×2: 5 pieces, 225⅝ in all
+  1×1: 14 pieces, 744¼ in all
+  2×10 (the board you have): 4 pieces, 86½ in all
+  2×10 ripped to 1½ × 1½, for legs: 2 pieces, 42½ in all

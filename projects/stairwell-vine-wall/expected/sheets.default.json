@@ -39,13 +39,13 @@
             "name": "Trellis panel",
             "x": 0,
             "y": 0,
-            "l": 52.875,
+            "l": 68.375,
             "w": 45.125,
             "turned": false,
             "needsFinish": true
           }
         ],
-        "offcuts": [{"x": 53, "y": 0, "l": 43, "w": 48}]
+        "offcuts": [{"x": 68.5, "y": 0, "l": 27.5, "w": 48}]
       }
     ],
     "unplaced": [],
@@ -70,62 +70,22 @@
         "width": 48,
         "placements": [
           {
-            "ids": ["planter-front"],
-            "name": "Planter front or back",
-            "x": 0,
-            "y": 0,
-            "l": 35.25,
-            "w": 16,
-            "turned": false,
-            "needsFinish": false
-          },
-          {
-            "ids": ["planter-back"],
-            "name": "Planter front or back",
-            "x": 0,
-            "y": 16.125,
-            "l": 35.25,
-            "w": 16,
-            "turned": false,
-            "needsFinish": false
-          },
-          {
             "ids": ["planter-bottom"],
             "name": "Planter bottom",
             "x": 0,
-            "y": 32.25,
-            "l": 33.8125,
-            "w": 7.5625,
-            "turned": false,
-            "needsFinish": false
-          },
-          {
-            "ids": ["planter-end-left"],
-            "name": "Planter end",
-            "x": 0,
-            "y": 39.9375,
-            "l": 16,
-            "w": 7.5625,
-            "turned": false,
-            "needsFinish": false
-          },
-          {
-            "ids": ["planter-end-right"],
-            "name": "Planter end",
-            "x": 16.125,
-            "y": 39.9375,
-            "l": 16,
-            "w": 7.5625,
+            "y": 0,
+            "l": 32.25,
+            "w": 8,
             "turned": false,
             "needsFinish": false
           }
         ],
-        "offcuts": [{"x": 35.375, "y": 0, "l": 12.625, "w": 48}]
+        "offcuts": [{"x": 0, "y": 8.125, "l": 48, "w": 39.875}, {"x": 32.375, "y": 0, "l": 15.625, "w": 8}]
       }
     ],
     "unplaced": [],
     "bought": {"4x4": 1},
     "owned": {},
-    "strategy": "area/longerLeftover/prefer=none"
+    "strategy": "area/shorterLeftover/prefer=none"
   }
 ]

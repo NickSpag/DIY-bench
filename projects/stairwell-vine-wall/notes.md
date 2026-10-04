@@ -14,13 +14,15 @@ The whole stairwell is modelled as room context (treads, landings, floors, walls
 and the 3D view show the trellis and planter in place. None of it appears in the cut list.
 
 - **Trellis:** the two 4×8 sheets of wood lattice you already have (¼″ slats in two layers, slats
-  just under 1½″ wide). Both are ripped to 45″. The lower one runs its full 96″, and the upper one
-  is cut to fit up to the ceiling.
-- **Standoff rails:** the lattice is screwed to horizontal 1×2 rails, so it sits ¾″ off the wall
-  and the vine can weave behind it. The rails are horizontal so that each one crosses every stud,
-  whichever way the studs are spaced. Paint them the wall colour; they show through the lattice.
-- **Planter:** a 23/32″ plywood box at the foot of the wall, on the landing, with a waterproof
-  liner. It is 9″ deep, to keep the landing clear, and 16″ tall, for about 14″ of soil.
+  just under 1½″ wide), ripped to 45⅛″. With the planter raised, they run from ½″ above the landing
+  to the ceiling: the lower sheet its full 96″, the upper cut to 68⅜″.
+- **Frame:** each sheet sits on a frame of your 1×1s, kept inside the sheet's edges, so the lattice
+  stands ¾″ off the wall and the vine can weave behind it. The full-width rails screw into every
+  stud they cross; rails are at most 24″ apart. Paint the frame the wall colour.
+- **Planter:** built from your 2×10 for its looks: front, back and ends on edge, a plywood bottom
+  inside, and a liner. Its bottom is 12″ off the landing. Two square legs, ripped from the 2×10,
+  stand on the landing behind it and screw through the lattice into the frame, so the weight goes to
+  the floor and the planter is held to the wall.
 
 ## Assumptions
 
@@ -32,18 +34,23 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 | Stair layout | flight 1: 6 risers, flight 2: 4, flight 3: 5; 7½″ rise, 10″ treads, 1½″ thick | From the photos; flight 2's treads (9″) are what fits the 102″ back wall between two landings. |
 | Landing 1 | the same size as landing 2 | Not measured. |
 | Upper floor | 75″ above landing 2, so 90″ to the ceiling | Follows from the risers. |
-| Planter size | 9″ deep × 16″ tall, as long as the landing along the wall | Deep enough soil for a vine without crowding the landing. |
-| Side-wall clearance | ⅛″ each side and at the ceiling | Room to fit the lattice without binding. |
-| Rail spacing | at most 48″, plus one at each end and at the seam | Lattice this thin needs support every few feet. |
+| 2×10 | 1½ × 9¼ actual, 120″ long | Standard size; the length is a placeholder until you measure the board. |
+| 1×1 | ¾ × ¾ actual | Standard size. |
+| Planter | 35¼″ long (the landing), 11″ deep, one 2×10 tall, bottom 12″ off the landing | Not specified yet. One board high gives about 8″ of soil, which the soil-depth check flags. |
+| Legs | 1½ × 1½, ripped from the 2×10 | Matches the planter. |
+| Clearance | ⅛″ at the back wall and the ceiling | Room to fit the lattice without binding. |
+| Frame spacing | rails at most 24″ apart | Lattice this thin needs support every couple of feet. |
 | Side wall thickness | 4½″ | Drawing only. |
 
 ## Open questions
 
 - The stair counts, rise and run are read from photos; count the steps in each flight to confirm.
-- Which plant? It sets the soil depth and the light the vine needs.
+- The 2×10's length, and the planter's size and height off the landing.
+- Which plant? It sets the soil depth. One 2×10 gives about 8″ of soil; two stacked would give about 17″.
 
 ## Decisions log
 
 - 2026-10-04: lattice ripped to width; the lower sheet runs full length and the upper is cut to the ceiling.
 - 2026-10-04: horizontal standoff rails rather than vertical, so every rail reaches studs.
+- 2026-10-04: planter from the user's 2×10, raised on two back legs fixed to the lattice frame; lattice framed with 1×1s and run from the landing to the ceiling.
 - 2026-10-04: the whole stairwell modelled as context, from the 102″ back wall and the 37½ × 35½ landing.
