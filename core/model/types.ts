@@ -87,6 +87,7 @@ export type ContextSpec = {
   id: string; name: string; where?: string;
   role: ContextRole; // walls and floor take part in overlap checks; contents never do
   box: Box; phase?: string; removedIn?: string; moves?: Record<string, Box>;
+  color?: string; // display colour in the 3D view and drawings (a CSS colour), e.g. water or soil
 };
 
 export type PartKind = "panel" | "board" | "hardware" | "context";

@@ -29,6 +29,15 @@ and the 3D view show the trellis and planter in place. None of it appears in the
   is 23/32″ plywood fitted between them, from the same sheet as the bottom, which saves the board. A liner goes inside. Its top is 38″ above the landing. It runs the full width of the vine wall with its back
   against the wall, so its right end overhangs flight 3, and sticks out 11″ into the landing.
   One board high or two is a design option; two (18″) gives about 16¾″ of soil, one (9″) about 7¾″.
+- **Watering without drips:** the planter sits over the landing and the top of a stair, so no
+  water may leave it. Inside the sealed box is a rigid, seamless liner, and in its bottom 2½″ a
+  water reservoir of about 4 gallons. An egg-crate grate on short supports holds the soil above
+  the water, under landscape fabric, and two wicking cups packed with soil hang down into it. You
+  water through a fill tube in the back corner at the wall end, hidden by the vine. A ½″
+  overflow hole in the liner, just under the grate, keeps it from overfilling, and a float gauge
+  in the tube shows when to refill. The inside of the wooden box is sealed as well, with two weep
+  holes in its bottom so a leak would show rather than rot it. Two boards high leaves about 13″ of
+  soil above the reservoir; one board high leaves about 4″, which the soil-depth check flags.
 - **Legs:** two 2×2 legs from other wood, directly under the back of the planter, so they
   take nothing from the walking area, and carry the planter and the trellis on it to the floor. The
   left leg stands on the landing at the back-wall end. The right leg is a design option: on the edge
@@ -49,6 +58,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 | Resawn thickness | 11/16″ | Half of 1½″ after a ⅛″ saw kerf. |
 | 1×1 | ¾ × ¾ actual | Standard size. |
 | Planter depth | 11″ front to back | Not specified yet. |
+| Reservoir | 2½″ of water, ⅛″ liner walls, ½″ grate, 4″ cups, 1¼″ PVC fill tube | Typical for a self-watering planter. |
 | Legs | 2×2, 1½ × 1½ actual, painted white | Other wood; size not specified. |
 | Clearance | ⅛″ at the back wall and the ceiling | Room to fit the lattice without binding. |
 | Frame spacing | rails at most 24″ apart | Lattice this thin needs support every couple of feet. |
@@ -65,6 +75,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 
 - 2026-10-04: lattice ripped to width; the lower sheet runs full length and the upper is cut to the ceiling.
 - 2026-10-04: horizontal standoff rails rather than vertical, so every rail reaches studs.
+- 2026-10-04: a sealed liner with a water reservoir, grate, wicking cups and fill tube, so the planter never drips.
 - 2026-10-04: the blue board only on the planter's front and ends; the back is plywood; the legs are 2×2 from other wood.
 - 2026-10-04: planter top at 38″; the board is resawn in half; one or two boards high is an option.
 - 2026-10-04: the lattice and frame stand on the planter instead of reaching the landing; the planter's back goes against the wall; the second sheet moves to a phase 2.

@@ -33,7 +33,7 @@
       "band": {},
       "tags": ["hidden"],
       "notes": [
-        "Sits inside the four sides, screwed through them. Drill a few weep holes in case the liner overflows."
+        "Sits inside the four sides, screwed through them. Two small weep holes let a leak show as a drip rather than rot the box quietly."
       ]
     },
     {
@@ -245,12 +245,73 @@
   "hardware": [
     {
       "item": "liner",
-      "name": "Planter liner or tray",
+      "name": "Rigid planter liner (trough insert)",
       "unit": "each",
       "qty": 1,
       "ids": ["planter-liner"],
+      "notes": [
+        "About 43¼″ long × 9³⁄₃₂″ front to back × 7²⁵⁄₃₂″ deep, outside. Drill one ½″ overflow hole in a back corner, just under the grate."
+      ],
+      "spec": "Seamless and watertight; see the part's notes for the size"
+    },
+    {
+      "item": "grate",
+      "name": "Egg-crate grate (plastic light-diffuser panel)",
+      "unit": "each",
+      "qty": 1,
+      "ids": ["reservoir-grate"],
+      "notes": ["Cut holes for the two wicking cups and the fill tube."],
+      "spec": "Cut to fit inside the liner"
+    },
+    {
+      "item": "grate-supports",
+      "name": "Grate supports: short pieces of PVC pipe",
+      "unit": "set",
+      "qty": 1,
+      "ids": ["reservoir-supports"],
+      "notes": []
+    },
+    {
+      "item": "cup",
+      "name": "Wicking cups (4″ net pots)",
+      "unit": "each",
+      "qty": 2,
+      "ids": ["wicking-cup-1", "wicking-cup-2"],
+      "notes": ["Hangs from its hole in the grate, packed with soil, its foot in the water."]
+    },
+    {
+      "item": "fill-tube",
+      "name": "Fill tube, 1¼″ PVC pipe",
+      "unit": "each",
+      "qty": 1,
+      "ids": ["fill-tube"],
+      "notes": ["1 @ ≈7¹⁵⁄₁₆"],
+      "spec": "Cut the bottom end at an angle so water flows out"
+    },
+    {
+      "item": "gauge",
+      "name": "Water-level float gauge",
+      "unit": "each",
+      "qty": 1,
+      "ids": ["water-gauge"],
       "notes": [],
-      "spec": "Waterproof; sized to the planter's inside"
+      "spec": "Sits in the fill tube"
+    },
+    {
+      "item": "sealer",
+      "name": "Sealer for the inside of the box (epoxy or liquid rubber)",
+      "unit": "set",
+      "qty": 1,
+      "ids": ["box-sealer"],
+      "notes": []
+    },
+    {
+      "item": "landscape-fabric",
+      "name": "Landscape fabric, to keep soil out of the reservoir",
+      "unit": "set",
+      "qty": 1,
+      "ids": ["reservoir-fabric"],
+      "notes": []
     },
     {
       "item": "screws",

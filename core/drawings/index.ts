@@ -162,7 +162,11 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
   }
 
   // ---------- contents: translucent, dashed outline ----------
-  const contentEls = contents.map((i) => `<g ${dp(i.id)}><rect class="f-contents" ${rectAttrs(i.u, i.v)}/><rect class="c-line" ${rectAttrs(i.u, i.v)}/></g>`);
+  const contentEls = contents.map((i) => {
+    const c = i.part.kind === "context" ? i.part.color : undefined;
+    const fill = c && /^[#\w(),.% -]+$/.test(c) ? `class="f-contents f-mat-contents" style="--mat:${c}"` : `class="f-contents"`;
+    return `<g ${dp(i.id)}><rect ${fill} ${rectAttrs(i.u, i.v)}/><rect class="c-line" ${rectAttrs(i.u, i.v)}/></g>`;
+  });
 
   // ---------- veil: translucent fill and hatch, outlined only along the opening ----------
   const veilEls: string[] = [];

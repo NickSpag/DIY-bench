@@ -25,7 +25,8 @@ export const P = {
   resawKerf: 0.125,                      // inferred: the board is resawn in half through its thickness
   planter: { depth: 11, top: 38 },       // top 38″ above the landing; depth inferred
   leg: 1.5,                              // inferred: square legs, 2×2 from other wood
-  linerInset: 0.25,
+  linerInset: 0.25,                      // inferred: gap between the box and the liner
+  reservoir: { depth: 2.5, linerWall: 0.125, grate: 0.5, cup: 4, tube: 1.66 }, // inferred: water depth, liner wall, egg-crate grate, wicking cup and 1¼″ PVC fill tube diameters
 };
 
 export default defineProject({
@@ -59,7 +60,14 @@ export default defineProject({
   },
   banding: {},
   hardware: {
-    liner: { name: "Planter liner or tray", unit: "each", spec: "Waterproof; sized to the planter's inside" },
+    liner: { name: "Rigid planter liner (trough insert)", unit: "each", spec: "Seamless and watertight; see the part's notes for the size" },
+    grate: { name: "Egg-crate grate (plastic light-diffuser panel)", unit: "each", spec: "Cut to fit inside the liner" },
+    "grate-supports": { name: "Grate supports: short pieces of PVC pipe", unit: "set" },
+    cup: { name: "Wicking cups (4″ net pots)", unit: "each" },
+    "fill-tube": { name: "Fill tube, 1¼″ PVC pipe", unit: "each", spec: "Cut the bottom end at an angle so water flows out" },
+    gauge: { name: "Water-level float gauge", unit: "each", spec: "Sits in the fill tube" },
+    sealer: { name: "Sealer for the inside of the box (epoxy or liquid rubber)", unit: "set" },
+    "landscape-fabric": { name: "Landscape fabric, to keep soil out of the reservoir", unit: "set" },
     screws: { name: "Screws into studs, #8 × 2½″", unit: "each" },
     "trellis-screws": { name: "Screws for the lattice, #6 × 1¼″, with finish washers", unit: "each" },
     pads: { name: "Felt or rubber feet", unit: "set" },
@@ -121,7 +129,7 @@ export default defineProject({
     b.panel({ id: "planter-bottom", name: "Planter bottom", material: "ply", phase: "p1", step: "planter",
       box: box([px[0] + bt, px[1] - bt], span(py[0], T), [pz[0] + T, pz[1] - bt]), grain: "x", exposure: "hidden",
       joins: ["front", "back", "end-wall", "end-stair"].map(k => ({ to: `planter-${k}`, by: "screws" as const })),
-      notes: "Sits inside the four sides, screwed through them. Drill a few weep holes in case the liner overflows." });
+      notes: "Sits inside the four sides, screwed through them. Two small weep holes let a leak show as a drip rather than rot the box quietly." });
 
     // Two legs under the back of the planter carry it, and the trellis standing on it, to the floor. The wall-end leg
     // stands on the landing; the stair-end one either stands on the landing's edge or runs down to the first step.
@@ -135,9 +143,33 @@ export default defineProject({
         material: "wood-legs", phase: "p1", step: "set-planter",
         box: box(xr, [foot, py[0]], span(pz[0], lg)), grain: "y",
         joins: [{ to: "planter-back", by: "screws" }] });
-    const li = P.linerInset;
-    b.hardware({ id: "planter-liner", name: "Liner", item: "liner", qty: 1, phase: "p1", step: "set-planter",
-      box: box([px[0] + bt + li, px[1] - bt - li], [py[0] + T, py[1] - 0.5], [pz[0] + T + li, pz[1] - bt - li]) });
+    // ---------- the reservoir: a sealed liner with water under a grate, so nothing drips on the landing ----------
+    const li = P.linerInset, Rv = P.reservoir, lw = Rv.linerWall;
+    const lx: Range = [px[0] + bt + li, px[1] - bt - li], lz: Range = [pz[0] + T + li, pz[1] - bt - li], ly: Range = [py[0] + T, py[1] - 0.5];
+    const ix: Range = [lx[0] + lw, lx[1] - lw], iz: Range = [lz[0] + lw, lz[1] - lw], floorY = ly[0] + lw;   // inside the liner
+    const grateY: Range = span(floorY + Rv.depth, Rv.grate);
+    const soilTop = py[1] - 1;                                          // an inch below the rim
+    const ext = (r: Range) => r[1] - r[0];
+    b.hardware({ id: "planter-liner", name: "Liner", item: "liner", qty: 1, phase: "p1", step: "reservoir",
+      notes: `About ${fmtLength(ext(lx), { marks: true })} long × ${fmtLength(ext(lz), { marks: true })} front to back × ${fmtLength(ext(ly), { marks: true })} deep, outside. Drill one ½″ overflow hole in a back corner, just under the grate.` });
+    b.context({ id: "reservoir-water", name: "Water", where: "reservoir", role: "contents", color: "#5fa8d3", box: box(ix, [floorY, grateY[0]], iz) });
+    b.context({ id: "planter-soil", name: "Soil", role: "contents", color: "#6b4f3a", box: box(ix, [grateY[1], soilTop], iz) });
+    b.hardware({ id: "reservoir-grate", name: "Grate", item: "grate", qty: 1, phase: "p1", step: "reservoir",
+      box: box(ix, grateY, iz), notes: "Cut holes for the two wicking cups and the fill tube." });
+    b.hardware({ id: "reservoir-supports", name: "Grate supports", item: "grate-supports", qty: 1, phase: "p1", step: "reservoir" });
+    const cupZ = (iz[0] + iz[1]) / 2;
+    [1, 3].forEach((q, i) => {
+      const cx = Math.round((ix[0] + (ix[1] - ix[0]) * q / 4) * 16) / 16;
+      b.hardware({ id: `wicking-cup-${i + 1}`, name: "Wicking cup", where: i === 0 ? "wall end" : "stair end", item: "cup", qty: 1, phase: "p1", step: "reservoir",
+        cylinder: { axis: "y", from: floorY, to: grateY[0], center: [cx, cupZ], diameter: Rv.cup }, notes: "Hangs from its hole in the grate, packed with soil, its foot in the water." });
+    });
+    const tubeX = ix[0] + Rv.tube / 2 + 0.125, tubeZ = iz[0] + Rv.tube / 2 + 0.125;   // the back corner at the wall end, hidden by the vine
+    b.hardware({ id: "fill-tube", name: "Fill tube", item: "fill-tube", qty: 1, phase: "p1", step: "reservoir", length: py[1] - 0.25 - floorY,
+      cylinder: { axis: "y", from: floorY, to: py[1] - 0.25, center: [tubeX, tubeZ], diameter: Rv.tube },
+      joins: [{ to: "reservoir-grate", by: "notch", note: "Passes through a hole in the grate" }] });
+    b.hardware({ id: "water-gauge", name: "Water-level gauge", item: "gauge", qty: 1, phase: "p1", step: "reservoir" });
+    b.hardware({ id: "box-sealer", name: "Sealer", item: "sealer", qty: 1, phase: "p1", step: "planter" });
+    b.hardware({ id: "reservoir-fabric", name: "Landscape fabric", item: "landscape-fabric", qty: 1, phase: "p1", step: "reservoir" });
     b.hardware({ id: "planter-feet", name: "Feet", item: "pads", qty: 1, phase: "p1", step: "set-planter" });
 
     // ---------- lattice on its 1×1 frame, standing on the planter's back: one sheet now, the second in phase 2 ----------
@@ -172,9 +204,11 @@ export default defineProject({
 
     // ---------- steps ----------
     b.step({ id: "planter", phase: "p1", title: "Build the planter",
-      text: "Resaw the blue board in half through its thickness, then cut the fronts and ends. Screw the plywood back between the ends, flush with their back edges, and the front across the ends; for a planter two boards high, join the lower and upper rows with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
+      text: "Resaw the blue board in half through its thickness, then cut the fronts and ends. Screw the plywood back between the ends, flush with their back edges, and the front across the ends; for a planter two boards high, join the lower and upper rows with a cleat inside each corner. Fit the plywood bottom inside, drill two small weep holes in it, and seal the whole inside in case the liner ever fails. Finish the outside." });
     b.step({ id: "set-planter", phase: "p1", title: "Legs and planter",
-      text: "Cut the two 2×2 legs and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
+      text: "Cut the two 2×2 legs, paint them white, and screw them under the back of the planter. Stand it against the wall and level it, pads under the legs." });
+    b.step({ id: "reservoir", phase: "p1", title: "Liner and reservoir",
+      text: "Drop in the liner and drill its overflow hole in a back corner, just under where the grate will sit. Stand the grate on its supports, hang the two wicking cups through it, and set the fill tube in the back corner at the wall end. Lay landscape fabric over the grate, pack the cups with soil, then fill with soil to an inch below the rim. Water through the tube until water shows at the overflow; the gauge shows when to refill." });
     b.step({ id: "frame-lower", phase: "p1", title: "Frame for the first sheet",
       text: "Paint the 1×1s the wall colour. Stand the bottom rail on the planter's back and screw every full-width rail into each stud it crosses, then fit the stiles and the rails between them." });
     b.step({ id: "trellis-lower", phase: "p1", title: "Hang the first sheet",
@@ -206,7 +240,9 @@ export default defineProject({
       top - bottom <= 2 * P.lattice.sheet[0], `${top - bottom}″ to cover, ${2 * P.lattice.sheet[0]}″ of lattice`, "error");
     b.check("sheet-width", "One sheet is wide enough for the wall", x[1] - x[0] <= P.lattice.sheet[1],
       `wall needs ${x[1] - x[0]}″, sheets are ${P.lattice.sheet[1]}″`, "error");
-    b.check("soil-depth", "At least 12″ of soil depth for a climbing vine", py[1] - py[0] - T - 0.5 >= 12, `${py[1] - py[0] - T - 0.5}″ inside the liner`);
+    const soil = soilTop - grateY[1], gallons = (ext(ix) * ext(iz) * Rv.depth) / 231;
+    b.check("soil-depth", "At least 12″ of soil above the reservoir for a climbing vine", soil >= 12,
+      `${fmtLength(soil, { marks: true })} of soil over a ${fmtLength(Rv.depth, { marks: true })} reservoir of about ${gallons.toFixed(1)} gallons`);
 
     // ---------- drawing views ----------
     b.view({ id: "front", title: "Elevation", kind: "elevation", look: "-z", depth: [-wt, LD],

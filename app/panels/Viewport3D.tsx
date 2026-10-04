@@ -51,7 +51,7 @@ function usePalette(): Palette {
 
 function partColor(p: ResolvedPart, pal: Palette): string {
   if (p.kind === "hardware") return pal.metal;
-  if (p.kind === "context") return p.role === "contents" ? pal.fabric : pal.wall;
+  if (p.kind === "context") return p.color ?? (p.role === "contents" ? pal.fabric : pal.wall);
   const m = p.materialDef;
   if (!m) return pal.wood;
   if (m.color) return m.color;
