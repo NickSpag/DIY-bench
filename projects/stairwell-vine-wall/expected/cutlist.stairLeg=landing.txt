@@ -1,11 +1,9 @@
 STAIRWELL VINE WALL · CUT LIST (in) · stairLeg=landing
 
-PHASE 1 · PLANTER AND TRELLIS
+PHASE 1 · PLANTER AND THE FIRST TRELLIS SHEET
 Wood lattice, ¼″ slats (two layers, ½″ thick)
   1 × Trellis panel (lower)  —  96 × 45⅛ × ½  [needs finish]
       Rip to width; keep the factory end at the bottom.
-  1 × Trellis panel (upper)  —  68⅜ × 45⅛ × ½  [needs finish; cut to fit]
-      Rip to width and cut to length; line up its diamonds with the lower sheet at the seam.
 
 23/32″ plywood (sold as ¾″)
   1 × Planter bottom  —  42⅛ × 8 × 23/32  [hidden]
@@ -13,14 +11,12 @@ Wood lattice, ¼″ slats (two layers, ½″ thick)
 
 1×1
   2 × Frame stile (lower sheet, back-wall end; lower sheet, stair end)  —  94½ × ¾ × ¾  [Behind the lattice edge; paint; cut to fit]
-  2 × Frame stile (upper sheet, back-wall end; upper sheet, stair end)  —  66⅞ × ¾ × ¾  [Behind the lattice edge; paint; cut to fit]
-  4 × Frame rail, full width (lower sheet; upper sheet)  —  45⅛ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
-  5 × Frame rail, between stiles (lower sheet; upper sheet)  —  43⅝ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
-  1 × Frame post behind the stair-side leg  —  22⅞ × ¾ × ¾  [Behind the lattice and the leg; paint]
+  2 × Frame rail, full width (lower sheet)  —  45⅛ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
+  3 × Frame rail, between stiles (lower sheet)  —  43⅝ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
 
 2×10 (the board you have)
   1 × Planter front or back (front)  —  45⅛ × 9¼ × 1½
-  1 × Planter front or back (back)  —  45⅛ × 9¼ × 1½  [Faces the lattice]
+  1 × Planter front or back (back)  —  45⅛ × 9¼ × 1½  [Against the wall; the trellis frame stands on it]
   2 × Planter end (back-wall end; stair end)  —  8 × 9¼ × 1½
 
 2×10 ripped to 1½ × 1½, for legs
@@ -28,11 +24,25 @@ Wood lattice, ¼″ slats (two layers, ½″ thick)
 
 Hardware
   1 × Planter liner or tray  —  Waterproof; sized to the planter's inside
-  27 × Screws into studs, #8 × 2½″
-  45 × Screws for the lattice, #6 × 1¼″, with finish washers
+  15 × Screws into studs, #8 × 2½″
+  25 × Screws for the lattice, #6 × 1¼″, with finish washers
   1 set × Felt or rubber feet
 
+PHASE 2 · SECOND TRELLIS SHEET
+Wood lattice, ¼″ slats (two layers, ½″ thick)
+  1 × Trellis panel (upper)  —  47⅝ × 45⅛ × ½  [needs finish; cut to fit]
+      Rip to width and cut to length; line up its diamonds with the lower sheet at the seam.
+
+1×1
+  2 × Frame stile (upper sheet, back-wall end; upper sheet, stair end)  —  46⅛ × ¾ × ¾  [Behind the lattice edge; paint; cut to fit]
+  2 × Frame rail, full width (upper sheet)  —  45⅛ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
+  1 × Frame rail, between stiles (upper sheet)  —  43⅝ × ¾ × ¾  [Shows through the lattice; paint it the wall colour; paint; cut to fit]
+
+Hardware
+  9 × Screws into studs, #8 × 2½″
+  15 × Screws for the lattice, #6 × 1¼″, with finish washers
+
 BOARD TOTALS
-  1×1: 14 pieces, 744¼ in all
+  1×1: 12 pieces, 636¼ in all
   2×10 (the board you have): 4 pieces, 106¼ in all
   2×10 ripped to 1½ × 1½, for legs: 2 pieces, 24 in all

@@ -18,7 +18,6 @@ export const P = {
   risers: { flight1: 6, flight2: 4, flight3: 5 },        // inferred from the photos: 6 + 4 down to landing 2, 5 more to the lower floor
   lattice: { slat: 0.25, slatWidth: 1.4375, sheet: [96, 48] as const },
   edgeGap: 0.125,                        // inferred: clearance to the back wall and the ceiling
-  latticeOffFloor: 0.5,                  // inferred: the lattice runs from just above landing 2 to the ceiling
   frame: { maxSpan: 24 },                // inferred: 1×1 frame members behind the lattice at most this far apart
   board2x10: { t: 1.5, w: 9.25, length: 144 }, // your 2×10; length inferred until measured
   planter: { depth: 11, offFloor: 12 },  // inferred: outside depth, and the bottom's height above the landing
@@ -38,7 +37,8 @@ export default defineProject({
     },
   },
   phases: [
-    { id: "p1", title: "Planter and trellis" },
+    { id: "p1", title: "Planter and the first trellis sheet", summary: "The vine can be planted and climbing after this phase." },
+    { id: "p2", title: "Second trellis sheet", summary: "When the vine outgrows the first sheet: the rest of the way to the ceiling." },
   ],
   materials: {
     lattice: { type: "sheet", name: "Wood lattice, ¼″ slats (two layers, ½″ thick)", thickness: 2 * P.lattice.slat, grained: false, finish: "none", kerf: 0.125,
@@ -90,53 +90,15 @@ export default defineProject({
     b.context({ id: "window-wall", name: "Window wall", role: "wall", box: box([-wt, far], [lowerY, H], [P.backWall, P.backWall + wt]) });
     b.context({ id: "ceiling", name: "Ceiling", role: "wall", box: box([-wt, far], [H, H + 1.5], [-wt, P.backWall + wt]) });
 
-    // ---------- lattice: the two owned sheets, ripped to width, the upper one cut to length ----------
-    const bottom = P.latticeOffFloor, top = H - P.edgeGap;
-    const seam = bottom + Math.min(P.lattice.sheet[0], top - bottom);  // the lower sheet runs full length
-    const panels: [string, Range][] = [["lower", [bottom, seam]], ...(top > seam ? [["upper", [seam, top]] as [string, Range]] : [])];
-    b.panel({ id: "trellis-lower", name: "Trellis panel", where: "lower", material: "lattice", phase: "p1", step: "trellis",
-      box: box(x, panels[0][1], zLat), finish: "clear", joins: [{ to: "frame-lower-bottom", by: "screws" }],
-      notes: "Rip to width; keep the factory end at the bottom." });
-    if (panels[1]) b.panel({ id: "trellis-upper", name: "Trellis panel", where: "upper", material: "lattice", phase: "p1", step: "trellis",
-      box: box(x, panels[1][1], zLat), finish: "clear", fitToSite: true, joins: [{ to: "frame-upper-bottom", by: "screws" }],
-      notes: "Rip to width and cut to length; line up its diamonds with the lower sheet at the seam." });
-
-    // ---------- 1×1 frame behind each sheet, inside its edges: rails screw to the studs ----------
-    const zF: Range = [0, S1];
-    let frameRails = 0;
-    const railsAt: Record<string, number[]> = {};
-    for (const [where, [y0, y1]] of panels) {
-      const id = (k: string) => `frame-${where}-${k}`;
-      const rail = (k: string, xr: Range, y: number, name: string) => {
-        b.board({ id: id(k), name, where: `${where} sheet`, material: "pine-1x1", phase: "p1", step: "frame",
-          box: box(xr, span(y, S1), zF), grain: "x", exposure: "limited", exposureNote: "Shows through the lattice; paint it the wall colour", fitToSite: true });
-        frameRails++;
-      };
-      rail("bottom", x, y0, "Frame rail, full width");
-      rail("top", x, y1 - S1, "Frame rail, full width");
-      for (const [side, xr] of [["wall", span(x[0], S1)], ["stair", [x[1] - S1, x[1]] as Range]] as const)
-        b.board({ id: id(`stile-${side}`), name: "Frame stile", where: `${where} sheet, ${side === "wall" ? "back-wall end" : "stair end"}`, material: "pine-1x1",
-          phase: "p1", step: "frame", box: box(xr, [y0 + S1, y1 - S1], zF), grain: "y", exposure: "limited", exposureNote: "Behind the lattice edge", fitToSite: true });
-      const n = Math.ceil((y1 - y0) / P.frame.maxSpan);
-      railsAt[where] = [];
-      for (let i = 1; i < n; i++) {
-        const y = Math.round((y0 + (y1 - y0) * i / n - S1 / 2) * 16) / 16;
-        railsAt[where].push(y);
-        rail(`rail-${i}`, [x[0] + S1, x[1] - S1], y, "Frame rail, between stiles");
-      }
-    }
-    b.hardware({ id: "frame-screws", name: "Screws into studs", item: "screws", qty: frameRails * 3, phase: "p1", step: "frame" });
-    b.hardware({ id: "trellis-screws", name: "Lattice screws", item: "trellis-screws", qty: frameRails * 5, phase: "p1", step: "trellis" });
-
-    // ---------- planter: the 2×10, raised on two back legs that stand on the landing and screw to the frame ----------
+    // ---------- planter: the 2×10 against the wall, raised on two legs under its back ----------
     const bt = P.board2x10.t, bh = P.board2x10.w, lg = P.leg;
     const px: Range = x;                                                // the full width of the vine wall
-    const pz: Range = [zLat[1], zLat[1] + P.planter.depth];            // its back against the lattice
+    const pz: Range = [0, P.planter.depth];                             // its back against the wall
     const py: Range = span(P.planter.offFloor, bh);
     b.board({ id: "planter-front", name: "Planter front or back", where: "front", material: "wood-2x10", phase: "p1", step: "planter",
       box: box(px, py, [pz[1] - bt, pz[1]]), grain: "x" });
     b.board({ id: "planter-back", name: "Planter front or back", where: "back", material: "wood-2x10", phase: "p1", step: "planter",
-      box: box(px, py, span(pz[0], bt)), grain: "x", exposure: "limited", exposureNote: "Faces the lattice" });
+      box: box(px, py, span(pz[0], bt)), grain: "x", exposure: "limited", exposureNote: "Against the wall; the trellis frame stands on it" });
     for (const [side, xr] of [["wall", span(px[0], bt)], ["stair", [px[1] - bt, px[1]] as Range]] as const)
       b.board({ id: `planter-end-${side}`, name: "Planter end", where: side === "wall" ? "back-wall end" : "stair end", material: "wood-2x10", phase: "p1", step: "planter",
         box: box(xr, py, [pz[0] + bt, pz[1] - bt]), grain: "z", joins: [{ to: "planter-front", by: "screws" }, { to: "planter-back", by: "screws" }] });
@@ -145,46 +107,73 @@ export default defineProject({
       joins: ["front", "back", "end-wall", "end-stair"].map(k => ({ to: `planter-${k}`, by: "screws" as const })),
       notes: "Sits inside the four sides, screwed through them. Drill a few weep holes in case the liner overflows." });
 
-    // Two legs under the back of the planter, screwed through the lattice into the frame. The wall-end leg stands
-    // on the landing; the stair-end one either stands on the landing's edge or runs down to the first step.
+    // Two legs under the back of the planter carry it, and the trellis standing on it, to the floor. The wall-end leg
+    // stands on the landing; the stair-end one either stands on the landing's edge or runs down to the first step.
     const onStep = opt.stairLeg === "step";
-    const stepTop = -S.rise;                                            // flight 3's first tread
     const legs: [string, Range, number][] = [
       ["wall", span(px[0], lg), 0],
-      ["stair", onStep ? [px[1] - lg, px[1]] : [LW - lg, LW], onStep ? stepTop : 0],
+      ["stair", onStep ? [px[1] - lg, px[1]] : [LW - lg, LW], onStep ? -S.rise : 0],
     ];
     for (const [side, xr, foot] of legs)
       b.board({ id: `planter-leg-${side}`, name: "Planter leg", where: side === "wall" ? "back-wall end" : onStep ? "stair end, on the first step" : "edge of the landing",
         material: "wood-legs", phase: "p1", step: "set-planter",
         box: box(xr, [foot, py[0]], span(pz[0], lg)), grain: "y",
-        joins: [{ to: "planter-back", by: "screws" }, { to: "trellis-lower", by: "screws", note: "Through the lattice into the frame" }] });
-    // The wall-end leg and an end-of-planter leg land on the frame's stiles; a leg on the landing's edge needs a 1×1 post behind it.
-    if (!onStep) {
-      const rx = (LW - lg / 2) - S1 / 2;
-      b.board({ id: "frame-lower-leg-post", name: "Frame post behind the stair-side leg", material: "pine-1x1", phase: "p1", step: "frame",
-        box: box(span(rx, S1), [bottom + S1, railsAt.lower[0] ?? seam - S1], zF), grain: "y", exposure: "limited", exposureNote: "Behind the lattice and the leg" });
-    }
+        joins: [{ to: "planter-back", by: "screws" }] });
     const legLen = Math.max(...legs.map(([, , foot]) => py[0] - foot));
     const li = P.linerInset;
     b.hardware({ id: "planter-liner", name: "Liner", item: "liner", qty: 1, phase: "p1", step: "set-planter",
       box: box([px[0] + bt + li, px[1] - bt - li], [py[0] + T, py[1] - 0.5], [pz[0] + bt + li, pz[1] - bt - li]) });
     b.hardware({ id: "planter-feet", name: "Feet", item: "pads", qty: 1, phase: "p1", step: "set-planter" });
 
+    // ---------- lattice on its 1×1 frame, standing on the planter's back: one sheet now, the second in phase 2 ----------
+    const bottom = py[1], top = H - P.edgeGap;
+    const seam = bottom + Math.min(P.lattice.sheet[0], top - bottom);  // the first sheet runs its full length
+    const sheets: [string, string, Range][] = [["lower", "p1", [bottom, seam]], ...(top > seam ? [["upper", "p2", [seam, top]] as [string, string, Range]] : [])];
+    const zF: Range = [0, S1];
+    for (const [where, phase, [y0, y1]] of sheets) {
+      const step = (k: string) => `${k}-${where}`;
+      b.panel({ id: `trellis-${where}`, name: "Trellis panel", where, material: "lattice", phase, step: step("trellis"),
+        box: box(x, [y0, y1], zLat), finish: "clear", fitToSite: where === "upper", joins: [{ to: `frame-${where}-bottom`, by: "screws" }],
+        notes: where === "lower" ? "Rip to width; keep the factory end at the bottom." : "Rip to width and cut to length; line up its diamonds with the lower sheet at the seam." });
+      const id = (k: string) => `frame-${where}-${k}`;
+      let rails = 0;
+      const rail = (k: string, xr: Range, y: number, name: string) => {
+        b.board({ id: id(k), name, where: `${where} sheet`, material: "pine-1x1", phase, step: step("frame"),
+          box: box(xr, span(y, S1), zF), grain: "x", exposure: "limited", exposureNote: "Shows through the lattice; paint it the wall colour", fitToSite: true,
+          ...(k === "bottom" && where === "lower" ? { joins: [{ to: "planter-back", by: "rests-on" as const }] } : {}) });
+        rails++;
+      };
+      rail("bottom", x, y0, "Frame rail, full width");
+      rail("top", x, y1 - S1, "Frame rail, full width");
+      for (const [side, xr] of [["wall", span(x[0], S1)], ["stair", [x[1] - S1, x[1]] as Range]] as const)
+        b.board({ id: id(`stile-${side}`), name: "Frame stile", where: `${where} sheet, ${side === "wall" ? "back-wall end" : "stair end"}`, material: "pine-1x1",
+          phase, step: step("frame"), box: box(xr, [y0 + S1, y1 - S1], zF), grain: "y", exposure: "limited", exposureNote: "Behind the lattice edge", fitToSite: true });
+      const n = Math.ceil((y1 - y0) / P.frame.maxSpan);
+      for (let i = 1; i < n; i++)
+        rail(`rail-${i}`, [x[0] + S1, x[1] - S1], Math.round((y0 + (y1 - y0) * i / n - S1 / 2) * 16) / 16, "Frame rail, between stiles");
+      b.hardware({ id: `frame-screws-${where}`, name: "Screws into studs", item: "screws", qty: rails * 3, phase, step: step("frame") });
+      b.hardware({ id: `trellis-screws-${where}`, name: "Lattice screws", item: "trellis-screws", qty: rails * 5, phase, step: step("trellis") });
+    }
+
     // ---------- steps ----------
-    b.step({ id: "frame", phase: "p1", title: "Mount the 1×1 frame",
-      text: "Paint the 1×1s the wall colour. Find the studs and screw the full-width rails into every stud they cross, starting just above the landing; then fit the stiles and the post that will sit behind the planter's right leg." });
-    b.step({ id: "trellis", phase: "p1", title: "Cut and hang the lattice",
-      text: "Rip both sheets to width. Screw the lower sheet to its frame through the slat crossings, then cut the upper sheet to fit to the ceiling and match its diamonds at the seam." });
     b.step({ id: "planter", phase: "p1", title: "Build the planter",
       text: "Cut the front, back and ends from the 2×10, screw the ends between the front and back, and fit the plywood bottom inside. Finish it before it gets wet." });
     b.step({ id: "set-planter", phase: "p1", title: "Legs and planter",
-      text: "Rip two legs from the 2×10 offcut and screw them to the planter's back. Stand it on the landing with the legs against the lattice, level it, and screw the legs through the lattice into the frame. Liner in, pads under the legs." });
+      text: "Rip two legs from the 2×10 offcut and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
+    b.step({ id: "frame-lower", phase: "p1", title: "Frame for the first sheet",
+      text: "Paint the 1×1s the wall colour. Stand the bottom rail on the planter's back and screw every full-width rail into each stud it crosses, then fit the stiles and the rails between them." });
+    b.step({ id: "trellis-lower", phase: "p1", title: "Hang the first sheet",
+      text: "Rip it to width and screw it to its frame through the slat crossings. Plant the vine." });
+    b.step({ id: "frame-upper", phase: "p2", title: "Frame for the second sheet",
+      text: "When the vine reaches the top of the first sheet: the same frame again, its bottom rail on the first frame's top rail, up to the ceiling." });
+    b.step({ id: "trellis-upper", phase: "p2", title: "Hang the second sheet",
+      text: "Rip it to width, cut it to fit to the ceiling, match its diamonds to the first sheet at the seam, and screw it on." });
 
     // ---------- design rules ----------
     const need = 2 * (px[1] - px[0]) + 2 * (pz[1] - pz[0] - 2 * bt) + legLen + 5 * 0.125;   // front, back, ends, and one length to rip the legs from
     b.check("board-enough", "The 2×10 is long enough for the planter and its legs", need <= P.board2x10.length,
       `needs about ${Math.round(need)}″ of 2×10; the board is ${P.board2x10.length}″`, "error");
-    b.check("two-sheets-cover", "The two lattice sheets reach from the landing to the ceiling",
+    b.check("two-sheets-cover", "The two lattice sheets reach from the planter to the ceiling",
       top - bottom <= 2 * P.lattice.sheet[0], `${top - bottom}″ to cover, ${2 * P.lattice.sheet[0]}″ of lattice`, "error");
     b.check("sheet-width", "One sheet is wide enough for the wall", x[1] - x[0] <= P.lattice.sheet[1],
       `wall needs ${x[1] - x[0]}″, sheets are ${P.lattice.sheet[1]}″`, "error");

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.4 -2.4 100.8 64.08" class="wb-sheets" data-phase="p1" data-material="lattice" font-family="ui-monospace, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.4 -2.4 100.8 64.08" class="wb-sheets" data-phase="p2" data-material="lattice" font-family="ui-monospace, monospace">
 <style>
 .wb-sheet-board { fill: var(--sheet-board, #f4f1ea); stroke: var(--ink, #222); stroke-width: var(--sheet-stroke, 0.3); }
 .wb-part { stroke: var(--wood-dark, #8a6a3f); stroke-width: 0.2; }
@@ -16,11 +16,12 @@
 .wb-grain { stroke: var(--dim, #2f6fb2); stroke-width: 0.3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .wb-grain-label { fill: var(--dim, #2f6fb2); }
 </style>
-<defs><pattern id="wb-raw-p1-lattice" patternUnits="userSpaceOnUse" width="1.44" height="1.44" patternTransform="rotate(45)"><rect class="wb-hatch-bg" width="1.44" height="1.44"/><line class="wb-hatch-line" x1="0" y1="0" x2="0" y2="1.44"/></pattern></defs>
+<defs><pattern id="wb-raw-p2-lattice" patternUnits="userSpaceOnUse" width="1.44" height="1.44" patternTransform="rotate(45)"><rect class="wb-hatch-bg" width="1.44" height="1.44"/><line class="wb-hatch-line" x1="0" y1="0" x2="0" y2="1.44"/></pattern></defs>
 <g class="wb-sheet" data-sheet="0" data-stock="4x8" data-owned="true" transform="translate(0 5.28)">
 <text class="wb-title" x="0" y="-1.68" font-size="2.277">4×8 (owned) · Wood lattice, ¼″ slats (two layers, ½″ thick), 96 × 48</text>
 <g class="wb-grain-arrow"><path class="wb-grain" d="M76.8 50.64H96M94.56 49.8L96 50.64L94.56 51.48"/><text class="wb-grain-label" x="75.84" y="51.36" font-size="1.92" text-anchor="end">grain</text></g>
 <rect class="wb-sheet-board" x="0" y="0" width="96" height="48"/>
-<g class="wb-placement" data-part="trellis-lower"><title>Trellis panel · 96 × 45⅛ · trellis-lower</title><rect class="wb-part k-raw k-needs-finish" x="0" y="0" width="96" height="45.125" fill="url(#wb-raw-p1-lattice)"/><text class="wb-label" x="48" y="21.8425" font-size="2.4" text-anchor="middle">Trellis panel</text><text class="wb-size" x="48" y="24.7225" font-size="2.4" text-anchor="middle">96 × 45⅛</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="45.25" y="0" width="50.75" height="48"/><text class="wb-offcut-label" x="70.625" y="24.576" font-size="1.92" text-anchor="middle">offcut 50¾ × 48</text></g>
+<g class="wb-placement" data-part="trellis-upper" data-turned="true"><title>Trellis panel · 47⅝ × 45⅛ (turned) · trellis-upper</title><rect class="wb-part k-raw k-needs-finish" x="0" y="0" width="45.125" height="47.625" fill="url(#wb-raw-p2-lattice)"/><text class="wb-label" x="22.5625" y="23.0925" font-size="2.4" text-anchor="middle">Trellis panel</text><text class="wb-size" x="22.5625" y="25.9725" font-size="2.4" text-anchor="middle">47⅝ × 45⅛</text></g>
 </g>
 </svg>
