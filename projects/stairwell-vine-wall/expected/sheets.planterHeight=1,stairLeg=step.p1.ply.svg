@@ -21,8 +21,8 @@
 <text class="wb-title" x="0" y="-0.84" font-size="1.2">4×4 · 23/32″ plywood (sold as ¾″), 48 × 48</text>
 <g class="wb-grain-arrow"><path class="wb-grain" d="M38.4 49.32H48M47.28 48.9L48 49.32L47.28 49.74"/><text class="wb-grain-label" x="37.92" y="49.68" font-size="0.96" text-anchor="end">grain</text></g>
 <rect class="wb-sheet-board" x="0" y="0" width="48" height="48"/>
-<g class="wb-offcut-g"><rect class="wb-offcut" x="0" y="8.125" width="48" height="39.875"/><text class="wb-offcut-label" x="24" y="28.3505" font-size="0.96" text-anchor="middle">offcut 48 × 39⅞</text></g>
-<g class="wb-offcut-g"><rect class="wb-offcut" x="42.25" y="0" width="5.75" height="8"/><g transform="rotate(-90 45.125 4)"><text class="wb-offcut-label" x="45.125" y="4.268" font-size="0.8933" text-anchor="middle">offcut 5¾ × 8</text></g></g>
-<g class="wb-placement" data-part="planter-bottom"><title>Planter bottom · 42⅛ × 8 · planter-bottom</title><rect class="wb-part k-fin" x="0" y="0" width="42.125" height="8"/><text class="wb-label" x="21.0625" y="3.64" font-size="1.2" text-anchor="middle">Planter bottom</text><text class="wb-size" x="21.0625" y="5.08" font-size="1.2" text-anchor="middle">42⅛ × 8</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="0" y="9.75" width="48" height="38.25"/><text class="wb-offcut-label" x="24" y="29.163" font-size="0.96" text-anchor="middle">offcut 48 × 38¼</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="43.875" y="0" width="4.125" height="9.625"/><g transform="rotate(-90 45.9375 4.8125)"><text class="wb-offcut-label" x="45.9375" y="5.1005" font-size="0.96" text-anchor="middle">offcut 4⅛ × 9⅝</text></g></g>
+<g class="wb-placement" data-part="planter-bottom"><title>Planter bottom · 43¾ × 9⅝ · planter-bottom</title><rect class="wb-part k-fin" x="0" y="0" width="43.75" height="9.625"/><text class="wb-label" x="21.875" y="4.4525" font-size="1.2" text-anchor="middle">Planter bottom</text><text class="wb-size" x="21.875" y="5.8925" font-size="1.2" text-anchor="middle">43¾ × 9⅝</text></g>
 </g>
 </svg>

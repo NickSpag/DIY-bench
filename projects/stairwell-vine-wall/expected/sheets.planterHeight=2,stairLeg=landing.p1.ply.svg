@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.2 -1.2 50.4 56.04" class="wb-sheets" data-phase="p1" data-material="ply" font-family="ui-monospace, monospace">
+<style>
+.wb-sheet-board { fill: var(--sheet-board, #f4f1ea); stroke: var(--ink, #222); stroke-width: var(--sheet-stroke, 0.3); }
+.wb-part { stroke: var(--wood-dark, #8a6a3f); stroke-width: 0.2; }
+.wb-part.k-fin { fill: var(--face, #e8d3ad); }
+.wb-part.k-raw { stroke: var(--ink-soft, #6b7378); }
+.wb-part.k-needs-finish { stroke: var(--dim, #2f6fb2); stroke-width: 0.45; }
+.wb-hatch-bg { fill: var(--sheet-board, #f4f1ea); }
+.wb-hatch-line { stroke: var(--hatch, #8f9ba1); stroke-width: 0.25; }
+.wb-strip-cut { stroke: var(--ink-soft, #6b7378); stroke-width: 0.2; stroke-dasharray: 0.8 0.5; fill: none; }
+.wb-offcut { fill: none; stroke: var(--ink-soft, #6b7378); stroke-width: 0.18; stroke-dasharray: 0.8 0.6; }
+.wb-title { fill: var(--ink-soft, #6b7378); }
+.wb-label { fill: var(--ink, #222); }
+.wb-size { fill: var(--ink-soft, #6b7378); }
+.wb-offcut-label { fill: var(--ink-soft, #6b7378); }
+.wb-grain { stroke: var(--dim, #2f6fb2); stroke-width: 0.3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.wb-grain-label { fill: var(--dim, #2f6fb2); }
+</style>
+<defs><pattern id="wb-raw-p1-ply" patternUnits="userSpaceOnUse" width="0.72" height="0.72" patternTransform="rotate(45)"><rect class="wb-hatch-bg" width="0.72" height="0.72"/><line class="wb-hatch-line" x1="0" y1="0" x2="0" y2="0.72"/></pattern></defs>
+<g class="wb-sheet" data-sheet="0" data-stock="4x4" data-owned="false" transform="translate(0 2.64)">
+<text class="wb-title" x="0" y="-0.84" font-size="1.2">4×4 · 23/32″ plywood (sold as ¾″), 48 × 48</text>
+<g class="wb-grain-arrow"><path class="wb-grain" d="M38.4 49.32H48M47.28 48.9L48 49.32L47.28 49.74"/><text class="wb-grain-label" x="37.92" y="49.68" font-size="0.96" text-anchor="end">grain</text></g>
+<rect class="wb-sheet-board" x="0" y="0" width="48" height="48"/>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="0" y="9.75" width="48" height="38.25"/><text class="wb-offcut-label" x="24" y="29.163" font-size="0.96" text-anchor="middle">offcut 48 × 38¼</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="43.875" y="0" width="4.125" height="9.625"/><g transform="rotate(-90 45.9375 4.8125)"><text class="wb-offcut-label" x="45.9375" y="5.1005" font-size="0.96" text-anchor="middle">offcut 4⅛ × 9⅝</text></g></g>
+<g class="wb-placement" data-part="planter-bottom"><title>Planter bottom · 43¾ × 9⅝ · planter-bottom</title><rect class="wb-part k-fin" x="0" y="0" width="43.75" height="9.625"/><text class="wb-label" x="21.875" y="4.4525" font-size="1.2" text-anchor="middle">Planter bottom</text><text class="wb-size" x="21.875" y="5.8925" font-size="1.2" text-anchor="middle">43¾ × 9⅝</text></g>
+</g>
+</svg>

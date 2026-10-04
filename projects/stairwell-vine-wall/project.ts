@@ -19,8 +19,9 @@ export const P = {
   lattice: { slat: 0.25, slatWidth: 1.4375, sheet: [96, 48] as const },
   edgeGap: 0.125,                        // inferred: clearance to the back wall and the ceiling
   frame: { maxSpan: 24 },                // inferred: 1×1 frame members behind the lattice at most this far apart
-  board2x10: { t: 1.5, w: 9.25, length: 144 }, // your 2×10; length inferred until measured
-  planter: { depth: 11, offFloor: 12 },  // inferred: outside depth, and the bottom's height above the landing
+  board2x10: { t: 1.5, w: 9, length: 144 },  // your board, measured 1½ × 9; length inferred until measured
+  resawKerf: 0.125,                      // inferred: the board is resawn in half through its thickness
+  planter: { depth: 11, top: 38 },       // top 38″ above the landing; depth inferred
   leg: 1.5,                              // inferred: square legs ripped from the 2×10
   linerInset: 0.25,
 };
@@ -30,6 +31,11 @@ export default defineProject({
   title: "Stairwell Vine Wall",
   units: "in",
   options: {
+    planterHeight: {
+      label: "Planter sides",
+      choices: { "2": "Two boards high (about 18″, deeper soil)", "1": "One board high (9″)" },
+      default: "2",
+    },
     stairLeg: {
       label: "Stair-side leg",
       choices: { landing: "On the edge of the landing", step: "At the end of the planter, down to the first step" },
@@ -46,8 +52,8 @@ export default defineProject({
     ply: { type: "sheet", name: "23/32″ plywood (sold as ¾″)", thickness: T, grained: true, finish: "clear", kerf: 0.125,
       stock: [{ id: "4x4", length: 48, width: 48, buy: true }, { id: "4x8", length: 96, width: 48, buy: true }] },
     "pine-1x1": { type: "board", name: "1×1", nominal: "1×1", thickness: S1, width: S1, finish: "paint", stockLengths: [96] },
-    "wood-2x10": { type: "board", name: "2×10 (the board you have)", nominal: "2×10", thickness: P.board2x10.t, width: P.board2x10.w, finish: "clear" },
-    "wood-legs": { type: "board", name: "2×10 ripped to 1½ × 1½, for legs", thickness: P.leg, width: P.leg, finish: "clear" },
+    "wood-resawn": { type: "board", name: "Your 1½ × 9 board, resawn in half", thickness: (P.board2x10.t - P.resawKerf) / 2, width: P.board2x10.w, finish: "clear" },
+    "wood-legs": { type: "board", name: "Your 1½ × 9 board, ripped to 1½ × 1½ for legs", thickness: P.leg, width: P.leg, finish: "clear" },
   },
   banding: {},
   hardware: {
@@ -90,18 +96,25 @@ export default defineProject({
     b.context({ id: "window-wall", name: "Window wall", role: "wall", box: box([-wt, far], [lowerY, H], [P.backWall, P.backWall + wt]) });
     b.context({ id: "ceiling", name: "Ceiling", role: "wall", box: box([-wt, far], [H, H + 1.5], [-wt, P.backWall + wt]) });
 
-    // ---------- planter: the 2×10 against the wall, raised on two legs under its back ----------
-    const bt = P.board2x10.t, bh = P.board2x10.w, lg = P.leg;
+    // ---------- planter: the resawn board against the wall, raised on two legs under its back ----------
+    const bt = (P.board2x10.t - P.resawKerf) / 2, bh = P.board2x10.w, lg = P.leg;
+    const layers = Number(opt.planterHeight);
     const px: Range = x;                                                // the full width of the vine wall
     const pz: Range = [0, P.planter.depth];                             // its back against the wall
-    const py: Range = span(P.planter.offFloor, bh);
-    b.board({ id: "planter-front", name: "Planter front or back", where: "front", material: "wood-2x10", phase: "p1", step: "planter",
-      box: box(px, py, [pz[1] - bt, pz[1]]), grain: "x" });
-    b.board({ id: "planter-back", name: "Planter front or back", where: "back", material: "wood-2x10", phase: "p1", step: "planter",
-      box: box(px, py, span(pz[0], bt)), grain: "x", exposure: "limited", exposureNote: "Against the wall; the trellis frame stands on it" });
-    for (const [side, xr] of [["wall", span(px[0], bt)], ["stair", [px[1] - bt, px[1]] as Range]] as const)
-      b.board({ id: `planter-end-${side}`, name: "Planter end", where: side === "wall" ? "back-wall end" : "stair end", material: "wood-2x10", phase: "p1", step: "planter",
-        box: box(xr, py, [pz[0] + bt, pz[1] - bt]), grain: "z", joins: [{ to: "planter-front", by: "screws" }, { to: "planter-back", by: "screws" }] });
+    const py: Range = [P.planter.top - layers * bh, P.planter.top];
+    const lid = (base: string, i: number) => (i === 0 ? base : `${base}-${i + 1}`);   // the lower layer keeps the plain ids
+    for (let i = 0; i < layers; i++) {
+      const yr = span(py[0] + i * bh, bh), course = layers > 1 ? (i === 0 ? ", lower" : ", upper") : "";
+      b.board({ id: lid("planter-front", i), name: "Planter front or back", where: `front${course}`, material: "wood-resawn", phase: "p1", step: "planter",
+        box: box(px, yr, [pz[1] - bt, pz[1]]), grain: "x" });
+      b.board({ id: lid("planter-back", i), name: "Planter front or back", where: `back${course}`, material: "wood-resawn", phase: "p1", step: "planter",
+        box: box(px, yr, span(pz[0], bt)), grain: "x", exposure: "limited", exposureNote: "Against the wall" });
+      for (const [side, xr] of [["wall", span(px[0], bt)], ["stair", [px[1] - bt, px[1]] as Range]] as const)
+        b.board({ id: lid(`planter-end-${side}`, i), name: "Planter end", where: `${side === "wall" ? "back-wall end" : "stair end"}${course}`, material: "wood-resawn", phase: "p1", step: "planter",
+          box: box(xr, yr, [pz[0] + bt, pz[1] - bt]), grain: "z",
+          joins: [{ to: lid("planter-front", i), by: "screws" }, { to: lid("planter-back", i), by: "screws" }] });
+    }
+    const topBack = lid("planter-back", layers - 1);
     b.panel({ id: "planter-bottom", name: "Planter bottom", material: "ply", phase: "p1", step: "planter",
       box: box([px[0] + bt, px[1] - bt], span(py[0], T), [pz[0] + bt, pz[1] - bt]), grain: "x", exposure: "hidden",
       joins: ["front", "back", "end-wall", "end-stair"].map(k => ({ to: `planter-${k}`, by: "screws" as const })),
@@ -140,7 +153,7 @@ export default defineProject({
       const rail = (k: string, xr: Range, y: number, name: string) => {
         b.board({ id: id(k), name, where: `${where} sheet`, material: "pine-1x1", phase, step: step("frame"),
           box: box(xr, span(y, S1), zF), grain: "x", exposure: "limited", exposureNote: "Shows through the lattice; paint it the wall colour", fitToSite: true,
-          ...(k === "bottom" && where === "lower" ? { joins: [{ to: "planter-back", by: "rests-on" as const }] } : {}) });
+          ...(k === "bottom" && where === "lower" ? { joins: [{ to: topBack, by: "rests-on" as const }] } : {}) });
         rails++;
       };
       rail("bottom", x, y0, "Frame rail, full width");
@@ -157,7 +170,7 @@ export default defineProject({
 
     // ---------- steps ----------
     b.step({ id: "planter", phase: "p1", title: "Build the planter",
-      text: "Cut the front, back and ends from the 2×10, screw the ends between the front and back, and fit the plywood bottom inside. Finish it before it gets wet." });
+      text: "Cut a leg-length piece off the board first and keep it full thickness. Resaw the rest in half through its thickness, then cut the fronts, backs and ends. Screw the ends between the front and back; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
     b.step({ id: "set-planter", phase: "p1", title: "Legs and planter",
       text: "Rip two legs from the 2×10 offcut and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
     b.step({ id: "frame-lower", phase: "p1", title: "Frame for the first sheet",
@@ -170,9 +183,11 @@ export default defineProject({
       text: "Rip it to width, cut it to fit to the ceiling, match its diamonds to the first sheet at the seam, and screw it on." });
 
     // ---------- design rules ----------
-    const need = 2 * (px[1] - px[0]) + 2 * (pz[1] - pz[0] - 2 * bt) + legLen + 5 * 0.125;   // front, back, ends, and one length to rip the legs from
-    b.check("board-enough", "The 2×10 is long enough for the planter and its legs", need <= P.board2x10.length,
-      `needs about ${Math.round(need)}″ of 2×10; the board is ${P.board2x10.length}″`, "error");
+    // One length is ripped for the legs at full thickness; the rest is resawn, so each length gives two pieces.
+    const perLayer = 2 * (px[1] - px[0]) + 2 * (pz[1] - pz[0] - 2 * bt) + 4 * 0.125;
+    const need = legLen + 0.125 + (layers * perLayer) / 2;
+    b.check("board-enough", "The board is long enough for the planter and its legs", need <= P.board2x10.length,
+      `needs about ${Math.round(need)}″ of the 1½ × 9 board; it is ${P.board2x10.length}″`, "error");
     b.check("two-sheets-cover", "The two lattice sheets reach from the planter to the ceiling",
       top - bottom <= 2 * P.lattice.sheet[0], `${top - bottom}″ to cover, ${2 * P.lattice.sheet[0]}″ of lattice`, "error");
     b.check("sheet-width", "One sheet is wide enough for the wall", x[1] - x[0] <= P.lattice.sheet[1],

@@ -1,0 +1,107 @@
+[
+  {
+    "phase": "p1",
+    "material": "lattice",
+    "materialName": "Wood lattice, ¼″ slats (two layers, ½″ thick)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "½",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "4x8",
+        "owned": true,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["trellis-lower"],
+            "name": "Trellis panel",
+            "x": 0,
+            "y": 0,
+            "l": 96,
+            "w": 45.125,
+            "turned": false,
+            "needsFinish": true
+          }
+        ],
+        "offcuts": []
+      }
+    ],
+    "unplaced": [],
+    "bought": {},
+    "owned": {"4x8": 1},
+    "strategy": "area/shorterLeftover/prefer=none"
+  },
+  {
+    "phase": "p1",
+    "material": "ply",
+    "materialName": "23/32″ plywood (sold as ¾″)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "23/32",
+    "finished": true,
+    "sheets": [
+      {
+        "stock": "4x4",
+        "owned": false,
+        "length": 48,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["planter-bottom"],
+            "name": "Planter bottom",
+            "x": 0,
+            "y": 0,
+            "l": 43.75,
+            "w": 9.625,
+            "turned": false,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [{"x": 0, "y": 9.75, "l": 48, "w": 38.25}, {"x": 43.875, "y": 0, "l": 4.125, "w": 9.625}]
+      }
+    ],
+    "unplaced": [],
+    "bought": {"4x4": 1},
+    "owned": {},
+    "strategy": "area/shorterLeftover/prefer=none"
+  },
+  {
+    "phase": "p2",
+    "material": "lattice",
+    "materialName": "Wood lattice, ¼″ slats (two layers, ½″ thick)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "½",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "4x8",
+        "owned": true,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["trellis-upper"],
+            "name": "Trellis panel",
+            "x": 0,
+            "y": 0,
+            "l": 30.875,
+            "w": 45.125,
+            "turned": true,
+            "needsFinish": true
+          }
+        ],
+        "offcuts": [{"x": 31, "y": 0, "l": 65, "w": 48}]
+      }
+    ],
+    "unplaced": [],
+    "bought": {},
+    "owned": {"4x8": 1},
+    "strategy": "area/shorterLeftover/prefer=none"
+  }
+]
