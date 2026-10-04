@@ -217,6 +217,14 @@ function PartMesh({ e, offset, pal, planes, selected, inStep, section }: {
         />
       )}
       {selected && <Outlines thickness={3.5} screenspace color={pal.select} clippingPlanes={planes} />}
+      {selected && (
+        // Drawn again on top of everything, so a selected part stays visible behind others (a frame behind lattice).
+        <mesh raycast={noRaycast} renderOrder={10}>
+          {geometry}
+          <meshBasicMaterial color={pal.select} transparent opacity={0.18} depthTest={false} depthWrite={false} clippingPlanes={planes} />
+          <Edges threshold={15} color={pal.select} lineWidth={1.4} depthTest={false} transparent opacity={0.95} renderOrder={11} clippingPlanes={planes} />
+        </mesh>
+      )}
     </mesh>
   );
 }

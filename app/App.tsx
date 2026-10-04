@@ -32,6 +32,47 @@ function readSizes(): Record<string, number> {
   }
 }
 
+// Columns can be collapsed to a thin strip: all three in the three-column layout, the 3D view in the two-column one.
+type PaneId = "3d" | "draw" | "side";
+type Collapsed = Record<PaneId, boolean>;
+const STRIP = "30px";
+const PANE_LABEL: Record<PaneId, string> = { "3d": "3D view", draw: "Drawings", side: "Side panel" };
+
+function readCollapsed(): Collapsed {
+  try {
+    return { "3d": false, draw: false, side: false, ...(JSON.parse(localStorage.getItem("wb-collapsed") ?? "{}") as Partial<Collapsed>) };
+  } catch {
+    return { "3d": false, draw: false, side: false };
+  }
+}
+
+/** Grid columns for the current mode and collapsed panes; undefined keeps the stylesheet's. */
+function columnsFor(mode: Mode, c: Collapsed): string | undefined {
+  if (mode === 3) {
+    if (!c["3d"] && !c.draw && !c.side) return undefined;
+    const flex: PaneId = !c.draw ? "draw" : !c["3d"] ? "3d" : "side";      // the open pane that takes up the slack
+    const col = (id: PaneId, w: string) => (c[id] ? STRIP : id === flex ? "minmax(0, 1fr)" : w);
+    const s1 = c["3d"] || c.draw ? "0px" : "6px", s2 = c.draw || c.side ? "0px" : "6px";
+    return `${col("3d", "var(--w3d, 38%)")} ${s1} ${col("draw", "minmax(0, 1fr)")} ${s2} ${col("side", "var(--wside, 30%)")}`;
+  }
+  if (mode === 2 && c["3d"]) return `${STRIP} 0px minmax(0, 1fr)`;
+  return undefined;
+}
+
+/** The collapse button in an open pane, and the strip that stands in for it when collapsed. */
+function PaneToggle({ id, collapsed, can, toggle }: { id: PaneId; collapsed: boolean; can: boolean; toggle: (id: PaneId) => void }) {
+  if (!can) return null;
+  return collapsed ? (
+    <button type="button" className="pane-strip" onClick={() => toggle(id)} title={`Show the ${PANE_LABEL[id].toLowerCase()}`} aria-label={`Show the ${PANE_LABEL[id].toLowerCase()}`}>
+      <span aria-hidden="true">{id === "side" ? "‹" : "›"}</span>{PANE_LABEL[id]}
+    </button>
+  ) : (
+    <button type="button" className="pane-collapse" onClick={() => toggle(id)} title={`Collapse the ${PANE_LABEL[id].toLowerCase()}`} aria-label={`Collapse the ${PANE_LABEL[id].toLowerCase()}`}>
+      {id === "side" ? "›" : "‹"}
+    </button>
+  );
+}
+
 function SidePanel({ tab }: { tab: SideTab }): ReactNode {
   switch (tab) {
     case "cutlist": return <CutListPanel />;
@@ -64,6 +105,7 @@ function Workspace() {
   const ref = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<Mode>(() => modeFor(window.innerWidth));
   const [sizes, setSizes] = useState<Record<string, number>>(readSizes);
+  const [collapsedAll, setCollapsed] = useState<Collapsed>(readCollapsed);
   const sideTab = useWb((s) => s.sideTab);
   const paneTab = useWb((s) => s.paneTab);
   const issues = useIssueCount();
@@ -98,7 +140,23 @@ function Workspace() {
   const showSidePane = mode === 3 || (active !== "3d" && active !== "drawing");
   const sideShown: SideTab = mode === 3 ? sideTab : (active !== "3d" && active !== "drawing" ? active : sideTab);
 
+  // Which panes can collapse in this mode, and which are collapsed (at least one stays open).
+  const can = (id: PaneId) => mode === 3 || (mode === 2 && id === "3d");
+  const collapsed: Collapsed = { "3d": can("3d") && collapsedAll["3d"], draw: can("draw") && collapsedAll.draw, side: can("side") && collapsedAll.side };
+  const toggle = (id: PaneId) => setCollapsed((c) => {
+    const next = { ...c, [id]: !c[id] };
+    if (mode === 3 && next["3d"] && next.draw && next.side) return c;
+    try {
+      localStorage.setItem("wb-collapsed", JSON.stringify(next));
+    } catch {
+      // storage blocked: the layout lasts for this page only
+    }
+    return next;
+  });
+  const columns = columnsFor(mode, collapsed);
+
   const style = {
+    ...(columns ? { gridTemplateColumns: columns } : {}),
     "--w3d": `${(sizes.w3d ?? 0.36) * 100}%`,
     "--wside": `${(sizes.wside ?? 0.3) * 100}%`,
     "--w3d2": `${(sizes.w3d2 ?? 0.46) * 100}%`,
@@ -113,19 +171,22 @@ function Workspace() {
             onClick={() => useWb.setState(t.id === "3d" || t.id === "drawing" ? { paneTab: t.id } : { paneTab: t.id, sideTab: t.id })} />
         ))}
       </div>
-      <section className="pane pane-3d" data-off={!show3d} aria-label="3D view">
+      <section className="pane pane-3d" data-off={!show3d} data-collapsed={collapsed["3d"]} aria-label="3D view">
+        <PaneToggle id="3d" collapsed={collapsed["3d"]} can={can("3d")} toggle={toggle} />
         <Viewport3D />
       </section>
       <Splitter className="split-1"
         onMove={(x) => setSizes((s) => (mode === 3 ? { ...s, w3d: Math.min(fraction(x), 0.98 - (s.wside ?? 0.3) - 0.15) } : { ...s, w3d2: fraction(x) }))}
         onDone={save} />
-      <section className="pane pane-draw" data-off={!showDraw} aria-label="Drawings">
+      <section className="pane pane-draw" data-off={!showDraw} data-collapsed={collapsed.draw} aria-label="Drawings">
+        <PaneToggle id="draw" collapsed={collapsed.draw} can={can("draw")} toggle={toggle} />
         <DrawingPanel />
       </section>
       <Splitter className="split-2"
         onMove={(x) => setSizes((s) => ({ ...s, wside: Math.min(Math.max(0.15, 1 - fraction(x)), 0.98 - (s.w3d ?? 0.36) - 0.15) }))}
         onDone={save} />
-      <section className="pane pane-side" data-off={!showSidePane} aria-label="Side panel">
+      <section className="pane pane-side" data-off={!showSidePane} data-collapsed={collapsed.side} aria-label="Side panel">
+        <PaneToggle id="side" collapsed={collapsed.side} can={can("side")} toggle={toggle} />
         {mode === 3 && (
           <div className="pane-head">
             <div className="tabs" role="tablist">
@@ -170,8 +231,16 @@ function useKeys() {
       else return;
       e.preventDefault();
     };
+    // Shift-click adds to the selection; stop it from also selecting text in tables and drawings.
+    const onDown = (e: MouseEvent) => {
+      if (e.shiftKey && (e.target as Element | null)?.closest?.("[data-part]")) e.preventDefault();
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("mousedown", onDown);
+    };
   }, []);
 }
 
