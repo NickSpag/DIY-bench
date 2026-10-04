@@ -13,7 +13,7 @@
         "p1": {"x": [0, 35.5], "y": [-1.5, 0], "z": [0, 37.5]},
         "p2": {"x": [0, 35.5], "y": [-1.5, 0], "z": [0, 37.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:84:7"
+      "src": "projects/stairwell-vine-wall/project.ts:85:7"
     },
     {
       "id": "landing-1",
@@ -25,7 +25,7 @@
         "p1": {"x": [0, 35.5], "y": [28.5, 30], "z": [64.5, 102]},
         "p2": {"x": [0, 35.5], "y": [28.5, 30], "z": [64.5, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:85:7"
+      "src": "projects/stairwell-vine-wall/project.ts:86:7"
     },
     {
       "id": "lower-floor",
@@ -37,7 +37,7 @@
         "p1": {"x": [75.5, 121.5], "y": [-38.5, -37.5], "z": [0, 37.5]},
         "p2": {"x": [75.5, 121.5], "y": [-38.5, -37.5], "z": [0, 37.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:86:7"
+      "src": "projects/stairwell-vine-wall/project.ts:87:7"
     },
     {
       "id": "upper-floor",
@@ -49,7 +49,7 @@
         "p1": {"x": [85.5, 121.5], "y": [74, 75], "z": [0, 102]},
         "p2": {"x": [85.5, 121.5], "y": [74, 75], "z": [0, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:87:7"
+      "src": "projects/stairwell-vine-wall/project.ts:88:7"
     },
     {
       "id": "flight-3-tread-1",
@@ -62,7 +62,7 @@
         "p1": {"x": [35.5, 45.5], "y": [-9, -7.5], "z": [0, 37.5]},
         "p2": {"x": [35.5, 45.5], "y": [-9, -7.5], "z": [0, 37.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-3-tread-2",
@@ -75,7 +75,7 @@
         "p1": {"x": [45.5, 55.5], "y": [-16.5, -15], "z": [0, 37.5]},
         "p2": {"x": [45.5, 55.5], "y": [-16.5, -15], "z": [0, 37.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-3-tread-3",
@@ -88,7 +88,7 @@
         "p1": {"x": [55.5, 65.5], "y": [-24, -22.5], "z": [0, 37.5]},
         "p2": {"x": [55.5, 65.5], "y": [-24, -22.5], "z": [0, 37.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-3-tread-4",
@@ -101,7 +101,7 @@
         "p1": {"x": [65.5, 75.5], "y": [-31.5, -30], "z": [0, 37.5]},
         "p2": {"x": [65.5, 75.5], "y": [-31.5, -30], "z": [0, 37.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-2-tread-1",
@@ -114,7 +114,7 @@
         "p1": {"x": [0, 35.5], "y": [6, 7.5], "z": [37.5, 46.5]},
         "p2": {"x": [0, 35.5], "y": [6, 7.5], "z": [37.5, 46.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-2-tread-2",
@@ -127,7 +127,7 @@
         "p1": {"x": [0, 35.5], "y": [13.5, 15], "z": [46.5, 55.5]},
         "p2": {"x": [0, 35.5], "y": [13.5, 15], "z": [46.5, 55.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-2-tread-3",
@@ -140,7 +140,7 @@
         "p1": {"x": [0, 35.5], "y": [21, 22.5], "z": [55.5, 64.5]},
         "p2": {"x": [0, 35.5], "y": [21, 22.5], "z": [55.5, 64.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-1-tread-1",
@@ -153,7 +153,7 @@
         "p1": {"x": [35.5, 45.5], "y": [36, 37.5], "z": [64.5, 102]},
         "p2": {"x": [35.5, 45.5], "y": [36, 37.5], "z": [64.5, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-1-tread-2",
@@ -166,7 +166,7 @@
         "p1": {"x": [45.5, 55.5], "y": [43.5, 45], "z": [64.5, 102]},
         "p2": {"x": [45.5, 55.5], "y": [43.5, 45], "z": [64.5, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-1-tread-3",
@@ -179,7 +179,7 @@
         "p1": {"x": [55.5, 65.5], "y": [51, 52.5], "z": [64.5, 102]},
         "p2": {"x": [55.5, 65.5], "y": [51, 52.5], "z": [64.5, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-1-tread-4",
@@ -192,7 +192,7 @@
         "p1": {"x": [65.5, 75.5], "y": [58.5, 60], "z": [64.5, 102]},
         "p2": {"x": [65.5, 75.5], "y": [58.5, 60], "z": [64.5, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "flight-1-tread-5",
@@ -205,7 +205,7 @@
         "p1": {"x": [75.5, 85.5], "y": [66, 67.5], "z": [64.5, 102]},
         "p2": {"x": [75.5, 85.5], "y": [66, 67.5], "z": [64.5, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:82:9"
+      "src": "projects/stairwell-vine-wall/project.ts:83:9"
     },
     {
       "id": "vine-wall",
@@ -217,7 +217,7 @@
         "p1": {"x": [-4.5, 45.25], "y": [-37.5, 165], "z": [-4.5, 0]},
         "p2": {"x": [-4.5, 45.25], "y": [-37.5, 165], "z": [-4.5, 0]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:95:7"
+      "src": "projects/stairwell-vine-wall/project.ts:96:7"
     },
     {
       "id": "back-wall",
@@ -229,7 +229,7 @@
         "p1": {"x": [-4.5, 0], "y": [-37.5, 165], "z": [0, 102]},
         "p2": {"x": [-4.5, 0], "y": [-37.5, 165], "z": [0, 102]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:96:7"
+      "src": "projects/stairwell-vine-wall/project.ts:97:7"
     },
     {
       "id": "window-wall",
@@ -241,7 +241,7 @@
         "p1": {"x": [-4.5, 121.5], "y": [-37.5, 165], "z": [102, 106.5]},
         "p2": {"x": [-4.5, 121.5], "y": [-37.5, 165], "z": [102, 106.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:97:7"
+      "src": "projects/stairwell-vine-wall/project.ts:98:7"
     },
     {
       "id": "ceiling",
@@ -253,7 +253,7 @@
         "p1": {"x": [-4.5, 121.5], "y": [165, 166.5], "z": [-4.5, 106.5]},
         "p2": {"x": [-4.5, 121.5], "y": [165, 166.5], "z": [-4.5, 106.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:98:7"
+      "src": "projects/stairwell-vine-wall/project.ts:99:7"
     },
     {
       "id": "planter-back",
@@ -268,7 +268,7 @@
         "p1": {"x": [0.8125, 44.5625], "y": [29, 38], "z": [0, 0.7188]},
         "p2": {"x": [0.8125, 44.5625], "y": [29, 38], "z": [0, 0.7188]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:107:7"
+      "src": "projects/stairwell-vine-wall/project.ts:108:7"
     },
     {
       "id": "planter-front",
@@ -284,7 +284,7 @@
         "p1": {"x": [0.125, 45.25], "y": [29, 38], "z": [10.3125, 11]},
         "p2": {"x": [0.125, 45.25], "y": [29, 38], "z": [10.3125, 11]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:112:9"
+      "src": "projects/stairwell-vine-wall/project.ts:113:9"
     },
     {
       "id": "planter-end-wall",
@@ -300,7 +300,7 @@
         "p1": {"x": [0.125, 0.8125], "y": [29, 38], "z": [0, 10.3125]},
         "p2": {"x": [0.125, 0.8125], "y": [29, 38], "z": [0, 10.3125]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:115:11"
+      "src": "projects/stairwell-vine-wall/project.ts:116:11"
     },
     {
       "id": "planter-end-stair",
@@ -316,7 +316,7 @@
         "p1": {"x": [44.5625, 45.25], "y": [29, 38], "z": [0, 10.3125]},
         "p2": {"x": [44.5625, 45.25], "y": [29, 38], "z": [0, 10.3125]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:115:11"
+      "src": "projects/stairwell-vine-wall/project.ts:116:11"
     },
     {
       "id": "planter-bottom",
@@ -331,7 +331,7 @@
         "p1": {"x": [0.8125, 44.5625], "y": [29, 29.7188], "z": [0.7188, 10.3125]},
         "p2": {"x": [0.8125, 44.5625], "y": [29, 29.7188], "z": [0.7188, 10.3125]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:120:7"
+      "src": "projects/stairwell-vine-wall/project.ts:121:7"
     },
     {
       "id": "planter-leg-wall",
@@ -347,7 +347,7 @@
         "p1": {"x": [0.125, 1.625], "y": [0, 29], "z": [0, 1.5]},
         "p2": {"x": [0.125, 1.625], "y": [0, 29], "z": [0, 1.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:133:9"
+      "src": "projects/stairwell-vine-wall/project.ts:134:9"
     },
     {
       "id": "planter-leg-stair",
@@ -363,7 +363,7 @@
         "p1": {"x": [43.75, 45.25], "y": [-7.5, 29], "z": [0, 1.5]},
         "p2": {"x": [43.75, 45.25], "y": [-7.5, 29], "z": [0, 1.5]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:133:9"
+      "src": "projects/stairwell-vine-wall/project.ts:134:9"
     },
     {
       "id": "planter-liner",
@@ -377,7 +377,7 @@
         "p1": {"x": [1.0625, 44.3125], "y": [29.7188, 37.5], "z": [0.9688, 10.0625]},
         "p2": {"x": [1.0625, 44.3125], "y": [29.7188, 37.5], "z": [0.9688, 10.0625]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:138:7"
+      "src": "projects/stairwell-vine-wall/project.ts:139:7"
     },
     {
       "id": "planter-feet",
@@ -388,7 +388,7 @@
       "step": "set-planter",
       "cutPhase": "p1",
       "boxes": {"p1": null, "p2": null},
-      "src": "projects/stairwell-vine-wall/project.ts:140:7"
+      "src": "projects/stairwell-vine-wall/project.ts:141:7"
     },
     {
       "id": "trellis-lower",
@@ -404,7 +404,7 @@
         "p1": {"x": [0.125, 45.25], "y": [38, 134], "z": [0.75, 1.25]},
         "p2": {"x": [0.125, 45.25], "y": [38, 134], "z": [0.75, 1.25]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:149:9"
+      "src": "projects/stairwell-vine-wall/project.ts:150:9"
     },
     {
       "id": "frame-lower-bottom",
@@ -420,7 +420,7 @@
         "p1": {"x": [0.125, 45.25], "y": [38, 38.75], "z": [0, 0.75]},
         "p2": {"x": [0.125, 45.25], "y": [38, 38.75], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-lower-top",
@@ -436,7 +436,7 @@
         "p1": {"x": [0.125, 45.25], "y": [133.25, 134], "z": [0, 0.75]},
         "p2": {"x": [0.125, 45.25], "y": [133.25, 134], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-lower-stile-wall",
@@ -452,7 +452,7 @@
         "p1": {"x": [0.125, 0.875], "y": [38.75, 133.25], "z": [0, 0.75]},
         "p2": {"x": [0.125, 0.875], "y": [38.75, 133.25], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:163:11"
+      "src": "projects/stairwell-vine-wall/project.ts:164:11"
     },
     {
       "id": "frame-lower-stile-stair",
@@ -468,7 +468,7 @@
         "p1": {"x": [44.5, 45.25], "y": [38.75, 133.25], "z": [0, 0.75]},
         "p2": {"x": [44.5, 45.25], "y": [38.75, 133.25], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:163:11"
+      "src": "projects/stairwell-vine-wall/project.ts:164:11"
     },
     {
       "id": "frame-lower-rail-1",
@@ -484,7 +484,7 @@
         "p1": {"x": [0.875, 44.5], "y": [61.625, 62.375], "z": [0, 0.75]},
         "p2": {"x": [0.875, 44.5], "y": [61.625, 62.375], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-lower-rail-2",
@@ -500,7 +500,7 @@
         "p1": {"x": [0.875, 44.5], "y": [85.625, 86.375], "z": [0, 0.75]},
         "p2": {"x": [0.875, 44.5], "y": [85.625, 86.375], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-lower-rail-3",
@@ -516,7 +516,7 @@
         "p1": {"x": [0.875, 44.5], "y": [109.625, 110.375], "z": [0, 0.75]},
         "p2": {"x": [0.875, 44.5], "y": [109.625, 110.375], "z": [0, 0.75]}
       },
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-screws-lower",
@@ -527,7 +527,7 @@
       "step": "frame-lower",
       "cutPhase": "p1",
       "boxes": {"p1": null, "p2": null},
-      "src": "projects/stairwell-vine-wall/project.ts:168:9"
+      "src": "projects/stairwell-vine-wall/project.ts:169:9"
     },
     {
       "id": "trellis-screws-lower",
@@ -538,7 +538,7 @@
       "step": "trellis-lower",
       "cutPhase": "p1",
       "boxes": {"p1": null, "p2": null},
-      "src": "projects/stairwell-vine-wall/project.ts:169:9"
+      "src": "projects/stairwell-vine-wall/project.ts:170:9"
     },
     {
       "id": "trellis-upper",
@@ -551,7 +551,7 @@
       "cutPhase": "p2",
       "size": [45.125, 30.875, 0.5],
       "boxes": {"p2": {"x": [0.125, 45.25], "y": [134, 164.875], "z": [0.75, 1.25]}},
-      "src": "projects/stairwell-vine-wall/project.ts:149:9"
+      "src": "projects/stairwell-vine-wall/project.ts:150:9"
     },
     {
       "id": "frame-upper-bottom",
@@ -564,7 +564,7 @@
       "cutPhase": "p2",
       "size": [45.125, 0.75, 0.75],
       "boxes": {"p2": {"x": [0.125, 45.25], "y": [134, 134.75], "z": [0, 0.75]}},
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-upper-top",
@@ -577,7 +577,7 @@
       "cutPhase": "p2",
       "size": [45.125, 0.75, 0.75],
       "boxes": {"p2": {"x": [0.125, 45.25], "y": [164.125, 164.875], "z": [0, 0.75]}},
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-upper-stile-wall",
@@ -590,7 +590,7 @@
       "cutPhase": "p2",
       "size": [29.375, 0.75, 0.75],
       "boxes": {"p2": {"x": [0.125, 0.875], "y": [134.75, 164.125], "z": [0, 0.75]}},
-      "src": "projects/stairwell-vine-wall/project.ts:163:11"
+      "src": "projects/stairwell-vine-wall/project.ts:164:11"
     },
     {
       "id": "frame-upper-stile-stair",
@@ -603,7 +603,7 @@
       "cutPhase": "p2",
       "size": [29.375, 0.75, 0.75],
       "boxes": {"p2": {"x": [44.5, 45.25], "y": [134.75, 164.125], "z": [0, 0.75]}},
-      "src": "projects/stairwell-vine-wall/project.ts:163:11"
+      "src": "projects/stairwell-vine-wall/project.ts:164:11"
     },
     {
       "id": "frame-upper-rail-1",
@@ -616,7 +616,7 @@
       "cutPhase": "p2",
       "size": [43.625, 0.75, 0.75],
       "boxes": {"p2": {"x": [0.875, 44.5], "y": [149.0625, 149.8125], "z": [0, 0.75]}},
-      "src": "projects/stairwell-vine-wall/project.ts:155:11"
+      "src": "projects/stairwell-vine-wall/project.ts:156:11"
     },
     {
       "id": "frame-screws-upper",
@@ -627,7 +627,7 @@
       "step": "frame-upper",
       "cutPhase": "p2",
       "boxes": {"p2": null},
-      "src": "projects/stairwell-vine-wall/project.ts:168:9"
+      "src": "projects/stairwell-vine-wall/project.ts:169:9"
     },
     {
       "id": "trellis-screws-upper",
@@ -638,7 +638,7 @@
       "step": "trellis-upper",
       "cutPhase": "p2",
       "boxes": {"p2": null},
-      "src": "projects/stairwell-vine-wall/project.ts:169:9"
+      "src": "projects/stairwell-vine-wall/project.ts:170:9"
     }
   ],
   "steps": [
@@ -692,7 +692,7 @@
       "severity": "warning",
       "code": "check:soil-depth",
       "message": "At least 12″ of soil depth for a climbing vine (7.78125″ inside the liner)",
-      "src": "projects/stairwell-vine-wall/project.ts:196:7"
+      "src": "projects/stairwell-vine-wall/project.ts:209:7"
     }
   ]
 }

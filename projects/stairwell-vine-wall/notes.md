@@ -57,7 +57,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 ## Open questions
 
 - The stair counts, rise and run are read from photos; count the steps in each flight to confirm.
-- The blue board's length: about 66″ for a two-high planter, about 33″ one high.
+- The blue board's length: at least 66″ for a two-high planter, 45⅛″ one high (the front can't be split), plus a little to square the ends.
 - One board high or two (the planter option).
 - Which plant? It sets the soil depth.
 

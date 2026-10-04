@@ -5,6 +5,7 @@
 // away on the right); y up from landing 2; z out from the vine wall across the stairwell. Inches.
 // Values marked "inferred" are placeholders until measured; see notes.md.
 import { defineProject, span, box, type Range } from "../../core/model/index.ts";
+import { fmtLength } from "../../core/units.ts";
 
 const T = 23 / 32;   // plywood sold as ¾″
 const S1 = 0.75;     // 1×1 pine, ¾ × ¾ actual
@@ -184,11 +185,23 @@ export default defineProject({
       text: "Rip it to width, cut it to fit to the ceiling, match its diamonds to the first sheet at the seam, and screw it on." });
 
     // ---------- design rules ----------
-    // The board is resawn, so each length gives two pieces: one row of the planter (a front and two ends) per half.
-    const perLayer = (px[1] - px[0]) + 2 * (pz[1] - pz[0] - bt) + 3 * 0.125;   // a front and two ends
-    const need = (layers * perLayer) / 2;
+    // The board is resawn into two strips as long as the board itself. The shortest board is the shortest strip
+    // length that fits every front and end on two strips, laid end to end with a saw kerf between pieces.
+    const kerf = 0.125;
+    const pieces = Array.from({ length: layers }, () => [px[1] - px[0], pz[1] - pz[0] - bt, pz[1] - pz[0] - bt]).flat().sort((a, c) => c - a);
+    const fits = (len: number) => {
+      const used = [0, 0];
+      return pieces.every((p) => {
+        const i = used.findIndex((u) => u + (u > 0 ? kerf : 0) + p <= len);
+        if (i < 0) return false;
+        used[i] += (used[i] > 0 ? kerf : 0) + p;
+        return true;
+      });
+    };
+    let need = pieces[0];
+    while (!fits(need)) need += 1 / 16;
     b.check("board-enough", "The blue board is long enough for the planter's front and ends", need <= P.board2x10.length,
-      `needs about ${Math.round(need)}″ of the 1½ × 9 board; it is ${P.board2x10.length}″`, "error");
+      `needs at least ${fmtLength(need, { marks: true })} of the 1½ × 9 board; it is ${P.board2x10.length}″`, "error");
     b.check("two-sheets-cover", "The two lattice sheets reach from the planter to the ceiling",
       top - bottom <= 2 * P.lattice.sheet[0], `${top - bottom}″ to cover, ${2 * P.lattice.sheet[0]}″ of lattice`, "error");
     b.check("sheet-width", "One sheet is wide enough for the wall", x[1] - x[0] <= P.lattice.sheet[1],
