@@ -1,0 +1,1128 @@
+{
+  "project": {"id": "closet-built-in", "title": "Closet Built-In", "units": "in"},
+  "config": {"top": "1"},
+  "phases": ["p1", "p2"],
+  "parts": [
+    {
+      "id": "floor",
+      "kind": "context",
+      "name": "Floor",
+      "role": "floor",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [-4.5, 84.5], "y": [-1, 0], "z": [-4.5, 28.5]},
+        "p2": {"x": [-4.5, 84.5], "y": [-1, 0], "z": [-4.5, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:86:7"
+    },
+    {
+      "id": "ceiling",
+      "kind": "context",
+      "name": "Ceiling",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [-4.5, 84.5], "y": [95.5, 97], "z": [-4.5, 28.5]},
+        "p2": {"x": [-4.5, 84.5], "y": [95.5, 97], "z": [-4.5, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:87:7"
+    },
+    {
+      "id": "wall-back",
+      "kind": "context",
+      "name": "Back wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [-4.5, 84.5], "y": [0, 95.5], "z": [-4.5, 0]},
+        "p2": {"x": [-4.5, 84.5], "y": [0, 95.5], "z": [-4.5, 0]}
+      },
+      "src": "projects/closet-built-in/project.ts:88:7"
+    },
+    {
+      "id": "wall-left",
+      "kind": "context",
+      "name": "Left wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [-4.5, 0], "y": [0, 95.5], "z": [0, 28.5]},
+        "p2": {"x": [-4.5, 0], "y": [0, 95.5], "z": [0, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:89:7"
+    },
+    {
+      "id": "wall-right",
+      "kind": "context",
+      "name": "Right wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [80, 84.5], "y": [0, 95.5], "z": [0, 28.5]},
+        "p2": {"x": [80, 84.5], "y": [0, 95.5], "z": [0, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:90:7"
+    },
+    {
+      "id": "return-left",
+      "kind": "context",
+      "name": "Left return",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0, 15.75], "y": [0, 95.5], "z": [24, 28.5]},
+        "p2": {"x": [0, 15.75], "y": [0, 95.5], "z": [24, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:91:7"
+    },
+    {
+      "id": "return-right",
+      "kind": "context",
+      "name": "Right return",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [64.25, 80], "y": [0, 95.5], "z": [24, 28.5]},
+        "p2": {"x": [64.25, 80], "y": [0, 95.5], "z": [24, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:92:7"
+    },
+    {
+      "id": "header",
+      "kind": "context",
+      "name": "Header",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [15.75, 64.25], "y": [80.5, 95.5], "z": [24, 28.5]},
+        "p2": {"x": [15.75, 64.25], "y": [80.5, 95.5], "z": [24, 28.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:93:7"
+    },
+    {
+      "id": "baseboard-back",
+      "kind": "context",
+      "name": "Baseboard",
+      "where": "back wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0, 80], "y": [0, 5.5], "z": [0, 0.75]},
+        "p2": {"x": [0, 80], "y": [0, 5.5], "z": [0, 0.75]}
+      },
+      "src": "projects/closet-built-in/project.ts:94:7"
+    },
+    {
+      "id": "baseboard-left",
+      "kind": "context",
+      "name": "Baseboard",
+      "where": "left wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0, 0.75], "y": [0, 5.5], "z": [0.75, 24]},
+        "p2": {"x": [0, 0.75], "y": [0, 5.5], "z": [0.75, 24]}
+      },
+      "src": "projects/closet-built-in/project.ts:95:7"
+    },
+    {
+      "id": "baseboard-right",
+      "kind": "context",
+      "name": "Baseboard",
+      "where": "right wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [79.25, 80], "y": [0, 5.5], "z": [0.75, 24]},
+        "p2": {"x": [79.25, 80], "y": [0, 5.5], "z": [0.75, 24]}
+      },
+      "src": "projects/closet-built-in/project.ts:96:7"
+    },
+    {
+      "id": "partition-left",
+      "kind": "panel",
+      "name": "Partition",
+      "where": "left",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-stand",
+      "cutPhase": "p1",
+      "size": [84, 23.25, 0.7188],
+      "boxes": {
+        "p1": {"x": [28, 28.7188], "y": [0, 84], "z": [0, 23.25]},
+        "p2": {"x": [28, 28.7188], "y": [0, 84], "z": [0, 23.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:100:9"
+    },
+    {
+      "id": "partition-right",
+      "kind": "panel",
+      "name": "Partition",
+      "where": "right",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-stand",
+      "cutPhase": "p1",
+      "size": [84, 23.25, 0.7188],
+      "boxes": {
+        "p1": {"x": [51.2813, 52], "y": [0, 84], "z": [0, 23.25]},
+        "p2": {"x": [51.2813, 52], "y": [0, 84], "z": [0, 23.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:100:9"
+    },
+    {
+      "id": "top-shelf-left",
+      "kind": "panel",
+      "name": "Top shelf",
+      "where": "left",
+      "material": "ply-raw",
+      "phase": "p1",
+      "step": "p1-tie",
+      "cutPhase": "p1",
+      "size": [28, 11.25, 0.7188],
+      "boxes": {
+        "p1": {"x": [0, 28], "y": [84, 84.7188], "z": [0, 11.25]},
+        "p2": {"x": [0, 28], "y": [84, 84.7188], "z": [0, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:112:9"
+    },
+    {
+      "id": "top-shelf-left-nosing",
+      "kind": "board",
+      "name": "Shelf nosing",
+      "where": "left",
+      "material": "hw-nosing",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "size": [28, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [0, 28], "y": [83.2188, 84.7188], "z": [11.25, 12]},
+        "p2": {"x": [0, 28], "y": [83.2188, 84.7188], "z": [11.25, 12]}
+      },
+      "src": "projects/closet-built-in/project.ts:113:9"
+    },
+    {
+      "id": "top-shelf-center",
+      "kind": "panel",
+      "name": "Center top shelf",
+      "where": "center",
+      "material": "ply-raw",
+      "phase": "p1",
+      "step": "p1-tie",
+      "cutPhase": "p1",
+      "size": [24, 11.25, 0.7188],
+      "boxes": {
+        "p1": {"x": [28, 52], "y": [84, 84.7188], "z": [0, 11.25]},
+        "p2": {"x": [28, 52], "y": [84, 84.7188], "z": [0, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:112:9"
+    },
+    {
+      "id": "top-shelf-center-nosing",
+      "kind": "board",
+      "name": "Shelf nosing",
+      "where": "center",
+      "material": "hw-nosing",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "size": [22.5625, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [28.7188, 51.2813], "y": [83.2188, 84.7188], "z": [11.25, 12]},
+        "p2": {"x": [28.7188, 51.2813], "y": [83.2188, 84.7188], "z": [11.25, 12]}
+      },
+      "src": "projects/closet-built-in/project.ts:113:9"
+    },
+    {
+      "id": "top-shelf-right",
+      "kind": "panel",
+      "name": "Top shelf",
+      "where": "right",
+      "material": "ply-raw",
+      "phase": "p1",
+      "step": "p1-tie",
+      "cutPhase": "p1",
+      "size": [28, 11.25, 0.7188],
+      "boxes": {
+        "p1": {"x": [52, 80], "y": [84, 84.7188], "z": [0, 11.25]},
+        "p2": {"x": [52, 80], "y": [84, 84.7188], "z": [0, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:112:9"
+    },
+    {
+      "id": "top-shelf-right-nosing",
+      "kind": "board",
+      "name": "Shelf nosing",
+      "where": "right",
+      "material": "hw-nosing",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "size": [28, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [52, 80], "y": [83.2188, 84.7188], "z": [11.25, 12]},
+        "p2": {"x": [52, 80], "y": [83.2188, 84.7188], "z": [11.25, 12]}
+      },
+      "src": "projects/closet-built-in/project.ts:113:9"
+    },
+    {
+      "id": "shelf-right-70",
+      "kind": "panel",
+      "name": "Right 70″ shelf",
+      "where": "right, at 70″",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-tie",
+      "cutPhase": "p1",
+      "size": [11.25, 28, 0.7188],
+      "boxes": {
+        "p1": {"x": [52, 80], "y": [70, 70.7188], "z": [0, 11.25]},
+        "p2": {"x": [52, 80], "y": [70, 70.7188], "z": [0, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:112:9"
+    },
+    {
+      "id": "shelf-right-70-nosing",
+      "kind": "board",
+      "name": "Shelf nosing",
+      "where": "right, at 70″",
+      "material": "hw-nosing",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "size": [28, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [52, 80], "y": [69.2188, 70.7188], "z": [11.25, 12]},
+        "p2": {"x": [52, 80], "y": [69.2188, 70.7188], "z": [11.25, 12]}
+      },
+      "src": "projects/closet-built-in/project.ts:113:9"
+    },
+    {
+      "id": "top-left-cleat-a",
+      "kind": "board",
+      "name": "Side cleat",
+      "where": "top-left, wall end",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [10.5, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [0, 0.75], "y": [80.5, 84], "z": [0.75, 11.25]},
+        "p2": {"x": [0, 0.75], "y": [80.5, 84], "z": [0.75, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:130:9"
+    },
+    {
+      "id": "top-left-cleat-b",
+      "kind": "board",
+      "name": "Side cleat",
+      "where": "top-left, partition end",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [10.5, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [27.25, 28], "y": [80.5, 84], "z": [0.75, 11.25]},
+        "p2": {"x": [27.25, 28], "y": [80.5, 84], "z": [0.75, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:131:9"
+    },
+    {
+      "id": "top-left-cleat-back",
+      "kind": "board",
+      "name": "Back cleat",
+      "where": "top-left",
+      "material": "pine-1x2",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [26.5, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [0.75, 27.25], "y": [82.5, 84], "z": [0, 0.75]},
+        "p2": {"x": [0.75, 27.25], "y": [82.5, 84], "z": [0, 0.75]}
+      },
+      "src": "projects/closet-built-in/project.ts:132:9"
+    },
+    {
+      "id": "top-right-cleat-a",
+      "kind": "board",
+      "name": "Side cleat",
+      "where": "top-right, wall end",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [10.5, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [52, 52.75], "y": [80.5, 84], "z": [0.75, 11.25]},
+        "p2": {"x": [52, 52.75], "y": [80.5, 84], "z": [0.75, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:130:9"
+    },
+    {
+      "id": "top-right-cleat-b",
+      "kind": "board",
+      "name": "Side cleat",
+      "where": "top-right, partition end",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [10.5, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [79.25, 80], "y": [80.5, 84], "z": [0.75, 11.25]},
+        "p2": {"x": [79.25, 80], "y": [80.5, 84], "z": [0.75, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:131:9"
+    },
+    {
+      "id": "top-right-cleat-back",
+      "kind": "board",
+      "name": "Back cleat",
+      "where": "top-right",
+      "material": "pine-1x2",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [26.5, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [52.75, 79.25], "y": [82.5, 84], "z": [0, 0.75]},
+        "p2": {"x": [52.75, 79.25], "y": [82.5, 84], "z": [0, 0.75]}
+      },
+      "src": "projects/closet-built-in/project.ts:132:9"
+    },
+    {
+      "id": "right-70-cleat-a",
+      "kind": "board",
+      "name": "Side cleat",
+      "where": "right-70, wall end",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [10.5, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [52, 52.75], "y": [66.5, 70], "z": [0.75, 11.25]},
+        "p2": {"x": [52, 52.75], "y": [66.5, 70], "z": [0.75, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:130:9"
+    },
+    {
+      "id": "right-70-cleat-b",
+      "kind": "board",
+      "name": "Side cleat",
+      "where": "right-70, partition end",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [10.5, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [79.25, 80], "y": [66.5, 70], "z": [0.75, 11.25]},
+        "p2": {"x": [79.25, 80], "y": [66.5, 70], "z": [0.75, 11.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:131:9"
+    },
+    {
+      "id": "right-70-cleat-back",
+      "kind": "board",
+      "name": "Back cleat",
+      "where": "right-70",
+      "material": "pine-1x2",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [26.5, 1.5, 0.75],
+      "boxes": {
+        "p1": {"x": [52.75, 79.25], "y": [68.5, 70], "z": [0, 0.75]},
+        "p2": {"x": [52.75, 79.25], "y": [68.5, 70], "z": [0, 0.75]}
+      },
+      "src": "projects/closet-built-in/project.ts:132:9"
+    },
+    {
+      "id": "center-shelf-fixed",
+      "kind": "panel",
+      "name": "Center fixed shelf",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-tie",
+      "cutPhase": "p1",
+      "size": [22.5625, 23.25, 0.7188],
+      "boxes": {
+        "p1": {"x": [28.7188, 51.2813], "y": [70, 70.7188], "z": [0, 23.25]},
+        "p2": {"x": [28.7188, 51.2813], "y": [70, 70.7188], "z": [0, 23.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:139:7"
+    },
+    {
+      "id": "nailer-top",
+      "kind": "panel",
+      "name": "Nailer",
+      "where": "behind the center top shelf",
+      "material": "ply-raw",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [22.5625, 3.5, 0.7188],
+      "boxes": {
+        "p1": {"x": [28.7188, 51.2813], "y": [80.5, 84], "z": [0, 0.7188]},
+        "p2": {"x": [28.7188, 51.2813], "y": [80.5, 84], "z": [0, 0.7188]}
+      },
+      "src": "projects/closet-built-in/project.ts:145:9"
+    },
+    {
+      "id": "nailer-70",
+      "kind": "panel",
+      "name": "Nailer",
+      "where": "under the back of the 70″ shelf",
+      "material": "ply-raw",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [22.5625, 3.5, 0.7188],
+      "boxes": {
+        "p1": {"x": [28.7188, 51.2813], "y": [66.5, 70], "z": [0, 0.7188]},
+        "p2": {"x": [28.7188, 51.2813], "y": [66.5, 70], "z": [0, 0.7188]}
+      },
+      "src": "projects/closet-built-in/project.ts:145:9"
+    },
+    {
+      "id": "floor-rail",
+      "kind": "board",
+      "name": "Floor rail",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-tie",
+      "cutPhase": "p1",
+      "size": [22.5625, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [28.7188, 51.2813], "y": [0, 3.5], "z": [0.75, 1.5]},
+        "p2": {"x": [28.7188, 51.2813], "y": [0, 3.5], "z": [0.75, 1.5]}
+      },
+      "src": "projects/closet-built-in/project.ts:148:7"
+    },
+    {
+      "id": "center-shelf-adj-1",
+      "kind": "panel",
+      "name": "Center adjustable shelf",
+      "where": "#1",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "removedIn": "p2",
+      "size": [22.4375, 22.5, 0.7188],
+      "boxes": {"p1": {"x": [28.7813, 51.2188], "y": [28, 28.7188], "z": [0.75, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:159:9"
+    },
+    {
+      "id": "center-shelf-adj-2",
+      "kind": "panel",
+      "name": "Center adjustable shelf",
+      "where": "#2",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "removedIn": "p2",
+      "size": [22.4375, 22.5, 0.7188],
+      "boxes": {"p1": {"x": [28.7813, 51.2188], "y": [42, 42.7188], "z": [0.75, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:159:9"
+    },
+    {
+      "id": "center-shelf-adj-3",
+      "kind": "panel",
+      "name": "Center adjustable shelf",
+      "where": "#3",
+      "material": "ply-pre",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "size": [22.4375, 22.5, 0.7188],
+      "boxes": {
+        "p1": {"x": [28.7813, 51.2188], "y": [55.75, 56.4688], "z": [0.75, 23.25]},
+        "p2": {"x": [28.7813, 51.2188], "y": [59.625, 60.3438], "z": [0.75, 23.25]}
+      },
+      "src": "projects/closet-built-in/project.ts:159:9"
+    },
+    {
+      "id": "rod-left-upper",
+      "kind": "hardware",
+      "name": "Rod, left upper",
+      "item": "rod",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0.875, 27.125], "y": [80.8438, 82.1563], "z": [11.3438, 12.6563]},
+        "p2": {"x": [0.875, 27.125], "y": [80.8438, 82.1563], "z": [11.3438, 12.6563]}
+      },
+      "src": "projects/closet-built-in/project.ts:167:9"
+    },
+    {
+      "id": "rod-left-lower",
+      "kind": "hardware",
+      "name": "Rod, left lower",
+      "item": "rod",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0.875, 27.875], "y": [40.3438, 41.6563], "z": [11.3438, 12.6563]},
+        "p2": {"x": [0.875, 27.875], "y": [40.3438, 41.6563], "z": [11.3438, 12.6563]}
+      },
+      "src": "projects/closet-built-in/project.ts:167:9"
+    },
+    {
+      "id": "rod-right",
+      "kind": "hardware",
+      "name": "Rod, right",
+      "item": "rod",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [52.875, 79.125], "y": [66.8438, 68.1563], "z": [11.3438, 12.6563]},
+        "p2": {"x": [52.875, 79.125], "y": [66.8438, 68.1563], "z": [11.3438, 12.6563]}
+      },
+      "src": "projects/closet-built-in/project.ts:167:9"
+    },
+    {
+      "id": "rod-backer",
+      "kind": "board",
+      "name": "Rod backer",
+      "material": "pine-1x4",
+      "phase": "p1",
+      "step": "p1-cleats",
+      "cutPhase": "p1",
+      "size": [6, 3.5, 0.75],
+      "boxes": {
+        "p1": {"x": [0, 0.75], "y": [39.25, 42.75], "z": [9, 15]},
+        "p2": {"x": [0, 0.75], "y": [39.25, 42.75], "z": [9, 15]}
+      },
+      "src": "projects/closet-built-in/project.ts:173:7"
+    },
+    {
+      "id": "rod-sockets",
+      "kind": "hardware",
+      "name": "Rod sockets",
+      "item": "rod-socket",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "boxes": {"p1": null, "p2": null},
+      "src": "projects/closet-built-in/project.ts:176:7"
+    },
+    {
+      "id": "shelf-pins",
+      "kind": "hardware",
+      "name": "Shelf pins",
+      "item": "shelf-pin",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "boxes": {"p1": null, "p2": null},
+      "src": "projects/closet-built-in/project.ts:177:7"
+    },
+    {
+      "id": "rolling-hamper",
+      "kind": "hardware",
+      "name": "Rolling hamper",
+      "item": "hamper",
+      "phase": "p1",
+      "step": "p1-finish",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [30.25, 49.75], "y": [0, 23], "z": [6, 21]},
+        "p2": {"x": [30.25, 49.75], "y": [0, 23], "z": [7.875, 22.875]}
+      },
+      "src": "projects/closet-built-in/project.ts:182:7"
+    },
+    {
+      "id": "hamper-face",
+      "kind": "panel",
+      "name": "Hamper face",
+      "material": "ply-raw",
+      "phase": "p2",
+      "step": "p2-faces",
+      "cutPhase": "p1",
+      "size": [27.625, 23.3125, 0.7188],
+      "boxes": {"p2": {"x": [28.3438, 51.6563], "y": [0.25, 27.875], "z": [23.25, 23.9688]}},
+      "src": "projects/closet-built-in/project.ts:188:7"
+    },
+    {
+      "id": "drawer-face-1",
+      "kind": "panel",
+      "name": "Drawer face",
+      "where": "drawer 1",
+      "material": "ply-raw",
+      "phase": "p2",
+      "step": "p2-faces",
+      "cutPhase": "p1",
+      "size": [7.875, 23.3125, 0.7188],
+      "boxes": {"p2": {"x": [28.3438, 51.6563], "y": [28, 35.875], "z": [23.25, 23.9688]}},
+      "src": "projects/closet-built-in/project.ts:193:9"
+    },
+    {
+      "id": "drawer-face-2",
+      "kind": "panel",
+      "name": "Drawer face",
+      "where": "drawer 2",
+      "material": "ply-raw",
+      "phase": "p2",
+      "step": "p2-faces",
+      "cutPhase": "p1",
+      "size": [6.875, 23.3125, 0.7188],
+      "boxes": {"p2": {"x": [28.3438, 51.6563], "y": [36, 42.875], "z": [23.25, 23.9688]}},
+      "src": "projects/closet-built-in/project.ts:193:9"
+    },
+    {
+      "id": "drawer-face-3",
+      "kind": "panel",
+      "name": "Drawer face",
+      "where": "drawer 3",
+      "material": "ply-raw",
+      "phase": "p2",
+      "step": "p2-faces",
+      "cutPhase": "p1",
+      "size": [5.875, 23.3125, 0.7188],
+      "boxes": {"p2": {"x": [28.3438, 51.6563], "y": [43, 48.875], "z": [23.25, 23.9688]}},
+      "src": "projects/closet-built-in/project.ts:193:9"
+    },
+    {
+      "id": "hamper-frame-side",
+      "kind": "panel",
+      "name": "Hamper frame side",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-frame",
+      "cutPhase": "p2",
+      "size": [21, 26.5, 0.4688],
+      "boxes": {"p2": {"x": [50.3125, 50.7813], "y": [0.5, 27], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:203:7"
+    },
+    {
+      "id": "hamper-frame-rail",
+      "kind": "board",
+      "name": "Hamper frame top rail",
+      "material": "hw-34",
+      "phase": "p2",
+      "step": "p2-frame",
+      "cutPhase": "p2",
+      "size": [21, 3, 0.75],
+      "boxes": {"p2": {"x": [29.2188, 29.9688], "y": [24, 27], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:205:7"
+    },
+    {
+      "id": "hamper-frame-back",
+      "kind": "panel",
+      "name": "Hamper frame back",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-frame",
+      "cutPhase": "p2",
+      "size": [20.3438, 26.5, 0.4688],
+      "boxes": {"p2": {"x": [29.9688, 50.3125], "y": [0.5, 27], "z": [7.2813, 7.75]}},
+      "src": "projects/closet-built-in/project.ts:208:7"
+    },
+    {
+      "id": "drawer-1-side-l",
+      "kind": "panel",
+      "name": "Drawer box side",
+      "where": "drawer 1",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 6.5, 0.4688],
+      "boxes": {"p2": {"x": [29.2188, 29.6875], "y": [28.5, 35], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:216:48"
+    },
+    {
+      "id": "drawer-1-side-r",
+      "kind": "panel",
+      "name": "Drawer box side",
+      "where": "drawer 1",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 6.5, 0.4688],
+      "boxes": {"p2": {"x": [50.3125, 50.7813], "y": [28.5, 35], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:216:48"
+    },
+    {
+      "id": "drawer-1-front",
+      "kind": "panel",
+      "name": "Drawer box front or back",
+      "where": "drawer 1 front",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [20.625, 6.5, 0.4688],
+      "boxes": {"p2": {"x": [29.6875, 50.3125], "y": [28.5, 35], "z": [22.7813, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:220:11"
+    },
+    {
+      "id": "drawer-1-back",
+      "kind": "panel",
+      "name": "Drawer box front or back",
+      "where": "drawer 1 back",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [20.625, 6.5, 0.4688],
+      "boxes": {"p2": {"x": [29.6875, 50.3125], "y": [28.5, 35], "z": [2.25, 2.7188]}},
+      "src": "projects/closet-built-in/project.ts:220:11"
+    },
+    {
+      "id": "drawer-1-bottom",
+      "kind": "panel",
+      "name": "Drawer bottom",
+      "where": "drawer 1",
+      "material": "ply-quarter",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 20.4375, 0.25],
+      "boxes": {"p2": {"x": [29.5, 50.5], "y": [28.75, 29], "z": [2.5313, 22.9688]}},
+      "src": "projects/closet-built-in/project.ts:225:9"
+    },
+    {
+      "id": "drawer-2-side-l",
+      "kind": "panel",
+      "name": "Drawer box side",
+      "where": "drawer 2",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 5.5, 0.4688],
+      "boxes": {"p2": {"x": [29.2188, 29.6875], "y": [36.5, 42], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:216:48"
+    },
+    {
+      "id": "drawer-2-side-r",
+      "kind": "panel",
+      "name": "Drawer box side",
+      "where": "drawer 2",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 5.5, 0.4688],
+      "boxes": {"p2": {"x": [50.3125, 50.7813], "y": [36.5, 42], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:216:48"
+    },
+    {
+      "id": "drawer-2-front",
+      "kind": "panel",
+      "name": "Drawer box front or back",
+      "where": "drawer 2 front",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [20.625, 5.5, 0.4688],
+      "boxes": {"p2": {"x": [29.6875, 50.3125], "y": [36.5, 42], "z": [22.7813, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:220:11"
+    },
+    {
+      "id": "drawer-2-back",
+      "kind": "panel",
+      "name": "Drawer box front or back",
+      "where": "drawer 2 back",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [20.625, 5.5, 0.4688],
+      "boxes": {"p2": {"x": [29.6875, 50.3125], "y": [36.5, 42], "z": [2.25, 2.7188]}},
+      "src": "projects/closet-built-in/project.ts:220:11"
+    },
+    {
+      "id": "drawer-2-bottom",
+      "kind": "panel",
+      "name": "Drawer bottom",
+      "where": "drawer 2",
+      "material": "ply-quarter",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 20.4375, 0.25],
+      "boxes": {"p2": {"x": [29.5, 50.5], "y": [36.75, 37], "z": [2.5313, 22.9688]}},
+      "src": "projects/closet-built-in/project.ts:225:9"
+    },
+    {
+      "id": "drawer-3-side-l",
+      "kind": "panel",
+      "name": "Drawer box side",
+      "where": "drawer 3",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 4.5, 0.4688],
+      "boxes": {"p2": {"x": [29.2188, 29.6875], "y": [43.5, 48], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:216:48"
+    },
+    {
+      "id": "drawer-3-side-r",
+      "kind": "panel",
+      "name": "Drawer box side",
+      "where": "drawer 3",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 4.5, 0.4688],
+      "boxes": {"p2": {"x": [50.3125, 50.7813], "y": [43.5, 48], "z": [2.25, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:216:48"
+    },
+    {
+      "id": "drawer-3-front",
+      "kind": "panel",
+      "name": "Drawer box front or back",
+      "where": "drawer 3 front",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [20.625, 4.5, 0.4688],
+      "boxes": {"p2": {"x": [29.6875, 50.3125], "y": [43.5, 48], "z": [22.7813, 23.25]}},
+      "src": "projects/closet-built-in/project.ts:220:11"
+    },
+    {
+      "id": "drawer-3-back",
+      "kind": "panel",
+      "name": "Drawer box front or back",
+      "where": "drawer 3 back",
+      "material": "ply-half",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [20.625, 4.5, 0.4688],
+      "boxes": {"p2": {"x": [29.6875, 50.3125], "y": [43.5, 48], "z": [2.25, 2.7188]}},
+      "src": "projects/closet-built-in/project.ts:220:11"
+    },
+    {
+      "id": "drawer-3-bottom",
+      "kind": "panel",
+      "name": "Drawer bottom",
+      "where": "drawer 3",
+      "material": "ply-quarter",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "size": [21, 20.4375, 0.25],
+      "boxes": {"p2": {"x": [29.5, 50.5], "y": [43.75, 44], "z": [2.5313, 22.9688]}},
+      "src": "projects/closet-built-in/project.ts:225:9"
+    },
+    {
+      "id": "center-top",
+      "kind": "board",
+      "name": "Hardwood top",
+      "material": "hw-1in",
+      "phase": "p2",
+      "step": "p2-top",
+      "cutPhase": "p2",
+      "size": [22.5625, 24, 1],
+      "boxes": {"p2": {"x": [28.7188, 51.2813], "y": [49, 50], "z": [0, 24]}},
+      "src": "projects/closet-built-in/project.ts:230:7"
+    },
+    {
+      "id": "slides",
+      "kind": "hardware",
+      "name": "Slides, 21″",
+      "item": "slide-21",
+      "phase": "p2",
+      "step": "p2-drawers",
+      "cutPhase": "p2",
+      "boxes": {"p2": null},
+      "src": "projects/closet-built-in/project.ts:233:7"
+    },
+    {
+      "id": "pulls",
+      "kind": "hardware",
+      "name": "Pulls",
+      "item": "pull",
+      "phase": "p2",
+      "step": "p2-faces",
+      "cutPhase": "p2",
+      "boxes": {"p2": null},
+      "src": "projects/closet-built-in/project.ts:234:7"
+    },
+    {
+      "id": "bins-2",
+      "kind": "context",
+      "name": "Bins",
+      "role": "contents",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [2, 26], "y": [84.7188, 92.5], "z": [0.8, 10.8]},
+        "p2": {"x": [2, 26], "y": [84.7188, 92.5], "z": [0.8, 10.8]}
+      },
+      "src": "projects/closet-built-in/project.ts:237:59"
+    },
+    {
+      "id": "bins-30",
+      "kind": "context",
+      "name": "Bins",
+      "role": "contents",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [30, 50], "y": [84.7188, 92.5], "z": [0.8, 10.8]},
+        "p2": {"x": [30, 50], "y": [84.7188, 92.5], "z": [0.8, 10.8]}
+      },
+      "src": "projects/closet-built-in/project.ts:237:59"
+    },
+    {
+      "id": "bins-54",
+      "kind": "context",
+      "name": "Bins",
+      "role": "contents",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [54, 78], "y": [84.7188, 92.5], "z": [0.8, 10.8]},
+        "p2": {"x": [54, 78], "y": [84.7188, 92.5], "z": [0.8, 10.8]}
+      },
+      "src": "projects/closet-built-in/project.ts:237:59"
+    },
+    {
+      "id": "hang-left-upper",
+      "kind": "context",
+      "name": "Shirts, jackets",
+      "role": "contents",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0.9, 26.8], "y": [43.9, 81.5], "z": [2, 22]},
+        "p2": {"x": [0.9, 26.8], "y": [43.9, 81.5], "z": [2, 22]}
+      },
+      "src": "projects/closet-built-in/project.ts:238:7"
+    },
+    {
+      "id": "hang-left-lower",
+      "kind": "context",
+      "name": "Shirts, folded pants",
+      "role": "contents",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [0.9, 26.8], "y": [2.4, 41], "z": [2, 22]},
+        "p2": {"x": [0.9, 26.8], "y": [2.4, 41], "z": [2, 22]}
+      },
+      "src": "projects/closet-built-in/project.ts:239:7"
+    },
+    {
+      "id": "hang-right",
+      "kind": "context",
+      "name": "Suits, coats, dresses",
+      "role": "contents",
+      "cutPhase": "p1",
+      "boxes": {
+        "p1": {"x": [52.9, 78.8], "y": [10.9, 67.5], "z": [2, 22]},
+        "p2": {"x": [52.9, 78.8], "y": [10.9, 67.5], "z": [2, 22]}
+      },
+      "src": "projects/closet-built-in/project.ts:240:7"
+    }
+  ],
+  "steps": [
+    {"id": "p1-bench", "phase": "p1", "parts": ["partition-left", "partition-right"]},
+    {
+      "id": "p1-cleats",
+      "phase": "p1",
+      "parts": [
+        "top-left-cleat-a",
+        "top-left-cleat-b",
+        "top-left-cleat-back",
+        "top-right-cleat-a",
+        "top-right-cleat-b",
+        "top-right-cleat-back",
+        "right-70-cleat-a",
+        "right-70-cleat-b",
+        "right-70-cleat-back",
+        "nailer-top",
+        "nailer-70",
+        "rod-backer"
+      ]
+    },
+    {"id": "p1-stand", "phase": "p1", "parts": ["partition-left", "partition-right"]},
+    {
+      "id": "p1-tie",
+      "phase": "p1",
+      "parts": [
+        "top-shelf-left",
+        "top-shelf-center",
+        "top-shelf-right",
+        "shelf-right-70",
+        "center-shelf-fixed",
+        "floor-rail"
+      ]
+    },
+    {
+      "id": "p1-finish",
+      "phase": "p1",
+      "parts": [
+        "top-shelf-left-nosing",
+        "top-shelf-center-nosing",
+        "top-shelf-right-nosing",
+        "shelf-right-70-nosing",
+        "center-shelf-adj-1",
+        "center-shelf-adj-2",
+        "center-shelf-adj-3",
+        "rod-left-upper",
+        "rod-left-lower",
+        "rod-right",
+        "rod-sockets",
+        "shelf-pins",
+        "rolling-hamper"
+      ]
+    },
+    {
+      "id": "p2-frame",
+      "phase": "p2",
+      "parts": ["hamper-frame-side", "hamper-frame-rail", "hamper-frame-back"]
+    },
+    {
+      "id": "p2-drawers",
+      "phase": "p2",
+      "parts": [
+        "drawer-1-side-l",
+        "drawer-1-side-r",
+        "drawer-1-front",
+        "drawer-1-back",
+        "drawer-1-bottom",
+        "drawer-2-side-l",
+        "drawer-2-side-r",
+        "drawer-2-front",
+        "drawer-2-back",
+        "drawer-2-bottom",
+        "drawer-3-side-l",
+        "drawer-3-side-r",
+        "drawer-3-front",
+        "drawer-3-back",
+        "drawer-3-bottom",
+        "slides"
+      ]
+    },
+    {"id": "p2-top", "phase": "p2", "parts": ["center-top"]},
+    {
+      "id": "p2-faces",
+      "phase": "p2",
+      "parts": ["hamper-face", "drawer-face-1", "drawer-face-2", "drawer-face-3", "pulls"]
+    }
+  ],
+  "checks": [
+    {"id": "hamper-under-rail", "pass": true, "severity": "warning"},
+    {"id": "hamper-depth", "pass": true, "severity": "warning"},
+    {"id": "column-in-opening", "pass": true, "severity": "error"},
+    {"id": "partition-tilts-in", "pass": true, "severity": "error"},
+    {"id": "bins-come-down", "pass": true, "severity": "warning"},
+    {"id": "coat-clears-floor", "pass": true, "severity": "warning"}
+  ],
+  "issues": []
+}

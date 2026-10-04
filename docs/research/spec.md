@@ -179,6 +179,9 @@ DIY-bench/
 │   ├── evaluate.ts                evaluate(project, config) → Resolved (section 6)
 │   ├── invariants.ts              the checks in section 6.4
 │   ├── geometry.ts                box ops: extent, intersect, overlap, cylinder bounds, project to view
+│   ├── parts.ts                   a panel's or board's length/width/thickness axes, banded edges, cut size
+│   ├── query.ts                   part summaries and details for the CLI and the Parts panel
+│   ├── json.ts                    deterministic JSON (4-decimal numbers) for CLI output and golden files
 │   ├── cutlist.ts                 section 7.1
 │   ├── nesting.ts                 section 7.2
 │   ├── drawings/
@@ -205,6 +208,8 @@ DIY-bench/
 │   └── theme.css                  tokens; light and dark
 ├── tools/
 │   ├── wb.ts                      the CLI (section 11)
+│   ├── projects.ts                finding and loading projects from Node
+│   ├── golden.ts                  golden files and `wb snapshot` (section 13.2)
 │   ├── vite-plugin.ts             diyBenchPlugin(): endpoints, state file, control relay (section 11.2)
 │   └── render.ts                  headless Chrome rendering for ./wb render and PDF
 ├── projects/
@@ -281,6 +286,8 @@ export type BoardMaterial = {
   nominal?: string;           // "1×4"
   finish: Finish;
   stockLengths?: number[];    // e.g. [96, 120], for the shopping list
+  kerf?: number;              // between pieces cut from one board (shopping list); default 0.125 in, 3 mm
+  oversize?: number;          // added to length and width of every cut size, default 0
 };
 export type Material = SheetMaterial | BoardMaterial;
 export type Banding = { name: string; thickness: number; width: number; reducesCutSize: boolean };
@@ -352,9 +359,11 @@ export type Project<O extends Record<string, OptionDef>> = {
   id: string; title: string; units: "in" | "mm";
   options: O; phases: Phase[];
   materials: Record<string, Material>; banding: Record<string, Banding>; hardware: Record<string, HardwareItem>;
-  build: (b: Builder, opt: { [K in keyof O]: keyof O[K]["choices"] & string }) => void;
+  build: (b: ModelBuilder, opt: { [K in keyof O]: keyof O[K]["choices"] & string }) => void;
 };
 ```
+
+`ModelBuilder` is an interface with the methods of `Builder` (section 5.3), declared in `types.ts` so that `Project` does not import the builder class. `Builder` implements it.
 
 ### 5.3 Builder
 
@@ -377,7 +386,9 @@ export class Builder {
 }
 ```
 
-Each builder method records its call site as `src`. Each method parses `new Error().stack` and takes the frame of the caller of the builder method; under type stripping that frame points at the exact line and column (verified). In the browser, Vite serves the module with a URL path, so `src.file` is normalised to the repo-relative path by stripping the dev-server origin and any `?t=` query. When stack parsing fails, `src` is `null`, and nothing may depend on it being present.
+Each builder method records its call site as `src`. Each method parses `new Error().stack` and takes the first frame outside `core/`, which is the caller of the builder method; under type stripping that frame points at the exact line and column (verified), and under Vitest the stack is source-mapped to the same position (verified in M1). `src.file` is repo-relative everywhere: in Node the repo root (two levels above `core/model/builder.ts`) is stripped from the path; in the browser, Vite serves the module with a URL path, so the dev-server origin and any `?t=` query are stripped. A file outside the repo keeps its absolute path. When stack parsing fails, `src` is `null`, and nothing may depend on it being present. The CLI prints `src` as the string `file:line:col`.
+
+The builder also throws on a duplicate step, check or view id.
 
 The builder throws immediately when it gets:
 - a duplicate `id`;
@@ -410,7 +421,9 @@ Imperial formatting:
 - Append `″` when `marks` is true.
 - Write feet only when asked (`opts.feet`). The reference never uses feet.
 
-Examples: 23.25 → `23¼`; 0.75 → `¾`; 1.3125 → `1⁵⁄₁₆`; 50.8333 → `≈50¹³⁄₁₆`; 0 → `0`. Thickness: 0.71875 → `23/32`; 0.46875 → `15/32`; metric stock with `thicknessLabel: "12 mm"` → `12 mm`.
+- When no `denom` is given, a value that is an exact multiple of 1/32 but not of 1/16 is written in 32nds with no `≈` (20.34375 → `20¹¹⁄₃₂`), so a deliberate 32nd never prints as an approximation. `denom: 16` forces 16ths.
+
+Examples: 23.25 → `23¼`; 0.75 → `¾`; 1.3125 → `1⁵⁄₁₆`; 50.8333 → `≈50¹³⁄₁₆`; 0 → `0`; 20.34375 → `20¹¹⁄₃₂`. Thickness: 0.71875 → `23/32`; 0.46875 → `15/32`; metric stock with `thicknessLabel: "12 mm"` → `12 mm`.
 
 Parsing accepts:
 - `23 1/4`, `23-1/4`, `23.25`, `23¼`
@@ -444,18 +457,21 @@ type Resolved = {
   project: { id: string; title: string; units: "in" | "mm" };
   config: Record<string, string>;
   phases: Phase[];
-  parts: ResolvedPart[];                 // every part, every phase
+  materials: Record<string, Material>; banding: Record<string, Banding>; hardware: Record<string, HardwareItem>;
+  parts: ResolvedPart[];                 // every part, every phase, in declaration order
   steps: (Step & { parts: string[] })[]; // parts filled from part.step when not listed
   checks: Check[];
   views: View[];
   issues: Issue[];
+  part(id: string): ResolvedPart | undefined;
   stateAt(phase: string, step?: string): PhaseState; // memoised
 };
 type ResolvedPart = Part & {
   kind: "panel" | "board" | "hardware" | "context";
   bounds?: Box;                          // box, or the cylinder's bounding box
   sizes?: { l: number; w: number; t: number; lAxis: Axis; wAxis: Axis; tAxis: Axis }; // panels and boards
-  material?: Material; finishApplied?: Finish; cutPhase: string;
+  materialDef?: Material;                // panels and boards; `material` stays the key
+  finishApplied?: Finish; cutPhase: string; // context parts with no phase: the first phase
 };
 type PhaseState = { phase: string; step?: string; parts: { part: ResolvedPart; box?: Box }[] }; // box after moves
 type Issue = { severity: "error" | "warning" | "info"; code: string; message: string; parts?: string[]; phases?: string[]; src?: Src };
@@ -467,7 +483,7 @@ Phase state at phase P:
 
 Step state at step S of phase P:
 - the state at the previous phase,
-- plus the parts whose `step` comes at or before S in declaration order within P,
+- plus the parts whose `step` comes at or before S in declaration order within P (a part of phase P with no step, or with a step outside P, is present from the first step of P),
 - minus the parts with `removedIn = P`, but only once the first step of P is reached.
 
 Membership in a step state is decided by each part's own `step` field. A step's `parts` list only decides which parts the step highlights and lists. That list may name parts not yet installed: `p1-bench` lists the partitions, which are worked on the bench before `p1-stand` installs them. The 3D view draws such parts as translucent ghosts.
@@ -480,15 +496,15 @@ Membership in a step state is decided by each part's own `step` field. A step's 
 `cutPhase` is `cutIn ?? phase`.
 
 ### 6.3 Errors in the program
-If `build` throws, `evaluate` throws an `EvaluationError` carrying the message and the `src` of the throwing frame inside the project file, when one exists. The app shows it and keeps the last good `Resolved`. The CLI prints it and exits 1.
+If `build` throws, `evaluate` throws an `EvaluationError` carrying the message and the `src` of the throwing frame inside the project file, when one exists (the first stack frame outside `core/`). The app shows it and keeps the last good `Resolved`. The CLI prints it and exits 1.
 
 ### 6.4 Invariants
 `core/invariants.ts` runs these on every evaluation. Each produces `Issue`s with the code shown. "Overlap" means positive volume on all three axes, beyond a tolerance of 1e-6. Faces that only touch are fine.
 
 | Code | Severity | Rule |
 |---|---|---|
-| `unknown-ref` | error | Every `joins[].to`, `step.parts[]`, `view.veil[]`, label part, and dimension reference names an existing part; every dimension ref's axis and side are valid. |
-| `unknown-step` / `unknown-phase` / `unknown-material` / `unknown-banding` / `unknown-hardware` | error | Names resolve. |
+| `unknown-ref` | error | Every `joins[].to`, `step.parts[]`, `view.veil[]`, label part, and dimension reference names an existing part; every dimension ref's axis and side are valid, the part it names has geometry, and both refs of a dimension share an axis. |
+| `unknown-step` / `unknown-phase` / `unknown-material` / `unknown-banding` / `unknown-hardware` | error | Names resolve. `unknown-material` also covers a panel given a board material or a board given a sheet material. `unknown-phase` covers `phase`, `removedIn`, `cutIn`, `moves` keys and `step.phase`. |
 | `range-order` | error | Every range has from < to (also enforced by the builder). |
 | `thickness` | error | A panel or board has at least one axis whose extent equals its material's thickness. |
 | `board-width` | error | A board whose material has `width` has one axis whose extent equals that width. |
@@ -1427,9 +1443,9 @@ Exit codes:
 |---|---|---|
 | `wb list` | — | `{ projects: { id, title, options, phases }[] }` |
 | `wb status` | — | `{ server: { url, pid, startedAt } \| null, state: ViewerState \| null }` |
-| `wb check [--all-configs] [--changed <file>] [--hook]` | project or file | `{ ok, results: { config, issues: Issue[] }[] }`. With `--hook`, behaves as in section 10.2. |
+| `wb check [--all-configs] [--changed <file>] [--hook]` | project or file | `{ ok, results: { project, config, issues: Issue[] }[] }`. Without `--project` it checks every project. With `--hook`, behaves as in section 10.2. |
 | `wb parts [--kind panel\|board\|hardware\|context] [--phase]` | — | `{ parts: { id, name, where, kind, material, size: {l,w,t}, box, phase, step, src }[] }` |
-| `wb part <id>` | part id | the part, its cut-list row, its sheet placement, its joints (both directions), its step, its src |
+| `wb part <id>` | part id | `{ part, joints: { to, from }, step, stepsListing, phases: { phase, box }[], src, cutRow, placement }`: the part, its joints (both directions), its step, its box in each phase, its src, its cut-list row (from M2) and its sheet placement (from M3) |
 | `wb cutlist [--phase] [--format text\|csv\|json]` | — | `CutList` (section 7.1) |
 | `wb sheets [--phase] [--svg <dir>]` | — | `Nesting[]` (section 7.2). `--svg` writes one SVG per material and phase. |
 | `wb shopping [--phase]` | — | section 7.5 |
@@ -1438,7 +1454,7 @@ Exit codes:
 | `wb show [--select ids] [--hover ids] [--phase] [--step] [--opt k=v] [--view id] [--tab name] [--frame]` | — | `{ delivered: boolean }`. Sends a `Control` to the open viewer (section 11.2). |
 | `wb render --view <viewId\|3d-front\|3d-iso\|3d-top\|sheets\|cutlist> [--phase] [--step] [--opt] [--select ids] [--size 1600x1000] [--out file.png]` | — | `{ file, width, height }`. Uses the running dev server if there is one, else starts a temporary one. Headless Chrome with `channel: "chrome"`; the URL has `?render=<target>`, which shows only that panel full-window. |
 | `wb export --format csv\|pdf (glb, stl, dxf, step are deferred) [--out dir] [--page letter\|tabloid] [--with-context]` | — | `{ files: string[] }` |
-| `wb snapshot [--update]` | project | writes or compares `expected/` (section 13.2); exit 1 on differences without `--update` |
+| `wb snapshot [--update]` | project (every project without `--project`) | writes or compares `expected/` (section 13.2); exit 1 on differences without `--update` |
 | `wb new <id> --template closet\|shelf\|cabinet\|blank [--title]` | — | creates `projects/<id>/` with `project.ts`, `notes.md` and `expected/`, and prints the path |
 
 Implementation notes:
