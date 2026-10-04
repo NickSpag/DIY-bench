@@ -8,3 +8,6 @@ dist/
 *.glb
 *.step
 .workbench/
+.diy-bench/
+test-results/
+playwright-report/

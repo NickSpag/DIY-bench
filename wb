@@ -1,0 +1,2 @@
+#!/bin/sh
+exec node --experimental-strip-types --disable-warning=ExperimentalWarning "$(dirname "$0")/tools/wb.ts" "$@"
