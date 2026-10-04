@@ -25,8 +25,8 @@ and the 3D view show the trellis and planter in place. None of it appears in the
   the planter's back board. The full-width rails also screw into every stud they cross; rails are
   at most 24″ apart. Paint the frame the wall colour.
 - **Planter:** the front and ends are your blue 1½ × 9 board, resawn in half through its thickness
-  into two boards about 11/16″ thick. The back, against the wall and never seen, is 23/32″ plywood
-  from the same sheet as the bottom, which saves the board. A liner goes inside. Its top is 38″ above the landing. It runs the full width of the vine wall with its back
+  into two boards about 11/16″ thick. The ends run back flush to the wall, and the back, never seen,
+  is 23/32″ plywood fitted between them, from the same sheet as the bottom, which saves the board. A liner goes inside. Its top is 38″ above the landing. It runs the full width of the vine wall with its back
   against the wall, so its right end overhangs flight 3, and sticks out 11″ into the landing.
   One board high or two is a design option; two (18″) gives about 16¾″ of soil, one (9″) about 7¾″.
 - **Legs:** two 2×2 legs from other wood, directly under the back of the planter, so they
@@ -57,7 +57,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 ## Open questions
 
 - The stair counts, rise and run are read from photos; count the steps in each flight to confirm.
-- The blue board's length: about 65″ for a two-high planter, about 32″ one high.
+- The blue board's length: about 66″ for a two-high planter, about 33″ one high.
 - One board high or two (the planter option).
 - Which plant? It sets the soil depth.
 

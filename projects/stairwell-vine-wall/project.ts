@@ -105,15 +105,15 @@ export default defineProject({
     const py: Range = [P.planter.top - layers * bh, P.planter.top];
     const lid = (base: string, i: number) => (i === 0 ? base : `${base}-${i + 1}`);   // the lower course keeps the plain ids
     b.panel({ id: "planter-back", name: "Planter back", material: "ply", phase: "p1", step: "planter",
-      box: box(px, py, span(pz[0], T)), grain: "x", exposure: "hidden",
-      notes: "Plywood: it is against the wall and never seen, which saves the blue board for the front and ends." });
+      box: box([px[0] + bt, px[1] - bt], py, span(pz[0], T)), grain: "x", exposure: "hidden",
+      notes: "Plywood, fitted between the ends: it is against the wall and never seen, which saves the blue board for the front and ends." });
     for (let i = 0; i < layers; i++) {
       const yr = span(py[0] + i * bh, bh), course = layers > 1 ? (i === 0 ? ", lower" : ", upper") : "";
       b.board({ id: lid("planter-front", i), name: "Planter front", where: `front${course}`, material: "wood-resawn", phase: "p1", step: "planter",
         box: box(px, yr, [pz[1] - bt, pz[1]]), grain: "x" });
       for (const [side, xr] of [["wall", span(px[0], bt)], ["stair", [px[1] - bt, px[1]] as Range]] as const)
         b.board({ id: lid(`planter-end-${side}`, i), name: "Planter end", where: `${side === "wall" ? "back-wall end" : "stair end"}${course}`, material: "wood-resawn", phase: "p1", step: "planter",
-          box: box(xr, yr, [pz[0] + T, pz[1] - bt]), grain: "z",
+          box: box(xr, yr, [pz[0], pz[1] - bt]), grain: "z",   // flush to the wall; the back fits between the ends
           joins: [{ to: lid("planter-front", i), by: "screws" }, { to: "planter-back", by: "screws" }] });
     }
     const topBack = "planter-back";
@@ -171,7 +171,7 @@ export default defineProject({
 
     // ---------- steps ----------
     b.step({ id: "planter", phase: "p1", title: "Build the planter",
-      text: "Resaw the blue board in half through its thickness, then cut the fronts and ends. Screw the ends to the plywood back and the front to the ends; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
+      text: "Resaw the blue board in half through its thickness, then cut the fronts and ends. Screw the plywood back between the ends, flush with their back edges, and the front across the ends; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
     b.step({ id: "set-planter", phase: "p1", title: "Legs and planter",
       text: "Cut the two 2×2 legs and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
     b.step({ id: "frame-lower", phase: "p1", title: "Frame for the first sheet",
@@ -185,7 +185,7 @@ export default defineProject({
 
     // ---------- design rules ----------
     // The board is resawn, so each length gives two pieces: one course of the planter per half.
-    const perLayer = (px[1] - px[0]) + 2 * (pz[1] - pz[0] - T - bt) + 3 * 0.125;   // a front and two ends
+    const perLayer = (px[1] - px[0]) + 2 * (pz[1] - pz[0] - bt) + 3 * 0.125;   // a front and two ends
     const need = (layers * perLayer) / 2;
     b.check("board-enough", "The blue board is long enough for the planter's front and ends", need <= P.board2x10.length,
       `needs about ${Math.round(need)}″ of the 1½ × 9 board; it is ${P.board2x10.length}″`, "error");

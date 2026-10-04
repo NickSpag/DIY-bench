@@ -28,12 +28,12 @@
       "qty": 1,
       "ids": ["planter-back"],
       "where": [],
-      "finished": {"l": 45.125, "w": 18, "t": 0.7188},
-      "cut": {"l": 45.125, "w": 18, "t": 0.7188},
+      "finished": {"l": 43.75, "w": 18, "t": 0.7188},
+      "cut": {"l": 43.75, "w": 18, "t": 0.7188},
       "band": {},
       "tags": ["hidden"],
       "notes": [
-        "Plywood: it is against the wall and never seen, which saves the blue board for the front and ends."
+        "Plywood, fitted between the ends: it is against the wall and never seen, which saves the blue board for the front and ends."
       ]
     },
     {
@@ -134,8 +134,8 @@
       "qty": 4,
       "ids": ["planter-end-wall", "planter-end-stair", "planter-end-wall-2", "planter-end-stair-2"],
       "where": ["back-wall end, lower", "stair end, lower", "back-wall end, upper", "stair end, upper"],
-      "finished": {"l": 9.5938, "w": 9, "t": 0.6875},
-      "cut": {"l": 9.5938, "w": 9, "t": 0.6875},
+      "finished": {"l": 10.3125, "w": 9, "t": 0.6875},
+      "cut": {"l": 10.3125, "w": 9, "t": 0.6875},
       "band": {},
       "tags": [],
       "notes": []
@@ -250,7 +250,7 @@
       "material": "wood-resawn",
       "name": "Your blue 1½ × 9 board, resawn in half",
       "pieces": 6,
-      "totalLength": 128.625
+      "totalLength": 131.5
     },
     {
       "material": "wood-legs",

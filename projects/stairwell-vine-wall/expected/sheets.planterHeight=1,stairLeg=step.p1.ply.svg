@@ -23,7 +23,8 @@
 <rect class="wb-sheet-board" x="0" y="0" width="48" height="48"/>
 <g class="wb-offcut-g"><rect class="wb-offcut" x="0" y="18.8438" width="48" height="29.1563"/><text class="wb-offcut-label" x="24" y="33.7099" font-size="0.96" text-anchor="middle">offcut 48 × 29⁵⁄₃₂</text></g>
 <g class="wb-offcut-g"><rect class="wb-offcut" x="43.875" y="0" width="4.125" height="9.5938"/><g transform="rotate(-90 45.9375 4.7969)"><text class="wb-offcut-label" x="45.9375" y="5.029" font-size="0.7737" text-anchor="middle">offcut 4⅛ × 9¹⁹⁄₃₂</text></g></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="43.875" y="9.7188" width="4.125" height="9"/><g transform="rotate(-90 45.9375 14.2188)"><text class="wb-offcut-label" x="45.9375" y="14.5068" font-size="0.96" text-anchor="middle">offcut 4⅛ × 9</text></g></g>
 <g class="wb-placement" data-part="planter-bottom"><title>Planter bottom · 43¾ × 9¹⁹⁄₃₂ · planter-bottom</title><rect class="wb-part k-fin" x="0" y="0" width="43.75" height="9.5938"/><text class="wb-label" x="21.875" y="4.4369" font-size="1.2" text-anchor="middle">Planter bottom</text><text class="wb-size" x="21.875" y="5.8769" font-size="1.2" text-anchor="middle">43¾ × 9¹⁹⁄₃₂</text></g>
-<g class="wb-placement" data-part="planter-back"><title>Planter back · 45⅛ × 9 · planter-back</title><rect class="wb-part k-fin" x="0" y="9.7188" width="45.125" height="9"/><text class="wb-label" x="22.5625" y="13.8588" font-size="1.2" text-anchor="middle">Planter back</text><text class="wb-size" x="22.5625" y="15.2988" font-size="1.2" text-anchor="middle">45⅛ × 9</text></g>
+<g class="wb-placement" data-part="planter-back"><title>Planter back · 43¾ × 9 · planter-back</title><rect class="wb-part k-fin" x="0" y="9.7188" width="43.75" height="9"/><text class="wb-label" x="21.875" y="13.8588" font-size="1.2" text-anchor="middle">Planter back</text><text class="wb-size" x="21.875" y="15.2988" font-size="1.2" text-anchor="middle">43¾ × 9</text></g>
 </g>
 </svg>
