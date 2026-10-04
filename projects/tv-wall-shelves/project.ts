@@ -17,10 +17,12 @@ export const P = {
   side: 30,                                      // each side shelf
   spanPieces: { "36-48-36": [36, 48, 36], "60-60": [60, 60] } as Record<string, number[]>,
   rows: 2,                                       // rows of side shelves on each side of the TV
-  bottomRowTop: 22,                              // top of the lowest side shelves, level with the TV's bottom edge
-  pitch: 20,                                     // from one shelf top to the next, up to the long shelf
+  bottomRowTop: 26,                              // top of the lowest side shelves, level with the TV's bottom edge
+  pitch: 18.5,                                   // from one shelf top to the next, up to the long shelf
   minTvGap: 4,                                   // inferred: the least gap between a side shelf and the TV that still looks deliberate
   minHeadroom: 18,                               // inferred: 12½″ was too little for books with other things on top
+  console: { width: 60, height: 24, depth: 16 }, // inferred: not bought yet; the size to shop for, see notes.md
+  minConsoleGap: 2,                              // inferred: between the console top and the TV's bottom edge
 };
 
 const r16 = (x: number) => Math.round(x * 16) / 16;
@@ -61,6 +63,9 @@ export default defineProject({
     b.context({ id: "tv", name: "TV", role: "fixture", color: "#1d1f23", box: box(tvX, tvY, span(P.tv.standoff, P.tv.depth)) });
     const acX: Range = [P.ac.fromLeft, W - P.ac.fromRight], acY: Range = [H - P.ac.drop, H];
     b.context({ id: "ac", name: "Air conditioner", role: "fixture", color: "#e4e7ea", box: box(acX, acY, [0, P.ac.depth]) });
+    const C = P.console;
+    const conX: Range = span(r16((W - C.width) / 2), C.width);
+    b.context({ id: "console", name: "Media console (to buy)", role: "fixture", color: "#7a5c43", box: box(conX, [0, C.height], [0, C.depth]) });
 
     // ---------- the long shelf above the TV, its ends setting where the side rows go ----------
     const pieces = P.spanPieces[opt.span];
@@ -123,6 +128,13 @@ export default defineProject({
       `seams at ${seams.map(L).join(", ")}; TV edges at ${L(tvX[0])} and ${L(tvX[1])}`);
     b.check("ac-over-middle", "The air conditioner sits entirely over the TV, so tall things at the ends of the long shelf are clear of it",
       acX[0] >= tvX[0] && acX[1] <= tvX[1], `AC ${L(acX[0])} to ${L(acX[1])}; TV ${L(tvX[0])} to ${L(tvX[1])}`);
+    // The console is not bought yet: these two say what size to look for.
+    const maxConsoleH = tvY[0] - P.minConsoleGap, maxConsoleW = sides[1][1][0] - sides[0][1][1];
+    b.check("console-under-tv", "The media console's top clears the TV's bottom edge", C.height <= maxConsoleH,
+      `console ${L(C.height)} tall, TV bottom at ${L(tvY[0])}: look for a console no taller than ${L(maxConsoleH)}`);
+    b.check("console-between-rows", "The media console fits between the lowest side shelves, so nothing on it sits under a shelf",
+      conX[0] >= sides[0][1][1] && conX[1] <= sides[1][1][0],
+      `console ${L(C.width)} wide; ${L(maxConsoleW)} between the side rows (at that width its ends line up with the shelves' inner ends)`);
 
     // ---------- drawing views ----------
     b.view({ id: "front", title: "Elevation", kind: "elevation", look: "-z",
@@ -141,8 +153,10 @@ export default defineProject({
         { from: `${spanIds[spanIds.length - 1]}.y1` as const, to: "ac.y0", offset: W + 4 },
         { from: "ac.y0", to: "ceiling.y0", offset: W + 4 },
         { from: "tv.y0", to: "tv.y1", offset: -4 },
+        { from: "floor.y1", to: "console.y1", offset: -4 },
+        { from: "console.x0", to: "console.x1", offset: C.height - 5 },
       ],
-      labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" }] });
+      labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" }, { part: "console", text: "media console" }] });
     b.view({ id: "section", title: "Section through the middle", kind: "section", look: "+x", cut: W / 2,
       caption: "Cut through the TV, the long shelf and the air conditioner; wall on the left.",
       dims: [{ from: "wall.z1", to: "span-left.z1", offset: H + 3 }, { from: "span-left.y1", to: "ac.y0", offset: -3 }] });

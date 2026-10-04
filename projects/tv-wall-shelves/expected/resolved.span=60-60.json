@@ -10,7 +10,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 128], "y": [0, 96], "z": [-4.5, 0]}},
-      "src": "projects/tv-wall-shelves/project.ts:53:7"
+      "src": "projects/tv-wall-shelves/project.ts:55:7"
     },
     {
       "id": "floor",
@@ -19,7 +19,7 @@
       "role": "floor",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 128], "y": [-1, 0], "z": [0, 36]}},
-      "src": "projects/tv-wall-shelves/project.ts:54:7"
+      "src": "projects/tv-wall-shelves/project.ts:56:7"
     },
     {
       "id": "ceiling",
@@ -28,7 +28,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 128], "y": [96, 97], "z": [-4.5, 36]}},
-      "src": "projects/tv-wall-shelves/project.ts:55:7"
+      "src": "projects/tv-wall-shelves/project.ts:57:7"
     },
     {
       "id": "wall-left",
@@ -38,7 +38,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-4.5, 0], "y": [-1, 97], "z": [-4.5, 36]}},
-      "src": "projects/tv-wall-shelves/project.ts:56:7"
+      "src": "projects/tv-wall-shelves/project.ts:58:7"
     },
     {
       "id": "wall-right",
@@ -48,7 +48,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [128, 132.5], "y": [-1, 97], "z": [-4.5, 36]}},
-      "src": "projects/tv-wall-shelves/project.ts:57:7"
+      "src": "projects/tv-wall-shelves/project.ts:59:7"
     },
     {
       "id": "tv",
@@ -56,8 +56,8 @@
       "name": "TV",
       "role": "fixture",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [40, 88], "y": [22, 51], "z": [1.5, 4]}},
-      "src": "projects/tv-wall-shelves/project.ts:61:7"
+      "boxes": {"p1": {"x": [40, 88], "y": [26, 55], "z": [1.5, 4]}},
+      "src": "projects/tv-wall-shelves/project.ts:63:7"
     },
     {
       "id": "ac",
@@ -66,7 +66,16 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [45, 80], "y": [81, 96], "z": [0, 9]}},
-      "src": "projects/tv-wall-shelves/project.ts:63:7"
+      "src": "projects/tv-wall-shelves/project.ts:65:7"
+    },
+    {
+      "id": "console",
+      "kind": "context",
+      "name": "Media console (to buy)",
+      "role": "fixture",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [34, 94], "y": [0, 24], "z": [0, 16]}},
+      "src": "projects/tv-wall-shelves/project.ts:68:7"
     },
     {
       "id": "span-left",
@@ -77,8 +86,8 @@
       "phase": "p1",
       "step": "hang-span",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [4, 64], "y": [61.925, 62], "z": [0, 8]}},
-      "src": "projects/tv-wall-shelves/project.ts:75:9"
+      "boxes": {"p1": {"x": [4, 64], "y": [62.925, 63], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:80:9"
     },
     {
       "id": "span-left-flange",
@@ -89,8 +98,8 @@
       "phase": "p1",
       "step": "hang-span",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [4, 64], "y": [62, 64.5], "z": [0, 0.075]}},
-      "src": "projects/tv-wall-shelves/project.ts:76:9"
+      "boxes": {"p1": {"x": [4, 64], "y": [63, 65.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:81:9"
     },
     {
       "id": "span-right",
@@ -101,8 +110,8 @@
       "phase": "p1",
       "step": "hang-span",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [64, 124], "y": [61.925, 62], "z": [0, 8]}},
-      "src": "projects/tv-wall-shelves/project.ts:75:9"
+      "boxes": {"p1": {"x": [64, 124], "y": [62.925, 63], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:80:9"
     },
     {
       "id": "span-right-flange",
@@ -113,8 +122,8 @@
       "phase": "p1",
       "step": "hang-span",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [64, 124], "y": [62, 64.5], "z": [0, 0.075]}},
-      "src": "projects/tv-wall-shelves/project.ts:76:9"
+      "boxes": {"p1": {"x": [64, 124], "y": [63, 65.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:81:9"
     },
     {
       "id": "side-left-1",
@@ -125,8 +134,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [4, 34], "y": [21.925, 22], "z": [0, 8]}},
-      "src": "projects/tv-wall-shelves/project.ts:75:9"
+      "boxes": {"p1": {"x": [4, 34], "y": [25.925, 26], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:80:9"
     },
     {
       "id": "side-left-1-flange",
@@ -137,8 +146,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [4, 34], "y": [22, 24.5], "z": [0, 0.075]}},
-      "src": "projects/tv-wall-shelves/project.ts:76:9"
+      "boxes": {"p1": {"x": [4, 34], "y": [26, 28.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:81:9"
     },
     {
       "id": "side-left-2",
@@ -149,8 +158,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [4, 34], "y": [41.925, 42], "z": [0, 8]}},
-      "src": "projects/tv-wall-shelves/project.ts:75:9"
+      "boxes": {"p1": {"x": [4, 34], "y": [44.425, 44.5], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:80:9"
     },
     {
       "id": "side-left-2-flange",
@@ -161,8 +170,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [4, 34], "y": [42, 44.5], "z": [0, 0.075]}},
-      "src": "projects/tv-wall-shelves/project.ts:76:9"
+      "boxes": {"p1": {"x": [4, 34], "y": [44.5, 47], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:81:9"
     },
     {
       "id": "side-right-1",
@@ -173,8 +182,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [94, 124], "y": [21.925, 22], "z": [0, 8]}},
-      "src": "projects/tv-wall-shelves/project.ts:75:9"
+      "boxes": {"p1": {"x": [94, 124], "y": [25.925, 26], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:80:9"
     },
     {
       "id": "side-right-1-flange",
@@ -185,8 +194,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [94, 124], "y": [22, 24.5], "z": [0, 0.075]}},
-      "src": "projects/tv-wall-shelves/project.ts:76:9"
+      "boxes": {"p1": {"x": [94, 124], "y": [26, 28.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:81:9"
     },
     {
       "id": "side-right-2",
@@ -197,8 +206,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [94, 124], "y": [41.925, 42], "z": [0, 8]}},
-      "src": "projects/tv-wall-shelves/project.ts:75:9"
+      "boxes": {"p1": {"x": [94, 124], "y": [44.425, 44.5], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:80:9"
     },
     {
       "id": "side-right-2-flange",
@@ -209,8 +218,8 @@
       "phase": "p1",
       "step": "hang-sides",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [94, 124], "y": [42, 44.5], "z": [0, 0.075]}},
-      "src": "projects/tv-wall-shelves/project.ts:76:9"
+      "boxes": {"p1": {"x": [94, 124], "y": [44.5, 47], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:81:9"
     }
   ],
   "steps": [
@@ -243,14 +252,16 @@
     {"id": "ac-headroom", "pass": true, "severity": "warning"},
     {"id": "even-bays", "pass": true, "severity": "warning"},
     {"id": "seams-on-tv-edges", "pass": false, "severity": "warning"},
-    {"id": "ac-over-middle", "pass": true, "severity": "warning"}
+    {"id": "ac-over-middle", "pass": true, "severity": "warning"},
+    {"id": "console-under-tv", "pass": true, "severity": "warning"},
+    {"id": "console-between-rows", "pass": true, "severity": "warning"}
   ],
   "issues": [
     {
       "severity": "warning",
       "code": "check:seams-on-tv-edges",
       "message": "The long shelf's seams fall on the TV's edge lines (seams at 64″; TV edges at 40″ and 88″)",
-      "src": "projects/tv-wall-shelves/project.ts:122:7"
+      "src": "projects/tv-wall-shelves/project.ts:127:7"
     }
   ]
 }

@@ -24,12 +24,20 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
 - **The long shelf** is 36 + 48 + 36 by default. Its two seams then fall at 40″ and 88″, on the TV's
   edges, and the 48″ shelf sits centred over the TV. The option `span` compares 60 + 60, which has
   fewer seams but puts one in the middle of the wall.
-- **Vertical.** Shelf tops at 22″ and 42″ on the sides and 62″ for the long shelf, a 20″ pitch. The
-  TV's bottom edge lines up with the lowest shelf tops at 22″. The earlier layout assumed 1½″ thick
-  shelves; the steel plate is under 1/10″, so with the same shelf tops the open heights are about
-  19⅞ / 19⅞ / 19″ (the last up to the air conditioner), and the TV top is 10⅞″ below the long shelf.
-  Roomy for books, with 7–10″ over a row of hardcovers for other things. The 2½″ flange stands up
-  behind the books.
+- **Vertical.** Shelf tops at 26″ and 44½″ on the sides and 63″ for the long shelf, an 18½″ pitch.
+  The TV's bottom edge lines up with the lowest shelf tops at 26″, which puts its centre at 40½″, a
+  normal seated eye line. The open heights are about 18⅜ / 18⅜ / 18″ (the last up to the air
+  conditioner), and the TV top is 7⅞″ below the long shelf. Roomy for books, with 6–9″ over a row of
+  hardcovers for other things. The 2½″ flange stands up behind the books.
+- **Media console** (not bought yet). The first layout had the TV's bottom at 22″, which left room for
+  a console only 20″ tall, lower than most. Raising the TV and the lowest shelves 4″ and closing the
+  pitch from 20″ to 18½″ keeps the long shelf 18″ under the air conditioner (it was 19″) and leaves
+  26″ under the TV. What to look for:
+  - **height** 24″ or less, which leaves at least 2″ under the TV;
+  - **width** up to 60″, the space between the lowest side shelves. A 60″ console's ends line up
+    with the shelves' inner ends; anything wider runs under those shelves, which sit only about 2″
+    above a 24″ top;
+  - **depth** anything usual (16–18″); the shelves are 8″ deep.
 - **The air conditioner** sits entirely over the TV and the 48″ middle shelf, so the outer ends of the
   long shelf have 34″ clear to the ceiling. Put tall things there. Its midpoint is 1½″ left of the
   wall's centre, so it is the one thing on the wall that is slightly off the symmetry.
@@ -46,15 +54,18 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
 | `wallT` | 4½″ | for drawing only |
 | side walls | walls at both ends of the 128″ | the layout's 4″ end margins read as distance from corners |
 | `minTvGap` | 4″ | the least gap to the TV that still looks deliberate; the design has 6″ |
-| `minHeadroom` | 18″ | 12½″ under the AC was too little for books with things on top; 19″ was accepted |
+| `minHeadroom` | 18″ | 12½″ under the AC was too little for books with things on top; 19″ was accepted, 18″ is what the console needs |
+| `console` | 60″ wide, 24″ tall, 16″ deep | not bought yet: the largest that fits, drawn so the space reads; see Summary |
+| `minConsoleGap` | 2″ | between the console top and the TV's bottom edge |
 
 ## Open questions
 
 - Finish: raw steel, or matte black, matte white or gold powder coat?
 - Stud positions. Each shelf has only three screw holes, so check which land on a stud; the rest go
   into the supplied anchors. A loaded book shelf is the case where that matters.
-- Is the TV centre at 36½″ comfortable from the sofa? Raising the TV comes straight out of the 10⅞″ gap
-  under the long shelf.
+- Is the TV centre at 40½″ comfortable from the sofa?
+- Is 18″ under the AC enough? It is 1″ less than the 19″ you accepted earlier. Getting it back means a
+  console 1″ lower or 1″ less between the rows.
 - Which way does the air conditioner blow? Straight down onto the long shelf would argue for dropping it.
 
 ## Decisions log
@@ -63,3 +74,5 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
   shelf of 36 + 48 + 36, shelf tops at 22, 42 and 62″, TV bottom at 22″.
 - 2026-10-04: Shelves are DIY Cartel linear floating shelves, 8″ deep. Modelled as bought items
   (steel plate plus back flange) instead of 1½″ boards; shelf tops kept where they were.
+- 2026-10-04: Room for a media console. TV and lowest shelves up from 22″ to 26″, pitch from 20″ to
+  18½″, long shelf from 62″ to 63″: 18″ under the AC instead of 19″, and a console up to 24″ tall fits.
