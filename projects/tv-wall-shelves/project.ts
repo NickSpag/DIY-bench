@@ -167,8 +167,10 @@ export default defineProject({
         { from: "wall.y0", to: "wall.y1", offset: -10 },
         { from: "wall.x0", to: "side-left-1.x0", offset: -2 },
         { from: "side-left-1.x0", to: "side-left-1.x1", offset: -2 },
-        { from: "side-left-1.x1", to: "tv.x0", offset: -2 },
-        { from: "tv.x0", to: "tv.x1", offset: -2 },
+        // The TV's width and its gaps to the side rows, on the open wall between the TV and the long shelf.
+        { from: "side-left-1.x1", to: "tv.x0", offset: tvY[1] + 4 },
+        { from: "tv.x0", to: "tv.x1", offset: tvY[1] + 4, text: "TV {}" },
+        { from: "tv.x1", to: "side-right-1.x0", offset: tvY[1] + 4 },
         ...spanIds.map((id) => ({ from: `${id}.x0` as const, to: `${id}.x1` as const, offset: spanTop + 4 })),
         { from: "floor.y1", to: "side-right-1.y1", offset: W + 4 },
         { from: "side-right-1.y1", to: "side-right-2.y1", offset: W + 4 },
@@ -177,7 +179,7 @@ export default defineProject({
         { from: "ac.y0", to: "ceiling.y0", offset: W + 4 },
         { from: "tv.y0", to: "tv.y1", offset: -4 },
         { from: "floor.y1", to: "console-space.y1", offset: -4 },
-        { from: "console-space.x0", to: "console-space.x1", offset: 3 },
+        { from: "console-space.x0", to: "console-space.x1", offset: 8 },
       ],
       labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" },
         con ? { part: "console", text: `console ${con[0]} × ${con[1]}` } : { part: "console-space", text: "space for a media console" }] });
