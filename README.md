@@ -4,7 +4,19 @@ A design workbench for woodworking and DIY projects: describe a project to a
 coding agent in a terminal and see it change live as a 3D model, drawings, a cut
 list, sheet layouts and build steps.
 
-Nothing is built yet. This repo holds the research and the first project.
+The model, its checks, the cut list, the shopping list and the sheet layouts work from the
+command line (milestones M0–M3 of `docs/research/spec.md`). The browser app comes next.
+
+```sh
+./wb check --all-configs                      # evaluate every project and configuration; report issues
+./wb parts --kind panel                       # the parts
+./wb part drawer-face-2                       # one part: size, phases, joints, cut-list row, sheet, source line
+./wb cutlist --format text|csv|json           # the cut list
+./wb shopping                                 # what to buy
+./wb sheets [--svg out/]                      # sheet layouts, optionally as SVG
+./wb snapshot [--update]                      # compare or rewrite projects/<id>/expected/
+npm run typecheck && npm test                 # types, unit tests and golden files
+```
 
 ## What's here
 
@@ -14,6 +26,9 @@ Nothing is built yet. This repo holds the research and the first project.
 | `docs/research/decisions.md` | Proposed decisions, with reasons and rejected alternatives |
 | `docs/research/spec.md` | Implementation spec and milestones for building the tool |
 | `docs/research/spikes/` | Throwaway experiments that settled facts the docs couldn't (see its README) |
+| `core/` | The model, evaluation, checks, cut list, shopping list and sheet layouts: pure TypeScript, shared by the CLI and the app |
+| `tools/wb.ts` | The `./wb` command-line tool |
+| `projects/closet-built-in/project.ts` | The closet as a model; `notes.md` beside it holds the design reasoning, `expected/` the golden files |
 | `projects/closet-built-in/concept-sheet.html` | The closet design as a standalone page: elevation, sections, plan, phases, cut list, sheet layouts. Open it in a browser. |
 
 The research (`research.md`) was written before the repo had a name, so it calls the tool

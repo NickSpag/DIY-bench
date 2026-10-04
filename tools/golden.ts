@@ -6,6 +6,8 @@ import { allConfigs, configKey, evaluate } from "../core/evaluate.ts";
 import { toJson } from "../core/json.ts";
 import { cutList } from "../core/cutlist.ts";
 import { cutListText } from "../core/export/text.ts";
+import { nest } from "../core/nesting.ts";
+import { sheetSvg } from "../core/sheet-svg.ts";
 import { fmtSrc } from "../core/model/builder.ts";
 import type { AnyProject, Box, Resolved } from "../core/model/types.ts";
 import { loadProject, projectDir } from "./projects.ts";
@@ -49,6 +51,9 @@ export function goldenFiles(project: AnyProject): Map<string, string> {
     const cl = cutList(r);
     files.set(`cutlist.${key}.json`, toJson(cl));
     files.set(`cutlist.${key}.txt`, cutListText(r, cl));
+    const ns = nest(r);
+    files.set(`sheets.${key}.json`, toJson(ns));
+    for (const n of ns) files.set(`sheets.${key}.${n.phase}.${n.material}.svg`, sheetSvg(n));
   }
   return files;
 }

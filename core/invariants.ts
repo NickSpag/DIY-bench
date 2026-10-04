@@ -4,6 +4,7 @@ import type { Axis, Box, Face, Issue, Range, Resolved, ResolvedCutPart, Resolved
 import { AXES, axesOfExtent, contains, EPS, ext, extent, FACE_AXIS, overlapAmounts } from "./geometry.ts";
 import { cutSize, isCutPart } from "./parts.ts";
 import { fmtLength } from "./units.ts";
+import type { Nesting } from "./nesting.ts";
 
 /** Joint kinds that let two parts overlap. */
 export const OVERLAPPING_JOINTS = new Set(["dado", "groove", "rabbet", "notch"]);
@@ -219,6 +220,30 @@ export function runInvariants(r: Resolved): Issue[] {
   }
 
   return issues;
+}
+
+const UNPLACED_WHY: Record<string, string> = {
+  "too-big": "it is larger than every stock size",
+  "no-stock": "the material has no stock left (owned pieces used up and nothing to buy)",
+  "no-space": "no sheet had room",
+};
+
+/** `nesting:unplaced` errors for the parts the sheet layouts could not place. */
+export function nestingIssues(r: Resolved, ns: Nesting[]): Issue[] {
+  const out: Issue[] = [];
+  for (const n of ns) {
+    for (const u of n.unplaced) {
+      const p = r.part(u.id);
+      const i: Issue = {
+        severity: "error", code: "nesting:unplaced",
+        message: `${n.phase} ${n.material}: ${u.id} could not be placed on a sheet: ${UNPLACED_WHY[u.reason]} (${u.reason})`,
+        parts: [u.id], phases: [n.phase],
+      };
+      if (p) i.src = p.src;
+      out.push(i);
+    }
+  }
+  return out;
 }
 
 /** Splits a dimension reference "part.x0" into its part, axis and side, or null. */

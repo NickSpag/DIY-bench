@@ -184,6 +184,7 @@ DIY-bench/
 │   ├── json.ts                    deterministic JSON (4-decimal numbers) for CLI output and golden files
 │   ├── cutlist.ts                 section 7.1
 │   ├── nesting.ts                 section 7.2
+│   ├── sheet-svg.ts               sheetSvg (section 7.2)
 │   ├── drawings/
 │   │   ├── view-mapping.ts        view mapping (section 7.3.1)
 │   │   ├── hidden.ts              visible/hidden segment computation
@@ -597,17 +598,25 @@ BOARD TOTALS
 ### 7.2 Sheet layouts (`core/nesting.ts`)
 
 ```ts
-export function nest(r: Resolved, opts?: { phase?: string }): Nesting[];   // one per (cut phase, sheet material)
+export function nest(r: Resolved, opts?: { phase?: string }): Nesting[];   // one per (cut phase, sheet material), phase order
 type Nesting = {
-  phase: string; material: string; kerf: number;
+  phase: string; material: string; materialName: string; units: "in" | "mm"; kerf: number; trim: number;
+  thickness: string;          // display text by the rule in section 5.6
+  finished: boolean;          // the material's finish is not "none"
   sheets: { stock: string; owned: boolean; length: number; width: number;
-            placements: { ids: string[]; x: number; y: number; l: number; w: number; turned: boolean;
-                          members?: { id: string; x: number; l: number }[] }[];  // members for strips
+            placements: { ids: string[]; name: string; x: number; y: number; l: number; w: number; turned: boolean;
+                          needsFinish: boolean; strip?: string;
+                          members?: { id: string; name: string; x: number; l: number }[] }[];  // strips: x absolute, along the length
             offcuts: { x: number; y: number; l: number; w: number }[] }[];
   unplaced: { id: string; reason: "no-stock" | "too-big" | "no-space" }[];
-  bought: Record<string, number>; strategy: string;
+  bought: Record<string, number>;   // stock id → sheets bought
+  owned: Record<string, number>;    // stock id → owned pieces used
+  strategy: string;                 // e.g. "area/longerLeftover/prefer=none"
 };
+export function pack(items: PackItem[], stock: PackStock[], kerf: number): PackResult; // the packer alone, for the property test
+export function placementOf(ns: Nesting[], id: string): { phase; material; stock; sheet; placement } | null;
 ```
+`x` runs along the sheet's length (its grain) and `y` across it. `turned` is true when the part's own length (its grain) runs across the sheet.
 
 Algorithm. This is the spike's algorithm, which reproduced the reference layout (verified):
 1. **Items.** Take the panels whose material is a sheet. The item size is `(cut.l, cut.w)` in grain orientation, with `turnable = grainLock === false || !material.grained`. A strip becomes one item, `(Σl + kerf·(n−1), max w)`, locked. Its members are recorded for expansion.
@@ -626,8 +635,8 @@ Algorithm. This is the spike's algorithm, which reproduced the reference layout 
    - split rule: the three above;
    - `prefer`: none, or each stock id.
 
-   Keep the result with the lowest score: purchased area × 10⁶ + sheet count × 10³ − largest free rectangle / 10³.
-6. **Unplaced items.** An item larger than every stock is `too-big`. An item whose material has no stock left is `no-stock`. Anything else is `no-space`. Unplaced items become `nesting:unplaced` errors.
+   Keep the result with the lowest score: unplaced items × 10¹⁵ + purchased area × 10⁶ + sheet count × 10³ − largest free rectangle / 10³. The first strategy with the lowest score wins, so the result is deterministic.
+6. **Unplaced items.** An item larger than every stock is `too-big`. An item whose material has no stock left is `no-stock`. Anything else is `no-space`. Unplaced items become `nesting:unplaced` errors: `evaluate` runs `nest` and appends them to `issues`. An unplaced strip reports each of its members.
 7. **Offcuts** are the remaining free rectangles with both sides ≥ 3 in (75 mm).
 
 Invariants checked in the unit tests:
@@ -636,12 +645,13 @@ Invariants checked in the unit tests:
 - Locked items are not turned.
 - The layout is guillotine-separable: recursively, a set of placements can always be split by a full-length cut along x or y that crosses no placement, until each piece holds one placement.
 
-Sheet SVG (`sheetSvg(nesting)`):
-- One `<g>` per sheet, with its title ("4×8 · 23/32″ prefinished maple plywood, 96 × 48").
-- One rect per placement with `data-part` set to all its IDs. A strip also draws its members' boundaries.
-- Labels with name and size.
-- Hatch fill for unfinished materials, and a blue outline for `needs finish`. These are the reference's visual conventions.
-- A grain arrow per sheet.
+Sheet SVG (`sheetSvg(nesting)`, `core/sheet-svg.ts`), one SVG per `Nesting` with its sheets stacked top to bottom, in model units:
+- `<svg class="wb-sheets" data-phase data-material>`, a `<style>` whose rules use CSS custom properties with fallback values (so the file reads on its own and the app's theme overrides it), and a hatch `<pattern id="wb-raw-<phase>-<material>">`.
+- One `<g class="wb-sheet" data-sheet data-stock data-owned>` per sheet, with its title ("4×8 · 23/32″ prefinished maple plywood (sold as ¾″), 96 × 48", the font shrunk to fit the sheet's length).
+- One `<g class="wb-placement" data-part="<all its ids>">` per placement, holding a `<title>` tooltip, the part rect and labels with name and size (rotated when the rectangle is taller than wide, shrunk to fit, omitted when too small). A strip also draws each member as `<g class="wb-strip-member" data-part="<member id>">` with a dashed boundary.
+- Hatch fill for unfinished materials (`k-raw`), and a blue outline for `needs finish` (`k-needs-finish`); finished material is a plain face fill (`k-fin`). These are the reference's visual conventions.
+- Offcuts as dashed rectangles with their size.
+- A grain arrow under each sheet's bottom-right corner, along the length.
 
 ### 7.3 Drawings (`core/drawings/`)
 
@@ -1464,7 +1474,7 @@ Exit codes:
 | `wb parts [--kind panel\|board\|hardware\|context] [--phase]` | — | `{ parts: { id, name, where, kind, material, size: {l,w,t}, box, phase, step, src }[] }` |
 | `wb part <id>` | part id | `{ part, joints: { to, from }, step, stepsListing, phases: { phase, box }[], src, cutRow, placement }`: the part, its joints (both directions), its step, its box in each phase, its src, its cut-list row (from M2) and its sheet placement (from M3) |
 | `wb cutlist [--phase] [--format text\|csv\|json]` | — | `CutList` (section 7.1) |
-| `wb sheets [--phase] [--svg <dir>]` | — | `Nesting[]` (section 7.2). `--svg` writes one SVG per material and phase. |
+| `wb sheets [--phase] [--svg <dir>]` | — | `Nesting[]` (section 7.2); every phase unless `--phase`. `--svg` writes one SVG per material and phase, named `sheets.<config>.<phase>.<material>.svg`, and the JSON becomes `{ nestings, files }`. Exit 1 when a part could not be placed. |
 | `wb shopping [--phase]` | — | section 7.5 |
 | `wb diff [--against last-good\|<git-ref>\|opt:key=value]` | — | `{ parts: { added, removed, changed: { id, field, from, to }[] }, cutlist: { added, removed, changed }, sheets: { from, to } }`. `--against opt:top=0.75` compares two configurations of the current model. |
 | `wb state` | — | `ViewerState` (exit 3 when the viewer has not written state in 24 h) |
@@ -1796,7 +1806,7 @@ Hardware: rods 3 (2 @ 26¼, 1 @ 27), rod sockets 3 pairs, shelf pins 12, rolling
 
 | Phase | Material | Stock | Parts on it |
 |---|---|---|---|
-| p1 | 23/32″ prefinished | 4×8 (buy) | partition-left, partition-right, shelf-right-70 (turned) |
+| p1 | 23/32″ prefinished | 4×8 (buy) | partition-left, partition-right, shelf-right-70 (its 28″ side across the sheet: its own grain runs front to back, so `turned` is false) |
 | p1 | 23/32″ prefinished | 4×4 (buy) | center-shelf-fixed, center-shelf-adj-1, -2, -3 |
 | p1 | 23/32″ unfinished | owned 56×48 | the faces strip (48⅝ × 23⁵⁄₁₆), top-shelf-left, top-shelf-right, top-shelf-center, nailer-top, nailer-70 |
 | p2 | 15/32″ plywood | 4×8 (buy) | hamper-frame-side, hamper-frame-back, and all 12 drawer box sides, fronts and backs |
@@ -1808,10 +1818,11 @@ Phase 1 still matches the concept sheet's layout. Phase 2 differs from the sheet
 `projects/<id>/expected/` holds, per configuration:
 - `resolved.<config>.json`: parts with boxes per phase, and issues.
 - `cutlist.<config>.json` and `.txt`.
-- `sheets.<config>.json` and the sheet SVGs.
-- `view.<viewId>.<phase>.svg` for every declared view and phase.
+- `sheets.<config>.json`.
+- `sheets.<config>.<phase>.<material>.svg`, one per sheet layout.
+- `view.<viewId>.<phase>.svg` for every declared view and phase (from M6).
 
-`<config>` is `key=value` pairs joined by `,`, for example `top=1`.
+`<config>` is `key=value` pairs joined by `,`, for example `top=1`; a project with no options uses `default`. The files are produced by `tools/golden.ts`, shared by the test and `wb snapshot`; `src` paths in them are repo-relative, so the files do not depend on where the repo is checked out.
 
 `tests/golden.test.ts` evaluates every project in every configuration and compares the results byte for byte. On a difference, it fails and prints a unified diff of the first 40 lines. `./wb snapshot --update` rewrites the files. AGENTS.md requires the agent to explain each changed line before updating.
 

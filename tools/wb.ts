@@ -1,5 +1,7 @@
 // The DIY-bench command-line tool (section 11.1 of the spec).
 // Exit codes: 0 ok; 1 model errors or failed checks of severity error; 2 usage error.
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { evaluate, EvaluationError, configKey, configsToCheck, normalizeConfig, optionEntries } from "../core/evaluate.ts";
 import { fmtSrc } from "../core/model/builder.ts";
@@ -9,6 +11,8 @@ import { fmtPartSize, partDetail, partSummary } from "../core/query.ts";
 import { fmtLength } from "../core/units.ts";
 import { cutList, rowOf } from "../core/cutlist.ts";
 import { shoppingList } from "../core/shopping.ts";
+import { nest, placementOf, type Nesting } from "../core/nesting.ts";
+import { sheetSvg, sheetTitle, stockLabel } from "../core/sheet-svg.ts";
 import { cutListCsv } from "../core/export/csv.ts";
 import { cutListText, fmtRowSize, shoppingText } from "../core/export/text.ts";
 import { snapshot } from "./golden.ts";
@@ -23,6 +27,7 @@ commands:
   part <id>                    one part: its joints, step, phases and source line
   cutlist [--format text|csv|json] [--phase p]   the cut list (all phases unless --phase)
   shopping [--phase p]         sheets, boards, hardware and banding to buy
+  sheets [--phase p] [--svg dir]   sheet layouts (all phases unless --phase); --svg writes one SVG per phase and material
   snapshot [--update]          compare (or rewrite) projects/<id>/expected/ (all projects unless --project)
 
 common flags:
@@ -158,7 +163,8 @@ async function cmdPart(flags: Flags, id: string | undefined): Promise<number> {
   if (!r.part(id)) throw new UsageError(`no part "${id}" in ${r.project.id}`);
   const cl = cutList(r);
   const row = rowOf(cl, id);
-  const d = { ...partDetail(r, id), cutRow: row ?? null };
+  const placed = placementOf(nest(r), id);
+  const d = { ...partDetail(r, id), cutRow: row ?? null, placement: placed };
   if (flags.json) {
     out(toJson(d));
     return 0;
@@ -182,6 +188,10 @@ async function cmdPart(flags: Flags, id: string | undefined): Promise<number> {
   for (const j of d.joints.to) lines.push(`  joins ${j.part} by ${j.by}${j.note ? ` (${j.note})` : ""}`);
   for (const j of d.joints.from) lines.push(`  joined by ${j.part} (${j.by})${j.note ? ` (${j.note})` : ""}`);
   if (row) lines.push(`  cut list: ${row.qty} × ${row.name}  —  ${fmtRowSize(r, row)}${row.tags.length ? `  [${row.tags.join("; ")}]` : ""} (phase ${row.phase})`);
+  if (placed) {
+    const pl = placed.placement;
+    lines.push(`  sheet: ${placed.phase} ${placed.material}, sheet ${placed.sheet + 1} (${placed.stock}), at ${L(pl.x)}, ${L(pl.y)}${pl.turned ? ", turned" : ""}${pl.strip ? `, in strip ${pl.strip}` : ""}`);
+  }
   if (p.kind !== "context" && p.notes) lines.push(`  notes: ${p.notes}`);
   lines.push(`  src: ${d.src}`);
   out(lines.join("\n"));
@@ -206,6 +216,47 @@ async function cmdShopping(flags: Flags): Promise<number> {
   const list = shoppingList(r, { phase });
   out(flags.json ? toJson(list) : shoppingText(r, list));
   return 0;
+}
+
+export function sheetsText(ns: Nesting[]): string {
+  const lines: string[] = [];
+  for (const n of ns) {
+    const L = (v: number) => fmtLength(v, { units: n.units });
+    const buy = Object.entries(n.bought).map(([k, c]) => `${c} × ${stockLabel(k)}`).join(", ");
+    const own = Object.entries(n.owned).map(([k, c]) => `${c} × ${k}`).join(", ");
+    lines.push(`${n.phase} · ${n.materialName} · kerf ${L(n.kerf)}${buy ? ` · buy ${buy}` : ""}${own ? ` · owned ${own}` : ""}`);
+    for (const [i, sh] of n.sheets.entries()) {
+      lines.push(`  sheet ${i + 1}: ${sheetTitle(n, sh)}`);
+      for (const p of sh.placements) {
+        const size = p.turned ? `${L(p.w)} × ${L(p.l)} (turned)` : `${L(p.l)} × ${L(p.w)}`;
+        lines.push(`    ${p.strip ? `strip ${p.strip}` : p.ids.join(" ")}: ${p.name}, ${size} at ${L(p.x)}, ${L(p.y)}`);
+        for (const m of p.members ?? []) lines.push(`      ${m.id}: ${L(m.l)} at ${L(m.x)}`);
+      }
+      if (sh.offcuts.length) lines.push(`    offcuts: ${sh.offcuts.map((o) => `${L(o.l)} × ${L(o.w)}`).join(", ")}`);
+    }
+    for (const u of n.unplaced) lines.push(`  UNPLACED ${u.id}: ${u.reason}`);
+    lines.push(`  strategy: ${n.strategy}`, "");
+  }
+  return lines.join("\n");
+}
+
+async function cmdSheets(flags: Flags): Promise<number> {
+  const { resolved: r } = await loadAndEvaluate(flags);
+  const phase = flags.phase === undefined ? undefined : pickPhase(r, flags.phase);
+  const ns = nest(r, { phase });
+  const written: string[] = [];
+  if (flags.svg !== undefined) {
+    const dir = resolve(flags.svg);
+    mkdirSync(dir, { recursive: true });
+    for (const n of ns) {
+      const file = join(dir, `sheets.${configKey(r.config)}.${n.phase}.${n.material}.svg`);
+      writeFileSync(file, sheetSvg(n));
+      written.push(file);
+    }
+  }
+  if (flags.json) out(toJson(flags.svg !== undefined ? { nestings: ns, files: written } : ns));
+  else out(sheetsText(ns) + (written.length ? `\nwrote ${written.length} SVG file${written.length === 1 ? "" : "s"}:\n${written.map((f) => `  ${f}`).join("\n")}` : ""));
+  return ns.some((n) => n.unplaced.length) ? 1 : 0;
 }
 
 async function cmdSnapshot(flags: Flags): Promise<number> {
@@ -264,6 +315,7 @@ async function main(argv: string[]): Promise<number> {
     case "part": return cmdPart(flags, args[0]);
     case "cutlist": return cmdCutlist(flags);
     case "shopping": return cmdShopping(flags);
+    case "sheets": return cmdSheets(flags);
     case "snapshot": return cmdSnapshot(flags);
     default: throw new UsageError(`unknown command "${command}"\n\n${USAGE}`);
   }

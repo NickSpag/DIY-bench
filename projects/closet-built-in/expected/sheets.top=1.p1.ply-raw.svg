@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.4 -1.4 58.8 57.38" class="wb-sheets" data-phase="p1" data-material="ply-raw" font-family="ui-monospace, monospace">
+<style>
+.wb-sheet-board { fill: var(--sheet-board, #f4f1ea); stroke: var(--ink, #222); stroke-width: var(--sheet-stroke, 0.3); }
+.wb-part { stroke: var(--wood-dark, #8a6a3f); stroke-width: 0.2; }
+.wb-part.k-fin { fill: var(--face, #e8d3ad); }
+.wb-part.k-raw { stroke: var(--ink-soft, #6b7378); }
+.wb-part.k-needs-finish { stroke: var(--dim, #2f6fb2); stroke-width: 0.45; }
+.wb-hatch-bg { fill: var(--sheet-board, #f4f1ea); }
+.wb-hatch-line { stroke: var(--hatch, #8f9ba1); stroke-width: 0.25; }
+.wb-strip-cut { stroke: var(--ink-soft, #6b7378); stroke-width: 0.2; stroke-dasharray: 0.8 0.5; fill: none; }
+.wb-offcut { fill: none; stroke: var(--ink-soft, #6b7378); stroke-width: 0.18; stroke-dasharray: 0.8 0.6; }
+.wb-title { fill: var(--ink-soft, #6b7378); }
+.wb-label { fill: var(--ink, #222); }
+.wb-size { fill: var(--ink-soft, #6b7378); }
+.wb-offcut-label { fill: var(--ink-soft, #6b7378); }
+.wb-grain { stroke: var(--dim, #2f6fb2); stroke-width: 0.3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.wb-grain-label { fill: var(--dim, #2f6fb2); }
+</style>
+<defs><pattern id="wb-raw-p1-ply-raw" patternUnits="userSpaceOnUse" width="0.84" height="0.84" patternTransform="rotate(45)"><rect class="wb-hatch-bg" width="0.84" height="0.84"/><line class="wb-hatch-line" x1="0" y1="0" x2="0" y2="0.84"/></pattern></defs>
+<g class="wb-sheet" data-sheet="0" data-stock="owned-56x48" data-owned="true" transform="translate(0 3.08)">
+<text class="wb-title" x="0" y="-0.98" font-size="1.4">owned-56×48 · 23/32″ plywood, unfinished (owned piece), 56 × 48</text>
+<g class="wb-grain-arrow"><path class="wb-grain" d="M44.8 49.54H56M55.16 49.05L56 49.54L55.16 50.03"/><text class="wb-grain-label" x="44.24" y="49.96" font-size="1.12" text-anchor="end">grain</text></g>
+<rect class="wb-sheet-board" x="0" y="0" width="56" height="48"/>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="28.125" y="34.8125" width="27.875" height="13.1875"/><text class="wb-offcut-label" x="42.0625" y="41.7423" font-size="1.12" text-anchor="middle">offcut 27⅞ × 13³⁄₁₆</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="52.25" y="23.4375" width="3.75" height="11.25"/><g transform="rotate(-90 54.125 29.0625)"><text class="wb-offcut-label" x="54.125" y="29.3891" font-size="1.0887" text-anchor="middle">offcut 3¾ × 11¼</text></g></g>
+<g class="wb-placement" data-part="hamper-face drawer-face-1 drawer-face-2 drawer-face-3" data-strip="faces"><title>Strip for the phase 2 faces · 48⅝ × 23⁵⁄₁₆ · hamper-face drawer-face-1 drawer-face-2 drawer-face-3</title><rect class="wb-part k-raw k-needs-finish" x="0" y="0" width="48.625" height="23.3125" fill="url(#wb-raw-p1-ply-raw)"/><g class="wb-strip-member" data-part="hamper-face"><title>Hamper face · 27⅝ × 23⁵⁄₁₆ · hamper-face</title><rect class="wb-strip-cut" x="0" y="0" width="27.625" height="23.3125"/><text class="wb-label" x="13.8125" y="11.2363" font-size="1.4" text-anchor="middle">Hamper face</text><text class="wb-size" x="13.8125" y="12.9163" font-size="1.4" text-anchor="middle">27⅝</text></g><g class="wb-strip-member" data-part="drawer-face-1"><title>Drawer face · 7⅞ × 23⁵⁄₁₆ · drawer-face-1</title><rect class="wb-strip-cut" x="27.75" y="0" width="7.875" height="23.3125"/><g transform="rotate(-90 31.6875 11.6563)"><text class="wb-label" x="31.6875" y="11.2363" font-size="1.4" text-anchor="middle">Drawer face</text><text class="wb-size" x="31.6875" y="12.9163" font-size="1.4" text-anchor="middle">7⅞</text></g></g><g class="wb-strip-member" data-part="drawer-face-2"><title>Drawer face · 6⅞ × 23⁵⁄₁₆ · drawer-face-2</title><rect class="wb-strip-cut" x="35.75" y="0" width="6.875" height="23.3125"/><g transform="rotate(-90 39.1875 11.6563)"><text class="wb-label" x="39.1875" y="11.2363" font-size="1.4" text-anchor="middle">Drawer face</text><text class="wb-size" x="39.1875" y="12.9163" font-size="1.4" text-anchor="middle">6⅞</text></g></g><g class="wb-strip-member" data-part="drawer-face-3"><title>Drawer face · 5⅞ × 23⁵⁄₁₆ · drawer-face-3</title><rect class="wb-strip-cut" x="42.75" y="0" width="5.875" height="23.3125"/><g transform="rotate(-90 45.6875 11.6563)"><text class="wb-label" x="45.6875" y="11.2363" font-size="1.4" text-anchor="middle">Drawer face</text><text class="wb-size" x="45.6875" y="12.9163" font-size="1.4" text-anchor="middle">5⅞</text></g></g></g>
+<g class="wb-placement" data-part="top-shelf-left"><title>Top shelf · 28 × 11¼ · top-shelf-left</title><rect class="wb-part k-raw" x="0" y="23.4375" width="28" height="11.25" fill="url(#wb-raw-p1-ply-raw)"/><text class="wb-label" x="14" y="28.6425" font-size="1.4" text-anchor="middle">Top shelf</text><text class="wb-size" x="14" y="30.3225" font-size="1.4" text-anchor="middle">28 × 11¼</text></g>
+<g class="wb-placement" data-part="top-shelf-right"><title>Top shelf · 28 × 11¼ · top-shelf-right</title><rect class="wb-part k-raw" x="0" y="34.8125" width="28" height="11.25" fill="url(#wb-raw-p1-ply-raw)"/><text class="wb-label" x="14" y="40.0175" font-size="1.4" text-anchor="middle">Top shelf</text><text class="wb-size" x="14" y="41.6975" font-size="1.4" text-anchor="middle">28 × 11¼</text></g>
+<g class="wb-placement" data-part="top-shelf-center"><title>Center top shelf · 24 × 11¼ · top-shelf-center</title><rect class="wb-part k-raw" x="28.125" y="23.4375" width="24" height="11.25" fill="url(#wb-raw-p1-ply-raw)"/><text class="wb-label" x="40.125" y="28.6425" font-size="1.4" text-anchor="middle">Center top shelf</text><text class="wb-size" x="40.125" y="30.3225" font-size="1.4" text-anchor="middle">24 × 11¼</text></g>
+<g class="wb-placement" data-part="nailer-top" data-turned="true"><title>Nailer · 22⁹⁄₁₆ × 3½ (turned) · nailer-top</title><rect class="wb-part k-raw" x="48.75" y="0" width="3.5" height="22.5625" fill="url(#wb-raw-p1-ply-raw)"/><g transform="rotate(-90 50.5 11.2813)"><text class="wb-label" x="50.5" y="10.9453" font-size="1.12" text-anchor="middle">Nailer</text><text class="wb-size" x="50.5" y="12.2893" font-size="1.12" text-anchor="middle">22⁹⁄₁₆ × 3½</text></g></g>
+<g class="wb-placement" data-part="nailer-70" data-turned="true"><title>Nailer · 22⁹⁄₁₆ × 3½ (turned) · nailer-70</title><rect class="wb-part k-raw" x="52.375" y="0" width="3.5" height="22.5625" fill="url(#wb-raw-p1-ply-raw)"/><g transform="rotate(-90 54.125 11.2813)"><text class="wb-label" x="54.125" y="10.9453" font-size="1.12" text-anchor="middle">Nailer</text><text class="wb-size" x="54.125" y="12.2893" font-size="1.12" text-anchor="middle">22⁹⁄₁₆ × 3½</text></g></g>
+</g>
+</svg>

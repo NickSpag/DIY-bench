@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.4 -2.4 100.8 125.76" class="wb-sheets" data-phase="p1" data-material="ply-pre" font-family="ui-monospace, monospace">
+<style>
+.wb-sheet-board { fill: var(--sheet-board, #f4f1ea); stroke: var(--ink, #222); stroke-width: var(--sheet-stroke, 0.3); }
+.wb-part { stroke: var(--wood-dark, #8a6a3f); stroke-width: 0.2; }
+.wb-part.k-fin { fill: var(--face, #e8d3ad); }
+.wb-part.k-raw { stroke: var(--ink-soft, #6b7378); }
+.wb-part.k-needs-finish { stroke: var(--dim, #2f6fb2); stroke-width: 0.45; }
+.wb-hatch-bg { fill: var(--sheet-board, #f4f1ea); }
+.wb-hatch-line { stroke: var(--hatch, #8f9ba1); stroke-width: 0.25; }
+.wb-strip-cut { stroke: var(--ink-soft, #6b7378); stroke-width: 0.2; stroke-dasharray: 0.8 0.5; fill: none; }
+.wb-offcut { fill: none; stroke: var(--ink-soft, #6b7378); stroke-width: 0.18; stroke-dasharray: 0.8 0.6; }
+.wb-title { fill: var(--ink-soft, #6b7378); }
+.wb-label { fill: var(--ink, #222); }
+.wb-size { fill: var(--ink-soft, #6b7378); }
+.wb-offcut-label { fill: var(--ink-soft, #6b7378); }
+.wb-grain { stroke: var(--dim, #2f6fb2); stroke-width: 0.3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.wb-grain-label { fill: var(--dim, #2f6fb2); }
+</style>
+<defs><pattern id="wb-raw-p1-ply-pre" patternUnits="userSpaceOnUse" width="1.44" height="1.44" patternTransform="rotate(45)"><rect class="wb-hatch-bg" width="1.44" height="1.44"/><line class="wb-hatch-line" x1="0" y1="0" x2="0" y2="1.44"/></pattern></defs>
+<g class="wb-sheet" data-sheet="0" data-stock="4x8" data-owned="false" transform="translate(0 5.28)">
+<text class="wb-title" x="0" y="-1.68" font-size="2.4">4×8 · 23/32″ prefinished maple plywood (sold as ¾″), 96 × 48</text>
+<g class="wb-grain-arrow"><path class="wb-grain" d="M76.8 50.64H96M94.56 49.8L96 50.64L94.56 51.48"/><text class="wb-grain-label" x="75.84" y="51.36" font-size="1.92" text-anchor="end">grain</text></g>
+<rect class="wb-sheet-board" x="0" y="0" width="96" height="48"/>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="84.125" y="28.125" width="11.25" height="19.875"/><g transform="rotate(-90 89.75 38.0625)"><text class="wb-offcut-label" x="89.75" y="38.6035" font-size="1.8032" text-anchor="middle">offcut 11¼ × 19⅞</text></g></g>
+<g class="wb-placement" data-part="partition-left"><title>Partition · 84 × 23¼ · partition-left</title><rect class="wb-part k-fin" x="0" y="0" width="84" height="23.25"/><text class="wb-label" x="42" y="10.905" font-size="2.4" text-anchor="middle">Partition</text><text class="wb-size" x="42" y="13.785" font-size="2.4" text-anchor="middle">84 × 23¼</text></g>
+<g class="wb-placement" data-part="partition-right"><title>Partition · 84 × 23¼ · partition-right</title><rect class="wb-part k-fin" x="0" y="23.375" width="84" height="23.25"/><text class="wb-label" x="42" y="34.28" font-size="2.4" text-anchor="middle">Partition</text><text class="wb-size" x="42" y="37.16" font-size="2.4" text-anchor="middle">84 × 23¼</text></g>
+<g class="wb-placement" data-part="shelf-right-70"><title>Right 70″ shelf · 11¼ × 28 · shelf-right-70</title><rect class="wb-part k-fin" x="84.125" y="0" width="11.25" height="28"/><g transform="rotate(-90 89.75 14)"><text class="wb-label" x="89.75" y="13.28" font-size="2.4" text-anchor="middle">Right 70″ shelf</text><text class="wb-size" x="89.75" y="16.16" font-size="2.4" text-anchor="middle">11¼ × 28</text></g></g>
+</g>
+<g class="wb-sheet" data-sheet="1" data-stock="4x4" data-owned="false" transform="translate(0 66.96)">
+<text class="wb-title" x="0" y="-1.68" font-size="1.2903">4×4 · 23/32″ prefinished maple plywood (sold as ¾″), 48 × 48</text>
+<g class="wb-grain-arrow"><path class="wb-grain" d="M28.8 50.64H48M46.56 49.8L48 50.64L46.56 51.48"/><text class="wb-grain-label" x="27.84" y="51.36" font-size="1.92" text-anchor="end">grain</text></g>
+<rect class="wb-sheet-board" x="0" y="0" width="48" height="48"/>
+<g class="wb-placement" data-part="center-shelf-fixed"><title>Center fixed shelf · 22⁹⁄₁₆ × 23¼ · center-shelf-fixed</title><rect class="wb-part k-fin" x="0" y="0" width="22.5625" height="23.25"/><text class="wb-label" x="11.2813" y="11.0791" font-size="1.8196" text-anchor="middle">Center fixed shelf</text><text class="wb-size" x="11.2813" y="13.2626" font-size="1.8196" text-anchor="middle">22⁹⁄₁₆ × 23¼</text></g>
+<g class="wb-placement" data-part="center-shelf-adj-1"><title>Center adjustable shelf · 22⁷⁄₁₆ × 22½ · center-shelf-adj-1</title><rect class="wb-part k-fin" x="22.6875" y="0" width="22.4375" height="22.5"/><text class="wb-label" x="33.9063" y="10.8252" font-size="1.4161" text-anchor="middle">Center adjustable shelf</text><text class="wb-size" x="33.9063" y="12.5245" font-size="1.4161" text-anchor="middle">22⁷⁄₁₆ × 22½</text></g>
+<g class="wb-placement" data-part="center-shelf-adj-2"><title>Center adjustable shelf · 22⁷⁄₁₆ × 22½ · center-shelf-adj-2</title><rect class="wb-part k-fin" x="0" y="23.375" width="22.4375" height="22.5"/><text class="wb-label" x="11.2188" y="34.2002" font-size="1.4161" text-anchor="middle">Center adjustable shelf</text><text class="wb-size" x="11.2188" y="35.8995" font-size="1.4161" text-anchor="middle">22⁷⁄₁₆ × 22½</text></g>
+<g class="wb-placement" data-part="center-shelf-adj-3"><title>Center adjustable shelf · 22⁷⁄₁₆ × 22½ · center-shelf-adj-3</title><rect class="wb-part k-fin" x="22.5625" y="23.375" width="22.4375" height="22.5"/><text class="wb-label" x="33.7813" y="34.2002" font-size="1.4161" text-anchor="middle">Center adjustable shelf</text><text class="wb-size" x="33.7813" y="35.8995" font-size="1.4161" text-anchor="middle">22⁷⁄₁₆ × 22½</text></g>
+</g>
+</svg>

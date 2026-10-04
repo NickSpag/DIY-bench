@@ -1,0 +1,431 @@
+[
+  {
+    "phase": "p1",
+    "material": "ply-pre",
+    "materialName": "23/32″ prefinished maple plywood (sold as ¾″)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "23/32",
+    "finished": true,
+    "sheets": [
+      {
+        "stock": "4x8",
+        "owned": false,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["partition-left"],
+            "name": "Partition",
+            "x": 0,
+            "y": 0,
+            "l": 84,
+            "w": 23.25,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["partition-right"],
+            "name": "Partition",
+            "x": 0,
+            "y": 23.375,
+            "l": 84,
+            "w": 23.25,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["shelf-right-70"],
+            "name": "Right 70″ shelf",
+            "x": 84.125,
+            "y": 0,
+            "l": 11.25,
+            "w": 28,
+            "turned": false,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [{"x": 84.125, "y": 28.125, "l": 11.25, "w": 19.875}]
+      },
+      {
+        "stock": "4x4",
+        "owned": false,
+        "length": 48,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["center-shelf-fixed"],
+            "name": "Center fixed shelf",
+            "x": 0,
+            "y": 0,
+            "l": 22.5625,
+            "w": 23.25,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["center-shelf-adj-1"],
+            "name": "Center adjustable shelf",
+            "x": 22.6875,
+            "y": 0,
+            "l": 22.4375,
+            "w": 22.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["center-shelf-adj-2"],
+            "name": "Center adjustable shelf",
+            "x": 0,
+            "y": 23.375,
+            "l": 22.4375,
+            "w": 22.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["center-shelf-adj-3"],
+            "name": "Center adjustable shelf",
+            "x": 22.5625,
+            "y": 23.375,
+            "l": 22.4375,
+            "w": 22.5,
+            "turned": false,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": []
+      }
+    ],
+    "unplaced": [],
+    "bought": {"4x8": 1, "4x4": 1},
+    "owned": {},
+    "strategy": "area/longerLeftover/prefer=none"
+  },
+  {
+    "phase": "p1",
+    "material": "ply-raw",
+    "materialName": "23/32″ plywood, unfinished (owned piece)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "23/32",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "owned-56x48",
+        "owned": true,
+        "length": 56,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["hamper-face", "drawer-face-1", "drawer-face-2", "drawer-face-3"],
+            "name": "Strip for the phase 2 faces",
+            "x": 0,
+            "y": 0,
+            "l": 48.625,
+            "w": 23.3125,
+            "turned": false,
+            "needsFinish": true,
+            "strip": "faces",
+            "members": [
+              {"id": "hamper-face", "name": "Hamper face", "x": 0, "l": 27.625},
+              {"id": "drawer-face-1", "name": "Drawer face", "x": 27.75, "l": 7.875},
+              {"id": "drawer-face-2", "name": "Drawer face", "x": 35.75, "l": 6.875},
+              {"id": "drawer-face-3", "name": "Drawer face", "x": 42.75, "l": 5.875}
+            ]
+          },
+          {
+            "ids": ["top-shelf-left"],
+            "name": "Top shelf",
+            "x": 0,
+            "y": 23.4375,
+            "l": 28,
+            "w": 11.25,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["top-shelf-right"],
+            "name": "Top shelf",
+            "x": 0,
+            "y": 34.8125,
+            "l": 28,
+            "w": 11.25,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["top-shelf-center"],
+            "name": "Center top shelf",
+            "x": 28.125,
+            "y": 23.4375,
+            "l": 24,
+            "w": 11.25,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["nailer-top"],
+            "name": "Nailer",
+            "x": 48.75,
+            "y": 0,
+            "l": 3.5,
+            "w": 22.5625,
+            "turned": true,
+            "needsFinish": false
+          },
+          {
+            "ids": ["nailer-70"],
+            "name": "Nailer",
+            "x": 52.375,
+            "y": 0,
+            "l": 3.5,
+            "w": 22.5625,
+            "turned": true,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [
+          {"x": 28.125, "y": 34.8125, "l": 27.875, "w": 13.1875},
+          {"x": 52.25, "y": 23.4375, "l": 3.75, "w": 11.25}
+        ]
+      }
+    ],
+    "unplaced": [],
+    "bought": {},
+    "owned": {"owned-56x48": 1},
+    "strategy": "area/shorterLeftover/prefer=none"
+  },
+  {
+    "phase": "p2",
+    "material": "ply-half",
+    "materialName": "15/32″ plywood (sold as ½″)",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "15/32",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "4x8",
+        "owned": false,
+        "length": 96,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["hamper-frame-side"],
+            "name": "Hamper frame side",
+            "x": 0,
+            "y": 0,
+            "l": 21,
+            "w": 26.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["hamper-frame-back"],
+            "name": "Hamper frame back",
+            "x": 21.125,
+            "y": 0,
+            "l": 20.3438,
+            "w": 26.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-1-side-l"],
+            "name": "Drawer box side",
+            "x": 0,
+            "y": 26.625,
+            "l": 21,
+            "w": 6.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-1-side-r"],
+            "name": "Drawer box side",
+            "x": 21.125,
+            "y": 26.625,
+            "l": 21,
+            "w": 6.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-1-front"],
+            "name": "Drawer box front or back",
+            "x": 42.25,
+            "y": 26.625,
+            "l": 20.625,
+            "w": 6.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-1-back"],
+            "name": "Drawer box front or back",
+            "x": 63,
+            "y": 26.625,
+            "l": 20.625,
+            "w": 6.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-2-side-l"],
+            "name": "Drawer box side",
+            "x": 0,
+            "y": 33.25,
+            "l": 21,
+            "w": 5.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-2-side-r"],
+            "name": "Drawer box side",
+            "x": 21.125,
+            "y": 33.25,
+            "l": 21,
+            "w": 5.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-2-front"],
+            "name": "Drawer box front or back",
+            "x": 42.25,
+            "y": 33.25,
+            "l": 20.625,
+            "w": 5.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-2-back"],
+            "name": "Drawer box front or back",
+            "x": 63,
+            "y": 33.25,
+            "l": 20.625,
+            "w": 5.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-3-side-l"],
+            "name": "Drawer box side",
+            "x": 0,
+            "y": 38.875,
+            "l": 21,
+            "w": 4.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-3-side-r"],
+            "name": "Drawer box side",
+            "x": 21.125,
+            "y": 38.875,
+            "l": 21,
+            "w": 4.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-3-front"],
+            "name": "Drawer box front or back",
+            "x": 0,
+            "y": 43.5,
+            "l": 20.625,
+            "w": 4.5,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-3-back"],
+            "name": "Drawer box front or back",
+            "x": 42.25,
+            "y": 38.875,
+            "l": 20.625,
+            "w": 4.5,
+            "turned": false,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [
+          {"x": 41.5938, "y": 0, "l": 54.4063, "w": 26.5},
+          {"x": 20.75, "y": 43.5, "l": 75.25, "w": 4.5},
+          {"x": 63, "y": 38.875, "l": 33, "w": 4.5},
+          {"x": 83.75, "y": 26.625, "l": 12.25, "w": 6.5},
+          {"x": 83.75, "y": 33.25, "l": 12.25, "w": 5.5}
+        ]
+      }
+    ],
+    "unplaced": [],
+    "bought": {"4x8": 1},
+    "owned": {},
+    "strategy": "area/longerLeftover/prefer=4x8"
+  },
+  {
+    "phase": "p2",
+    "material": "ply-quarter",
+    "materialName": "¼″ plywood",
+    "units": "in",
+    "kerf": 0.125,
+    "trim": 0,
+    "thickness": "¼",
+    "finished": false,
+    "sheets": [
+      {
+        "stock": "4x4",
+        "owned": false,
+        "length": 48,
+        "width": 48,
+        "placements": [
+          {
+            "ids": ["drawer-1-bottom"],
+            "name": "Drawer bottom",
+            "x": 0,
+            "y": 0,
+            "l": 21,
+            "w": 20.4375,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-2-bottom"],
+            "name": "Drawer bottom",
+            "x": 21.125,
+            "y": 0,
+            "l": 21,
+            "w": 20.4375,
+            "turned": false,
+            "needsFinish": false
+          },
+          {
+            "ids": ["drawer-3-bottom"],
+            "name": "Drawer bottom",
+            "x": 0,
+            "y": 20.5625,
+            "l": 20.4375,
+            "w": 21,
+            "turned": true,
+            "needsFinish": false
+          }
+        ],
+        "offcuts": [
+          {"x": 20.5625, "y": 20.5625, "l": 27.4375, "w": 27.4375},
+          {"x": 0, "y": 41.6875, "l": 20.4375, "w": 6.3125},
+          {"x": 42.25, "y": 0, "l": 5.75, "w": 20.4375}
+        ]
+      }
+    ],
+    "unplaced": [],
+    "bought": {"4x4": 1},
+    "owned": {},
+    "strategy": "area/shorterLeftover/prefer=none"
+  }
+]

@@ -1,7 +1,8 @@
 // Sheet layouts (section 7.2 of the spec): a guillotine packer with several stock sizes,
 // owned pieces used before anything is bought, per-part grain lock, kerf and trim, and
 // grain-matched strips packed as one piece. Ported from spikes/fixture/packer.mjs.
-import type { Resolved, ResolvedCutPart, SheetMaterial } from "./model/types.ts";
+import type { Resolved, ResolvedCutPart, SheetMaterial, Units } from "./model/types.ts";
+import { fmtThickness } from "./units.ts";
 import { strips } from "./cutlist.ts";
 import { cutSize, defaultKerf, isCutPart } from "./parts.ts";
 
@@ -24,7 +25,9 @@ export type SheetLayout = {
 };
 export type UnplacedReason = "no-stock" | "too-big" | "no-space";
 export type Nesting = {
-  phase: string; material: string; materialName: string; kerf: number; trim: number;
+  phase: string; material: string; materialName: string; units: Units; kerf: number; trim: number;
+  thickness: string; // display text by the rule of section 5.6
+  finished: boolean; // the material has a finish of its own (not "none")
   sheets: SheetLayout[];
   unplaced: { id: string; reason: UnplacedReason }[];
   bought: Record<string, number>; // stock id → sheets bought
@@ -211,7 +214,8 @@ export function nest(r: Resolved, opts: { phase?: string } = {}): Nesting[] {
       for (const [id, n] of Object.entries(owned)) ownedLeft.set(`${key}/${id}`, (ownedLeft.get(`${key}/${id}`) ?? 0) - n);
       if (opts.phase !== undefined && opts.phase !== ph.id) continue;
       out.push({
-        phase: ph.id, material: key, materialName: m.name, kerf, trim: m.trim ?? 0,
+        phase: ph.id, material: key, materialName: m.name, units, kerf, trim: m.trim ?? 0,
+        thickness: fmtThickness(m, { units }), finished: m.finish !== "none",
         sheets,
         unplaced: res.unplaced.flatMap((u) => (u.item.ids ?? [u.item.id]).map((id) => ({ id, reason: u.reason }))),
         bought, owned, strategy: res.strategy,

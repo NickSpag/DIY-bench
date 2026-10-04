@@ -6,7 +6,8 @@ import type {
   AnyProject, Box, Config, Material, OptionDef, Part, PhaseState, Resolved, ResolvedCutPart, ResolvedPart, ResolvedStep, Src,
 } from "./model/types.ts";
 import { cylinderBounds } from "./geometry.ts";
-import { runInvariants } from "./invariants.ts";
+import { nestingIssues, runInvariants } from "./invariants.ts";
+import { nest } from "./nesting.ts";
 import { computeSizes } from "./parts.ts";
 
 export * from "./parts.ts";
@@ -186,6 +187,6 @@ export function evaluate(project: AnyProject, config: Config = {}): Resolved {
     part: (id) => byId.get(id),
     stateAt,
   };
-  r.issues = runInvariants(r);
+  r.issues = [...runInvariants(r), ...nestingIssues(r, nest(r))];
   return r;
 }
