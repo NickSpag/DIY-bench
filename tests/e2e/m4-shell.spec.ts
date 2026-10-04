@@ -18,6 +18,11 @@ test("the app shows the closet with the cut list and no issues", async ({ page }
   expect(await page.evaluate(() => window.__wbLoadCount)).toBe(1);
 });
 
+test("the browser tab names the project", async ({ page }) => {
+  await openApp(page);
+  await expect(page).toHaveTitle("DIY-bench: Closet Built-In");
+});
+
 test("live edit: a changed partition height reaches the cut list without a page reload", async ({ page }) => {
   await openApp(page);
   await page.evaluate(() => ((window as any).__marker = "still here"));

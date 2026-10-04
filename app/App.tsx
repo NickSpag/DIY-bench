@@ -244,8 +244,17 @@ function useKeys() {
   }, []);
 }
 
+// The browser tab names the project, so several open viewers can be told apart.
+function useDocumentTitle() {
+  const title = useWb((s) => s.resolved?.project.title);
+  useEffect(() => {
+    document.title = title ? `DIY-bench: ${title}` : "DIY-bench";
+  }, [title]);
+}
+
 export function App() {
   useKeys();
+  useDocumentTitle();
   const help = useWb((s) => s.help);
   return (
     <div className="app">
