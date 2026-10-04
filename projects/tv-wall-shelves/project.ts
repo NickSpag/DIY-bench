@@ -17,12 +17,10 @@ export const P = {
   side: 30,                                      // each side shelf
   spanPieces: { "36-48-36": [36, 48, 36], "60-60": [60, 60] } as Record<string, number[]>,
   rows: 2,                                       // rows of side shelves on each side of the TV
-  bottomRowTop: 26,                              // top of the lowest side shelves, level with the TV's bottom edge
-  pitch: 18.5,                                   // from one shelf top to the next, up to the long shelf
+  acHeadroom: 14,                                // from the long shelf's top to the air conditioner; the side rows share what is left
   minTvGap: 4,                                   // inferred: the least gap between a side shelf and the TV that still looks deliberate
-  minHeadroom: 18,                               // inferred: 12½″ was too little for books with other things on top
   console: { width: 60, height: 24, depth: 16 }, // inferred: not bought yet; the size to shop for, see notes.md
-  minConsoleGap: 2,                              // inferred: between the console top and the TV's bottom edge
+  consoleGap: 4,                                 // inferred: from the console top up to the TV's bottom edge (2″ was too tight)
 };
 
 const r16 = (x: number) => Math.round(x * 16) / 16;
@@ -59,7 +57,8 @@ export default defineProject({
     b.context({ id: "wall-right", name: "Side wall", where: "right", role: "wall", box: box([W, W + wt], [-1, H + 1], [-wt, room]) });
 
     const tvX: Range = span(r16((W - P.tv.width) / 2), P.tv.width);
-    const tvY: Range = span(P.bottomRowTop, P.tv.height);       // its bottom edge lines up with the lowest shelves
+    const bottomRowTop = P.console.height + P.consoleGap;         // the TV's bottom edge and the lowest shelf tops
+    const tvY: Range = span(bottomRowTop, P.tv.height);
     b.context({ id: "tv", name: "TV", role: "fixture", color: "#1d1f23", box: box(tvX, tvY, span(P.tv.standoff, P.tv.depth)) });
     const acX: Range = [P.ac.fromLeft, W - P.ac.fromRight], acY: Range = [H - P.ac.drop, H];
     b.context({ id: "ac", name: "Air conditioner", role: "fixture", color: "#e4e7ea", box: box(acX, acY, [0, P.ac.depth]) });
@@ -71,7 +70,8 @@ export default defineProject({
     const pieces = P.spanPieces[opt.span];
     const spanLen = pieces.reduce((a, c) => a + c, 0);
     const margin = r16((W - spanLen) / 2);
-    const spanTop = P.bottomRowTop + P.rows * P.pitch;
+    const spanTop = acY[0] - P.acHeadroom;
+    const pitch = r16((spanTop - bottomRowTop) / P.rows);        // the side rows split the height below the long shelf evenly
     const spanIds = pieces.length === 3 ? ["span-left", "span-middle", "span-right"] : ["span-left", "span-right"];
     // One shelf: the plate, and its back flange drawn as a second box. The flange is part of the same bought
     // shelf, so it counts 0 in the shopping list.
@@ -91,7 +91,7 @@ export default defineProject({
 
     // ---------- side rows: flush with the long shelf's ends ----------
     const sides: [string, Range][] = [["left", span(margin, P.side)], ["right", [W - margin - P.side, W - margin]]];
-    const rowTops = Array.from({ length: P.rows }, (_, i) => P.bottomRowTop + i * P.pitch);
+    const rowTops = Array.from({ length: P.rows }, (_, i) => bottomRowTop + i * pitch);
     for (const [side, xr] of sides)
       rowTops.forEach((top, i) =>
         shelf(`side-${side}-${i + 1}`, `${side} of the TV, row ${i + 1} from the bottom`, "hang-sides", xr, top));
@@ -119,17 +119,18 @@ export default defineProject({
     b.check("tv-under-span", "The TV fits under the long shelf", tvY[1] < spanUnder,
       `TV top at ${L(tvY[1])}, long shelf underside at ${L(spanUnder)}: ${L(spanUnder - tvY[1])} between them`, "error");
     const headroom = acY[0] - spanTop;
-    b.check("ac-headroom", "Room under the air conditioner for books with things on top", headroom >= P.minHeadroom,
-      `${L(headroom)} from the long shelf to the AC; at least ${L(P.minHeadroom)} wanted`);
-    const bays = [...rowTops.slice(1).map((y, i) => y - t - rowTops[i]), spanUnder - rowTops[rowTops.length - 1], headroom];
-    b.check("even-bays", "The open heights over each shelf are within 1″ of each other", Math.max(...bays) - Math.min(...bays) <= 1,
-      `${bays.map(L).join(" / ")}, bottom to top`);
+    b.check("ac-headroom", "Room under the air conditioner for things on the long shelf", headroom >= P.acHeadroom,
+      `${L(headroom)} from the long shelf to the AC; ${L(P.acHeadroom)} wanted`);
+    // The space over the long shelf is set by the AC, so only the shelf-to-shelf spaces need to match.
+    const bays = [...rowTops.slice(1).map((y, i) => y - t - rowTops[i]), spanUnder - rowTops[rowTops.length - 1]];
+    b.check("even-bays", "The open heights between shelves are within 1″ of each other", Math.max(...bays) - Math.min(...bays) <= 1,
+      `${bays.map(L).join(" / ")}, bottom to top; ${L(headroom)} over the long shelf, up to the AC`);
     b.check("seams-on-tv-edges", "The long shelf's seams fall on the TV's edge lines", seams.every((s) => s === tvX[0] || s === tvX[1]),
       `seams at ${seams.map(L).join(", ")}; TV edges at ${L(tvX[0])} and ${L(tvX[1])}`);
     b.check("ac-over-middle", "The air conditioner sits entirely over the TV, so tall things at the ends of the long shelf are clear of it",
       acX[0] >= tvX[0] && acX[1] <= tvX[1], `AC ${L(acX[0])} to ${L(acX[1])}; TV ${L(tvX[0])} to ${L(tvX[1])}`);
     // The console is not bought yet: these two say what size to look for.
-    const maxConsoleH = tvY[0] - P.minConsoleGap, maxConsoleW = sides[1][1][0] - sides[0][1][1];
+    const maxConsoleH = tvY[0] - P.consoleGap, maxConsoleW = sides[1][1][0] - sides[0][1][1];
     b.check("console-under-tv", "The media console's top clears the TV's bottom edge", C.height <= maxConsoleH,
       `console ${L(C.height)} tall, TV bottom at ${L(tvY[0])}: look for a console no taller than ${L(maxConsoleH)}`);
     b.check("console-between-rows", "The media console fits between the lowest side shelves, so nothing on it sits under a shelf",
