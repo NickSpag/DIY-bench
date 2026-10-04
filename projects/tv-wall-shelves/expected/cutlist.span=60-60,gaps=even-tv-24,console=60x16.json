@@ -1,0 +1,35 @@
+{
+  "rows": [],
+  "strips": [],
+  "boards": [],
+  "hardware": [
+    {
+      "item": "shelf-30",
+      "name": "DIY Cartel linear floating shelf, 30″ × 8″",
+      "unit": "each",
+      "qty": 4,
+      "ids": [
+        "side-left-1",
+        "side-left-1-flange",
+        "side-left-2",
+        "side-left-2-flange",
+        "side-right-1",
+        "side-right-1-flange",
+        "side-right-2",
+        "side-right-2-flange"
+      ],
+      "notes": [],
+      "spec": "14-gauge steel; screws and drywall anchors included"
+    },
+    {
+      "item": "shelf-60",
+      "name": "DIY Cartel linear floating shelf, 60″ × 8″",
+      "unit": "each",
+      "qty": 2,
+      "ids": ["span-left", "span-left-flange", "span-right", "span-right-flange"],
+      "notes": [],
+      "spec": "14-gauge steel; screws and drywall anchors included"
+    }
+  ],
+  "banding": []
+}

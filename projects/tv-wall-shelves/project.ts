@@ -17,12 +17,23 @@ export const P = {
   side: 30,                                      // each side shelf
   spanPieces: { "36-48-36": [36, 48, 36], "60-60": [60, 60] } as Record<string, number[]>,
   rows: 2,                                       // rows of side shelves on each side of the TV
-  acHeadroom: 14,                                // from the long shelf's top to the air conditioner; the side rows share what is left
+  acHeadroom: 14,                                // from the long shelf's top to the air conditioner, at least
   minTvGap: 4,                                   // inferred: the least gap between a side shelf and the TV that still looks deliberate
-  consoleSpace: { height: 24, depth: 18 },       // inferred: the tallest console the TV sits above, and a usual depth
-  consoleGap: 4,                                 // inferred: from the console top up to the TV's bottom edge (2″ was too tight)
+  maxTvCentre: 44,                               // inferred: much higher and a seated viewer looks up at the TV
+  consoleDepth: 18,                              // inferred: a usual depth, for the space kept for the console
+  // How the middle column's gaps are set (option `gaps`). Each gives the console space's height and a rule:
+  //   under: a fixed gap under the TV, and acHeadroom over the long shelf;
+  //   even-tv: the same gap under and over the TV, and acHeadroom over the long shelf;
+  //   even-all: the same gap under the TV, over the TV and over the long shelf.
+  // Gaps over the TV run to the long shelf's top line; the steel plate is under 1/10″ thick.
+  gapPlans: {
+    "4-under": { console: 24, rule: "under", under: 4 },
+    "even-tv": { console: 18, rule: "even-tv" },
+    "even-all": { console: 16, rule: "even-all" },
+    "even-tv-24": { console: 24, rule: "even-tv" },
+  } as Record<string, { console: number; rule: "under" | "even-tv" | "even-all"; under?: number }>,
   consoles: {                                    // common sizes to try in the space: width, height, depth
-    "48x20": [48, 20, 16], "60x22": [60, 22, 16], "60x24": [60, 24, 16], "70x22": [70, 22, 16], "72x26": [72, 26, 18],
+    "60x16": [60, 16, 16], "60x18": [60, 18, 16], "48x20": [48, 20, 16], "60x22": [60, 22, 16], "60x24": [60, 24, 16], "70x22": [70, 22, 16], "72x26": [72, 26, 18],
   } as Record<string, [number, number, number]>,
 };
 
@@ -39,13 +50,25 @@ export default defineProject({
       choices: { "36-48-36": "36 + 48 + 36: seams on the TV's edges", "60-60": "60 + 60: one seam, in the middle" },
       default: "36-48-36",
     },
+    gaps: {
+      label: "Gaps around the TV",
+      choices: {
+        "4-under": "4″ under the TV, 24″ console space",
+        "even-tv": "Even under and over the TV, 18″ console space",
+        "even-all": "Even under the TV, over it and over the long shelf, 16″ console space",
+        "even-tv-24": "Even under and over the TV, 24″ console space (TV higher)",
+      },
+      default: "4-under",
+    },
     console: {
       label: "Media console",
       choices: {
         none: "None: just the space for one",
+        "60x16": "60″ wide × 16″ tall",
+        "60x18": "60″ wide × 18″ tall",
         "48x20": "48″ wide × 20″ tall",
         "60x22": "60″ wide × 22″ tall",
-        "60x24": "60″ wide × 24″ tall, the most that fits",
+        "60x24": "60″ wide × 24″ tall",
         "70x22": "70″ wide × 22″ tall, runs under the side shelves",
         "72x26": "72″ wide × 26″ tall, too big",
       },
@@ -72,17 +95,25 @@ export default defineProject({
     b.context({ id: "wall-right", name: "Side wall", where: "right", role: "wall", box: box([W, W + wt], [-1, H + 1], [-wt, room]) });
 
     const tvX: Range = span(r16((W - P.tv.width) / 2), P.tv.width);
-    const bottomRowTop = P.consoleSpace.height + P.consoleGap;    // the TV's bottom edge and the lowest shelf tops
+    // ---------- the middle column, floor up: console space, gap, TV, gap, long shelf, gap, AC ----------
+    const acY: Range = [H - P.ac.drop, H];
+    const plan = P.gapPlans[opt.gaps];
+    const spaceH = plan.console;
+    const evenAll = r16((acY[0] - spaceH - P.tv.height) / 3);
+    const spanTop = plan.rule === "even-all" ? acY[0] - evenAll : acY[0] - P.acHeadroom;
+    const gapUnder = plan.rule === "under" ? (plan.under as number)
+      : plan.rule === "even-all" ? evenAll
+      : r16((spanTop - spaceH - P.tv.height) / 2);
+    const bottomRowTop = spaceH + gapUnder;                       // the TV's bottom edge and the lowest shelf tops
     const tvY: Range = span(bottomRowTop, P.tv.height);
     b.context({ id: "tv", name: "TV", role: "fixture", color: "#1d1f23", box: box(tvX, tvY, span(P.tv.standoff, P.tv.depth)) });
-    const acX: Range = [P.ac.fromLeft, W - P.ac.fromRight], acY: Range = [H - P.ac.drop, H];
+    const acX: Range = [P.ac.fromLeft, W - P.ac.fromRight];
     b.context({ id: "ac", name: "Air conditioner", role: "fixture", color: "#e4e7ea", box: box(acX, acY, [0, P.ac.depth]) });
 
     // ---------- the long shelf above the TV, its ends setting where the side rows go ----------
     const pieces = P.spanPieces[opt.span];
     const spanLen = pieces.reduce((a, c) => a + c, 0);
     const margin = r16((W - spanLen) / 2);
-    const spanTop = acY[0] - P.acHeadroom;
     const pitch = r16((spanTop - bottomRowTop) / P.rows);        // the side rows split the height below the long shelf evenly
     const spanIds = pieces.length === 3 ? ["span-left", "span-middle", "span-right"] : ["span-left", "span-right"];
     // One shelf: the plate, and its back flange drawn as a second box. The flange is part of the same bought
@@ -110,8 +141,7 @@ export default defineProject({
 
     // ---------- the media console: not bought yet, so the space for one, and a size to try in it ----------
     const spaceX: Range = [sides[0][1][1], sides[1][1][0]];          // between the lowest side shelves
-    const spaceH = P.consoleSpace.height;
-    b.context({ id: "console-space", name: "Space for a media console", role: "space", box: box(spaceX, [0, spaceH], [0, P.consoleSpace.depth]) });
+    b.context({ id: "console-space", name: "Space for a media console", role: "space", box: box(spaceX, [0, spaceH], [0, P.consoleDepth]) });
     const con = opt.console === "none" ? null : P.consoles[opt.console];
     if (con) {
       const [cw, ch, cd] = con;
@@ -119,7 +149,7 @@ export default defineProject({
       b.context({ id: "console", name: `Media console, ${cw}″ × ${ch}″`, role: "fixture", color: "#7a5c43", box: box(conX, [0, ch], [0, cd]) });
       // Two rules that say whether the size being tried fits the space.
       b.check("console-under-tv", "The media console's top clears the TV's bottom edge", ch <= spaceH,
-        `console ${L(ch)} tall; ${L(P.consoleGap)} under the TV means no taller than ${L(spaceH)}`);
+        `console ${L(ch)} tall; ${L(gapUnder)} under the TV means no taller than ${L(spaceH)}`);
       b.check("console-between-rows", "The media console fits between the lowest side shelves, so nothing on it sits under a shelf",
         conX[0] >= spaceX[0] && conX[1] <= spaceX[1],
         `console ${L(cw)} wide; ${L(spaceX[1] - spaceX[0])} between the side rows`);
@@ -150,6 +180,9 @@ export default defineProject({
     const headroom = acY[0] - spanTop;
     b.check("ac-headroom", "Room under the air conditioner for things on the long shelf", headroom >= P.acHeadroom,
       `${L(headroom)} from the long shelf to the AC; ${L(P.acHeadroom)} wanted`);
+    const tvCentre = (tvY[0] + tvY[1]) / 2;
+    b.check("tv-height", "The TV's centre is at a comfortable height from a sofa", tvCentre <= P.maxTvCentre,
+      `centre at ${L(tvCentre)}; ${L(P.maxTvCentre)} at most. Gaps: ${L(gapUnder)} under the TV, ${L(spanTop - tvY[1])} over it, ${L(headroom)} over the long shelf`);
     // The space over the long shelf is set by the AC, so only the shelf-to-shelf spaces need to match.
     const bays = [...rowTops.slice(1).map((y, i) => y - t - rowTops[i]), spanUnder - rowTops[rowTops.length - 1]];
     b.check("even-bays", "The open heights between shelves are within 1″ of each other", Math.max(...bays) - Math.min(...bays) <= 1,
@@ -167,10 +200,12 @@ export default defineProject({
         { from: "wall.y0", to: "wall.y1", offset: -10 },
         { from: "wall.x0", to: "side-left-1.x0", offset: -2 },
         { from: "side-left-1.x0", to: "side-left-1.x1", offset: -2 },
-        // The TV's width and its gaps to the side rows, on the open wall between the TV and the long shelf.
-        { from: "side-left-1.x1", to: "tv.x0", offset: tvY[1] + 4 },
-        { from: "tv.x0", to: "tv.x1", offset: tvY[1] + 4, text: "TV {}" },
-        { from: "tv.x1", to: "side-right-1.x0", offset: tvY[1] + 4 },
+        // The TV's width and its gap to the side rows (the same each side), just over the TV.
+        { from: "side-left-1.x1", to: "tv.x0", offset: tvY[1] + 1.5 },
+        { from: "tv.x0", to: "tv.x1", offset: tvY[1] + 1.5, text: "TV {}" },
+        // The gaps under and over the TV, in the strip between it and the right-hand shelves.
+        { from: "console-space.y1", to: "tv.y0", offset: tvX[1] + 2.5 },
+        { from: "tv.y1", to: `${spanIds[spanIds.length - 1]}.y1` as const, offset: tvX[1] + 2.5 },
         ...spanIds.map((id) => ({ from: `${id}.x0` as const, to: `${id}.x1` as const, offset: spanTop + 4 })),
         { from: "floor.y1", to: "side-right-1.y1", offset: W + 4 },
         { from: "side-right-1.y1", to: "side-right-2.y1", offset: W + 4 },
@@ -179,10 +214,10 @@ export default defineProject({
         { from: "ac.y0", to: "ceiling.y0", offset: W + 4 },
         { from: "tv.y0", to: "tv.y1", offset: -4 },
         { from: "floor.y1", to: "console-space.y1", offset: -4 },
-        { from: "console-space.x0", to: "console-space.x1", offset: 8 },
+        { from: "console-space.x0", to: "console-space.x1", offset: spaceH - 3 },
       ],
       labels: [{ part: "tv", text: "TV" }, { part: "ac", text: "AC" },
-        con ? { part: "console", text: `console ${con[0]} × ${con[1]}` } : { part: "console-space", text: "space for a media console" }] });
+        con ? { part: "console", text: `console ${con[0]} × ${con[1]}`, dy: -con[1] / 4 } : { part: "console-space", text: "space for a media console", dy: -spaceH / 4 }] });
     b.view({ id: "section", title: "Section through the middle", kind: "section", look: "+x", cut: W / 2,
       caption: "Cut through the TV, the long shelf and the air conditioner; wall on the left.",
       dims: [{ from: "wall.z1", to: "span-left.z1", offset: H + 3 }, { from: "span-left.y1", to: "ac.y0", offset: -3 }] });

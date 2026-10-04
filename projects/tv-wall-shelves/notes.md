@@ -29,8 +29,22 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
   shelf tops sit at 28″; the long shelf's top is 14″ under the AC at 67″; the upper side shelves split
   the height between, at 47½″, a 19½″ pitch. The TV's centre is at 42½″, the top of the usual seated
   range. The open heights between shelves are about 19⅜ / 19⅜″, there is 14″ over the long shelf, and
-  the TV top is 9⅞″ below the long shelf. Roomy for books, with 7–10″ over a row of hardcovers for
+  the TV top is 10″ below the long shelf. Roomy for books, with 7–10″ over a row of hardcovers for
   other things. The 2½″ flange stands up behind the books.
+- **Gaps around the TV** (option `gaps`). The middle column, floor up, is console, gap, TV, gap, long
+  shelf, gap, AC. The objects are fixed sizes, but the console is not bought yet, so its height is free
+  and the gaps can be made even. Gaps over the TV are measured to the long shelf's top line.
+
+  | Choice | Under TV | Over TV | Over long shelf | Console space | TV centre | Shelf tops |
+  |---|---|---|---|---|---|---|
+  | `4-under` (default, the current design) | 4″ | 10″ | 14″ | 24″ | 42½″ | 28, 47½, 67 |
+  | `even-tv` | 10″ | 10″ | 14″ | 18″ | 42½″ | 28, 47½, 67 |
+  | `even-all` | 12″ | 12″ | 12″ | 16″ | 42½″ | 28, 48½, 69 |
+  | `even-tv-24` | 7″ | 7″ | 14″ | 24″ | 45½″ | 31, 49, 67 |
+
+  `even-tv` moves nothing on the wall; only the console to shop for changes, to a low 18″ one. Its 10″
+  gaps are about half the 19½″ shelf pitch. `even-all` gives only 12″ over the long shelf, under the
+  14″ wanted, and `even-tv-24` puts the TV's centre above 44″; each fails its design rule as a warning.
 - **Media console** (not bought yet). The first layout had the TV's bottom at 22″, which left room for
   a console only 20″ tall, lower than most. With the space under the AC cut from 19″ to 14″, the TV
   and the lowest shelves move up to 28″. The drawings show the space for a console as a dashed box;
@@ -58,16 +72,18 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
 | `wallT` | 4½″ | for drawing only |
 | side walls | walls at both ends of the 128″ | the layout's 4″ end margins read as distance from corners |
 | `minTvGap` | 4″ | the least gap to the TV that still looks deliberate; the design has 6″ |
-| `consoleSpace` | 24″ tall, 18″ deep | the tallest console the TV sits 4″ above; a usual depth. Its width is the 60″ between the lowest side shelves |
+| `consoleDepth` | 18″ | a usual depth for the space kept for the console. Its width is the 60″ between the lowest side shelves; its height comes from the `gaps` option |
+| `maxTvCentre` | 44″ | above this a seated viewer looks up at the TV |
 | `consoles` | 16″ deep (18″ for the 72″) | common sizes to try; depths are typical, not from a particular product |
-| `consoleGap` | 4″ | from the console top to the TV's bottom edge; 2″ was too tight, 4–6″ is the usual advice |
+| `gapPlans` `4-under` | 4″ under the TV | 2″ was too tight; 4–6″ is the usual advice |
 
 ## Open questions
 
 - Finish: raw steel, or matte black, matte white or gold powder coat?
 - Stud positions. Each shelf has only three screw holes, so check which land on a stud; the rest go
   into the supplied anchors. A loaded book shelf is the case where that matters.
-- Is the TV centre at 42½″ comfortable from the sofa? Each inch more over the console raises it an inch.
+- Is the TV centre at 42½″ comfortable from the sofa?
+- Which gaps: 4″ under the TV with a 24″ console, or 10″ above and below with an 18″ one (option `gaps`)?
 - Which way does the air conditioner blow? Straight down onto the long shelf would argue for dropping it.
 
 ## Decisions log
@@ -84,3 +100,5 @@ length. Nothing is cut: the model places the shelves, and the shopping list pric
   between shelves only, since the space over the long shelf is set by the AC.
 - 2026-10-04: The console is drawn as the space for one (dashed), with an option to try common sizes in it.
   The space, not the console, sets the TV height.
+- 2026-10-04: The gaps around the TV became an option (`gaps`) with four ways to set them, so they can be
+  compared; the current design stays the default. A rule now warns if the TV's centre goes above 44″.

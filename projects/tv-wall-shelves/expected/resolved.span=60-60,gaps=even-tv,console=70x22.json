@@ -1,0 +1,289 @@
+{
+  "project": {"id": "tv-wall-shelves", "title": "TV Wall Shelves", "units": "in"},
+  "config": {"span": "60-60", "gaps": "even-tv", "console": "70x22"},
+  "phases": ["p1"],
+  "parts": [
+    {
+      "id": "wall",
+      "kind": "context",
+      "name": "TV wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 128], "y": [0, 96], "z": [-4.5, 0]}},
+      "src": "projects/tv-wall-shelves/project.ts:91:7"
+    },
+    {
+      "id": "floor",
+      "kind": "context",
+      "name": "Floor",
+      "role": "floor",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 128], "y": [-1, 0], "z": [0, 36]}},
+      "src": "projects/tv-wall-shelves/project.ts:92:7"
+    },
+    {
+      "id": "ceiling",
+      "kind": "context",
+      "name": "Ceiling",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 128], "y": [96, 97], "z": [-4.5, 36]}},
+      "src": "projects/tv-wall-shelves/project.ts:93:7"
+    },
+    {
+      "id": "wall-left",
+      "kind": "context",
+      "name": "Side wall",
+      "where": "left",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-4.5, 0], "y": [-1, 97], "z": [-4.5, 36]}},
+      "src": "projects/tv-wall-shelves/project.ts:94:7"
+    },
+    {
+      "id": "wall-right",
+      "kind": "context",
+      "name": "Side wall",
+      "where": "right",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [128, 132.5], "y": [-1, 97], "z": [-4.5, 36]}},
+      "src": "projects/tv-wall-shelves/project.ts:95:7"
+    },
+    {
+      "id": "tv",
+      "kind": "context",
+      "name": "TV",
+      "role": "fixture",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [40, 88], "y": [28, 57], "z": [1.5, 4]}},
+      "src": "projects/tv-wall-shelves/project.ts:109:7"
+    },
+    {
+      "id": "ac",
+      "kind": "context",
+      "name": "Air conditioner",
+      "role": "fixture",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [45, 80], "y": [81, 96], "z": [0, 9]}},
+      "src": "projects/tv-wall-shelves/project.ts:111:7"
+    },
+    {
+      "id": "span-left",
+      "kind": "hardware",
+      "name": "Shelf, 60″",
+      "where": "above the TV, left",
+      "item": "shelf-60",
+      "phase": "p1",
+      "step": "hang-span",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [4, 64], "y": [66.925, 67], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:123:9"
+    },
+    {
+      "id": "span-left-flange",
+      "kind": "hardware",
+      "name": "Shelf back flange",
+      "where": "above the TV, left",
+      "item": "shelf-60",
+      "phase": "p1",
+      "step": "hang-span",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [4, 64], "y": [67, 69.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:124:9"
+    },
+    {
+      "id": "span-right",
+      "kind": "hardware",
+      "name": "Shelf, 60″",
+      "where": "above the TV, right",
+      "item": "shelf-60",
+      "phase": "p1",
+      "step": "hang-span",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [64, 124], "y": [66.925, 67], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:123:9"
+    },
+    {
+      "id": "span-right-flange",
+      "kind": "hardware",
+      "name": "Shelf back flange",
+      "where": "above the TV, right",
+      "item": "shelf-60",
+      "phase": "p1",
+      "step": "hang-span",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [64, 124], "y": [67, 69.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:124:9"
+    },
+    {
+      "id": "side-left-1",
+      "kind": "hardware",
+      "name": "Shelf, 30″",
+      "where": "left of the TV, row 1 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [4, 34], "y": [27.925, 28], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:123:9"
+    },
+    {
+      "id": "side-left-1-flange",
+      "kind": "hardware",
+      "name": "Shelf back flange",
+      "where": "left of the TV, row 1 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [4, 34], "y": [28, 30.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:124:9"
+    },
+    {
+      "id": "side-left-2",
+      "kind": "hardware",
+      "name": "Shelf, 30″",
+      "where": "left of the TV, row 2 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [4, 34], "y": [47.425, 47.5], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:123:9"
+    },
+    {
+      "id": "side-left-2-flange",
+      "kind": "hardware",
+      "name": "Shelf back flange",
+      "where": "left of the TV, row 2 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [4, 34], "y": [47.5, 50], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:124:9"
+    },
+    {
+      "id": "side-right-1",
+      "kind": "hardware",
+      "name": "Shelf, 30″",
+      "where": "right of the TV, row 1 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [94, 124], "y": [27.925, 28], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:123:9"
+    },
+    {
+      "id": "side-right-1-flange",
+      "kind": "hardware",
+      "name": "Shelf back flange",
+      "where": "right of the TV, row 1 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [94, 124], "y": [28, 30.5], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:124:9"
+    },
+    {
+      "id": "side-right-2",
+      "kind": "hardware",
+      "name": "Shelf, 30″",
+      "where": "right of the TV, row 2 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [94, 124], "y": [47.425, 47.5], "z": [0, 8]}},
+      "src": "projects/tv-wall-shelves/project.ts:123:9"
+    },
+    {
+      "id": "side-right-2-flange",
+      "kind": "hardware",
+      "name": "Shelf back flange",
+      "where": "right of the TV, row 2 from the bottom",
+      "item": "shelf-30",
+      "phase": "p1",
+      "step": "hang-sides",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [94, 124], "y": [47.5, 50], "z": [0, 0.075]}},
+      "src": "projects/tv-wall-shelves/project.ts:124:9"
+    },
+    {
+      "id": "console-space",
+      "kind": "context",
+      "name": "Space for a media console",
+      "role": "space",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [34, 94], "y": [0, 18], "z": [0, 18]}},
+      "src": "projects/tv-wall-shelves/project.ts:144:7"
+    },
+    {
+      "id": "console",
+      "kind": "context",
+      "name": "Media console, 70″ × 22″",
+      "role": "fixture",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [29, 99], "y": [0, 22], "z": [0, 16]}},
+      "src": "projects/tv-wall-shelves/project.ts:149:9"
+    }
+  ],
+  "steps": [
+    {"id": "layout", "phase": "p1", "parts": []},
+    {
+      "id": "hang-sides",
+      "phase": "p1",
+      "parts": [
+        "side-left-1",
+        "side-left-1-flange",
+        "side-left-2",
+        "side-left-2-flange",
+        "side-right-1",
+        "side-right-1-flange",
+        "side-right-2",
+        "side-right-2-flange"
+      ]
+    },
+    {
+      "id": "hang-span",
+      "phase": "p1",
+      "parts": ["span-left", "span-left-flange", "span-right", "span-right-flange"]
+    }
+  ],
+  "checks": [
+    {"id": "console-under-tv", "pass": false, "severity": "warning"},
+    {"id": "console-between-rows", "pass": false, "severity": "warning"},
+    {"id": "stock-lengths", "pass": true, "severity": "error"},
+    {"id": "ends-aligned", "pass": true, "severity": "error"},
+    {"id": "tv-gap", "pass": true, "severity": "warning"},
+    {"id": "tv-under-span", "pass": true, "severity": "error"},
+    {"id": "ac-headroom", "pass": true, "severity": "warning"},
+    {"id": "tv-height", "pass": true, "severity": "warning"},
+    {"id": "even-bays", "pass": true, "severity": "warning"},
+    {"id": "seams-on-tv-edges", "pass": false, "severity": "warning"},
+    {"id": "ac-over-middle", "pass": true, "severity": "warning"}
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "code": "check:console-under-tv",
+      "message": "The media console's top clears the TV's bottom edge (console 22″ tall; 10″ under the TV means no taller than 18″)",
+      "src": "projects/tv-wall-shelves/project.ts:151:9"
+    },
+    {
+      "severity": "warning",
+      "code": "check:console-between-rows",
+      "message": "The media console fits between the lowest side shelves, so nothing on it sits under a shelf (console 70″ wide; 60″ between the side rows)",
+      "src": "projects/tv-wall-shelves/project.ts:153:9"
+    },
+    {
+      "severity": "warning",
+      "code": "check:seams-on-tv-edges",
+      "message": "The long shelf's seams fall on the TV's edge lines (seams at 64″; TV edges at 40″ and 88″)",
+      "src": "projects/tv-wall-shelves/project.ts:190:7"
+    }
+  ]
+}
