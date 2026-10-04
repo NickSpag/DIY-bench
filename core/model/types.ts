@@ -82,10 +82,11 @@ export type HardwareSpec = Common & {
   length?: number; // for stock cut to length (rods)
   fitToSite?: boolean;
 };
-export type ContextRole = "wall" | "floor" | "contents";
+export type ContextRole = "wall" | "floor" | "fixture" | "contents";
 export type ContextSpec = {
   id: string; name: string; where?: string;
-  role: ContextRole; // walls and floor take part in overlap checks; contents never do
+  role: ContextRole; // walls, floor and fixtures take part in overlap checks; contents never do. A fixture is
+  // something fixed in the room that the build works around (a TV, an air conditioner, a radiator): drawn solid.
   box: Box; phase?: string; removedIn?: string; moves?: Record<string, Box>;
   color?: string; // display colour in the 3D view and drawings (a CSS colour), e.g. water or soil
 };

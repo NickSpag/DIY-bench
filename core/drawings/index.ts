@@ -25,7 +25,7 @@ export type DrawItem = {
 
 /** Fill class of a part: wall, floor, wood, face, hardwood, pine, metal, rod, or the material's own colour. */
 function fillClass(p: ResolvedPart): string {
-  if (p.kind === "context") return p.role === "floor" ? "f-floor" : p.role === "contents" ? "f-contents" : "f-wall";
+  if (p.kind === "context") return p.role === "floor" ? "f-floor" : p.role === "contents" ? "f-contents" : p.role === "fixture" ? (p.color ? "f-mat" : "f-fixture") : "f-wall";
   if (p.kind === "hardware") return p.cylinder ? "f-rod" : "f-metal";
   const m = p.materialDef;
   if (!m) return "f-wood";
@@ -112,7 +112,7 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
     : `<rect ${dp(i.id)} class="${cls}"${matStyle(i, cls)} ${rectAttrs(i.u, i.v)}/>`;
   // A material with its own colour passes it to the f-mat rule, which still mixes in the highlight.
   const matStyle = (i: DrawItem, cls: string) => {
-    const c = cls.includes("f-mat") ? i.part.materialDef?.color : undefined;
+    const c = !cls.includes("f-mat") ? undefined : i.part.kind === "context" ? i.part.color : i.part.materialDef?.color;
     return c && /^[#\w(),.% -]+$/.test(c) ? ` style="--mat:${c}"` : "";
   };
   const partClass = (i: DrawItem) => `part k-${i.part.kind}${i.part.kind === "panel" || i.part.kind === "board" ? ` m-${i.part.material}` : ""}`;
@@ -120,8 +120,8 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
   const fills: string[] = beyond.map((i) => fillEl(i, `${partClass(i)} ${i.fill}`));
   const cutEls: string[] = [];
   for (const i of cut) {
-    const isRoom = i.part.kind === "context";
-    cutEls.push(fillEl(i, `${partClass(i)} ${isRoom ? "f-cutwall" : i.part.kind === "hardware" ? i.fill : "f-cut"}`));
+    const isRoom = i.part.kind === "context" && i.part.role !== "fixture";   // a fixture is cut like a solid object, not hatched like a wall
+    cutEls.push(fillEl(i, `${partClass(i)} ${isRoom ? "f-cutwall" : i.part.kind === "hardware" || i.part.kind === "context" ? i.fill : "f-cut"}`));
     if (isRoom) cutEls.push(hatchRect(i));
   }
 

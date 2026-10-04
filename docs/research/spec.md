@@ -342,7 +342,7 @@ export type HardwareSpec = Common & {
 };
 export type ContextSpec = {
   id: string; name: string; where?: string;
-  role: "wall" | "floor" | "contents";   // walls and floor take part in overlap checks; contents never do
+  role: "wall" | "floor" | "fixture" | "contents";   // walls, floor and fixtures (a TV, an air conditioner) take part in overlap checks; contents never do
   box: Box; phase?: string; removedIn?: string; moves?: Record<string, Box>;
 };
 
@@ -523,7 +523,7 @@ If `build` throws, `evaluate` throws an `EvaluationError` carrying the message a
 | `board-width` | error | A board whose material has `width` has one axis whose extent equals that width. |
 | `grain-axis` | error | `grain` is not the thickness axis; grained materials require `grain` on panels. |
 | `band-face` | error | Banded faces are edges, not the two broad faces on the thickness axis. |
-| `overlap` | error | In each phase state, no two parts overlap, and no part overlaps a context part with role `wall` or `floor`. Exempt: pairs joined by `dado`, `groove`, `rabbet` or `notch` (either direction); pairs of context parts; contents. One issue per pair, listing every phase where it occurs. |
+| `overlap` | error | In each phase state, no two parts overlap, and no part overlaps a context part with role `wall`, `floor` or `fixture`. Exempt: pairs joined by `dado`, `groove`, `rabbet` or `notch` (either direction); pairs of context parts; contents. One issue per pair, listing every phase where it occurs. |
 | `outside-room` | warning | If a project has wall or floor context parts, every built part lies within the bounding box of those context parts. Contents are exempt. This catches a sign error or a misplaced decimal, not a scribing problem. |
 | `unfinished-exposed` | warning | An `exposed` part whose applied finish is `none`. |
 | `no-step` | warning | A non-context part with no `step`. |

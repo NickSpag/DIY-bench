@@ -78,6 +78,9 @@ export function diyBenchPlugin(): Plugin {
     },
     configureServer(server) {
       token = randomBytes(16).toString("hex");
+      // projects/ lies outside Vite's root (app/), so a project created after startup would
+      // never reach the viewer's import.meta.glob without watching the folder itself.
+      server.watcher.add(join(ROOT, "projects"));
       // .diy-bench/, or WB_DIR when a test runs its own server.
       const STATE_FILE = join(stateDir(), "state.json");
       const SERVER_FILE = join(stateDir(), "server.json");

@@ -117,7 +117,7 @@ export default defineProject({
               strip?: { id, name, order }, notes?, tags? });
     b.board({ ...same fields, material: a board material });
     b.hardware({ id, name, item, qty, phase, step, box? | cylinder?: { axis, from, to, center: [a, b], diameter }, length?, fitToSite? });
-    b.context({ id, name, role: "wall"|"floor"|"contents", box });   // the room; walls and floor take part in overlap checks
+    b.context({ id, name, role: "wall"|"floor"|"fixture"|"contents", box, color? });   // the room; walls, floor and fixtures (TV, AC, radiator) take part in overlap checks
     b.step({ id, phase, title, text, parts? });
     b.check(id, label, pass, detail?, severity?: "warning"|"error");   // default warning
     b.view({ id, title, kind: "elevation"|"section"|"plan", look: "-z"|"+z"|"-x"|"+x"|"-y", cut?, dims?: [{ from: "part.x0", to: "part.x1", offset }], labels?, veil?, caption?, hiddenLines? });

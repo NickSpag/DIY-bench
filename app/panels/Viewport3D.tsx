@@ -51,7 +51,7 @@ function usePalette(): Palette {
 
 function partColor(p: ResolvedPart, pal: Palette): string {
   if (p.kind === "hardware") return pal.metal;
-  if (p.kind === "context") return p.color ?? (p.role === "contents" ? pal.fabric : pal.wall);
+  if (p.kind === "context") return p.color ?? (p.role === "contents" ? pal.fabric : p.role === "fixture" ? pal.metal : pal.wall);
   const m = p.materialDef;
   if (!m) return pal.wood;
   if (m.color) return m.color;
@@ -158,7 +158,7 @@ function PartMesh({ e, offset, pal, planes, selected, inStep, section }: {
   const isContext = p.kind === "context";
   const isContents = isContext && p.role === "contents";
   const translucent = e.ghost || isContext || (p.kind === "hardware" && !p.cylinder);
-  const opacity = e.ghost ? 0.22 : isContents ? 0.28 : isContext ? (p.id.startsWith("baseboard") ? 0.55 : p.role === "floor" ? 0.85 : 0.1) : p.kind === "hardware" ? 0.45 : 1;
+  const opacity = e.ghost ? 0.22 : isContents ? 0.28 : isContext && p.role === "fixture" ? 0.92 : isContext ? (p.id.startsWith("baseboard") ? 0.55 : p.role === "floor" ? 0.85 : 0.1) : p.kind === "hardware" ? 0.45 : 1;
   const color = partColor(p, pal);
   const emissive = selected ? pal.select : inStep ? pal.step : "#000000";
   const emissiveIntensity = selected ? 0.55 : inStep ? 0.32 : 0;
@@ -265,6 +265,7 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
     // The grid stands in for the lowest floor. Other floors (landings, stair treads, the
     // storey above or below) are drawn.
     if (e.part.role === "floor") return drawnFloor(e.part, e.box, lowest);
+    if (e.part.role === "fixture") return !veiled.has(e.part.id);   // drawn even above the build: an AC at the ceiling
     return !veiled.has(e.part.id) && e.box.y[0] < builtTop;
   });
   return (
