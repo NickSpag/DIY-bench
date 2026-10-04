@@ -15,8 +15,8 @@ export const ORIGINAL = readFileSync(PROJECT_FILE, "utf8");
 export async function openApp(page: Page, query = ""): Promise<void> {
   await page.goto(`/${query}`);
   await page.waitForFunction(() => {
-    const st = (window as any).__wb?.store?.getState();
-    return !!st?.resolved;
+    const w = (window as any).__wb;
+    return !!w?.store?.getState().resolved && w.meshes?.size > 0;
   });
 }
 
