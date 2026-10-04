@@ -1196,12 +1196,13 @@ Part selection is by clicking. Hover highlighting is optional and may be added l
 - **Scene:** every part in the current phase or step state.
   - Panels and boards are `BoxGeometry` meshes, with drei `<Edges>` at a threshold of 15°.
   - Hardware with a cylinder is a `CylinderGeometry`, rotated to its axis. Hardware with a box is a translucent box.
-  - Context walls are drawn as a translucent shell, and the floor as a grid. Contents are hidden by default (toggle).
+  - Context walls are drawn as a translucent shell, and the floor as a grid. Walls that would hide the build are left out: those that any drawing view lists in `veil` (the front returns and the header) and those entirely above the built parts (the ceiling). Contents are hidden by default; a Room toggle hides the walls and grid, a Contents toggle shows the contents.
 - **Colours:** per material, from theme tokens. Prefinished is light, unfinished is hatched in 2D and a slightly darker tone in 3D, hardware is grey.
 - **Camera:**
   - drei `<CameraControls>`: orbit, pan, zoom.
   - Perspective by default; `O` toggles orthographic.
-  - Standard views, each followed by `fitToBox` of the built parts: `1` front, `2` top, `3` left, `4` right, `5` isometric.
+  - Standard views, each followed by `fitToBox` of the built parts in the final phase: `1` front, `2` top, `3` left, `4` right, `5` isometric. `fitToBox` snaps the camera to the nearest axis, so the isometric view and `F` use `fitToSphere` instead.
+  - Both cameras are created by the viewport and sized on every resize (r3f sizes only the camera it creates). The orthographic camera's frustum is in pixels; switching keeps the target and direction, with zoom = viewport height / (2 · distance · tan(fov/2)). camera-controls owns the zoom, so it is set through `zoomTo`.
   - `F` frames the selection.
   - A view cube through drei `<GizmoHelper><GizmoViewcube/></GizmoHelper>`.
   - The camera is never reset by a model reload. `<Canvas>` and the controls stay mounted.
@@ -1218,7 +1219,8 @@ Part selection is by clicking. Hover highlighting is optional and may be added l
   - One `THREE.Plane` shared by every part material.
   - When the drawing panel shows a section or plan view, a link icon syncs the 3D plane to that view's cut.
   - Stencil caps (three's `webgl_clipping_stencil` example) are a stretch goal within M5.
-- **Explode:** each part is offset by `(centre(part) − centre(all built parts)) × k`, animated over 300 ms (respect `prefers-reduced-motion`). Context does not move.
+- **Explode:** each part is offset by `(centre(part) − centre(all built parts)) × k`, where the second centre is the centre of the bounding box of the built parts in the phase or step on screen, animated over 300 ms (respect `prefers-reduced-motion`). Context does not move.
+- **Toolbar:** a toolbar on the viewport holds perspective/orthographic, the standard views and Fit, the explode slider, the section (off / x / y / z, a position slider and a flip of the kept side) and the Room and Contents toggles.
 - **Tooltip:** a small card next to the selected part shows the name and where, the size, material and phase, and `project.ts:line`. (It may also show on hover once hover highlighting exists.)
 
 ### 9.4 Drawing panel
@@ -1254,7 +1256,9 @@ type WbState = {
   // hovered and hoverSource are optional: unused until hover highlighting is added
   hovered: string[]; hoverSource: "3d" | "drawing" | "cutlist" | "sheets" | "steps" | "parts" | "checks" | "agent" | null;
   selected: string[];
-  camera: { mode: "perspective" | "orthographic" }; section: { axis: "x" | "y" | "z"; at: number; enabled: boolean };
+  camera: { mode: "perspective" | "orthographic" }; section: { axis: "x" | "y" | "z"; at: number; enabled: boolean; flip: boolean }; // keeps axis < at, or axis > at when flipped
+  sectionSync: boolean; showRoom: boolean; hiddenLines: boolean | null; compare: Record<string, string> | null;
+  paneTab: "3d" | "drawing" | SideTab; theme: "auto" | "light" | "dark"; loads: number; notes: string; project: AnyProject | null;
   explode: number; display: "in" | "mm"; showContents: boolean;
   resolved: Resolved | null; lastGood: Resolved | null; error: { message: string; src?: Src } | null;
 };
@@ -1634,10 +1638,10 @@ Order: M0 → M1 → M2 → M3 → M4 → (M5 and M6, in either order) → M7 �
 ### M5. 3D viewport
 **Deliverables:** `Viewport3D.tsx` with parts, edges, picking, highlight, camera controls, standard views, orthographic toggle, the view cube, phase and step visibility, explode, the section plane with filtered picking, and the tooltip.
 
-**AC (Playwright; the app exposes `window.__wb` in dev builds with `meshes`, `camera`, `section` and `project(id)` returning the screen point of a part's centre):**
-- Clicking at `project("partition-left")` sets `selected` to `["partition-left"]`.
+**AC (Playwright; the app exposes `window.__wb` in dev builds with `store`, `meshes`, `camera`, `controls`, `section`, `rayHits(x, y)` (every part along the ray, ignoring the section) and `project(id)` returning the screen point of a part's centre):**
+- In the orthographic front view at phase p1, clicking at `project("partition-left")` sets `selected` to `["partition-left"]`. (In perspective the ray to a part's centre can graze a nearer part: here the edge of `center-shelf-adj-2`.)
 - Clicking the Partition row in the cut list gives both partition meshes the selection tint (`--hl-select`).
-- At phase p2, with a section that keeps z < 10, clicking at `project("hamper-face")` never yields `selected` containing `hamper-face`. The face spans z 23¼ to 23³¹⁄₃₂ (23¼ + 23/32), so it is entirely clipped. This mirrors the spike's verified trap: unfiltered raycasts return clipped parts.
+- At phase p2, with a section that keeps z < 10, `rayHits` at `project("hamper-face")` returns `hamper-face` first, and clicking there never yields `selected` containing `hamper-face`; the click selects the first part on the kept side. The face spans z 23¼ to 23³¹⁄₃₂ (23¼ + 23/32), so it is entirely clipped. This mirrors the spike's verified trap: unfiltered raycasts return clipped parts.
 - Across a model edit, the camera position and target are unchanged (compared with 1e-9 tolerance), and `selected` is kept.
 - At phase `p1`, no p2 part has a visible mesh, and `center-shelf-adj-3` is at y 55¾. At `p2` it is at 59⅝, and adj-1 and adj-2 are absent.
 - Explode at k = 1 moves `partition-left`'s mesh by `(centre − assembly centre)`, within 1e-6.
