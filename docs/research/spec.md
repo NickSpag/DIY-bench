@@ -656,7 +656,8 @@ Sheet SVG (`sheetSvg(nesting)`, `core/sheet-svg.ts`), one SVG per `Nesting` with
 ### 7.3 Drawings (`core/drawings/`)
 
 ```ts
-export function drawView(r: Resolved, viewId: string, opts: { phase: string; step?: string; display: "in" | "mm" }): string; // SVG
+export function drawView(r: Resolved, viewId: string, opts: { phase: string; step?: string | null; display: "in" | "mm"; hiddenLines?: boolean }): string; // SVG; hiddenLines overrides the view's
+export function viewItems(r, view, { phase, step }): DrawItem[]; // each part classified and projected, for tests
 ```
 
 #### 7.3.1 View mapping
@@ -688,24 +689,25 @@ Every row was derived from the camera basis: right = forward × up, with up = +y
   - A horizontal edge at `v = v0` is covered on `(Q.u0, Q.u1)` when `Q.v0 < v0 < Q.v1` (strict).
   - Vertical edges work the same way.
   - Covered pieces are hidden; the rest are visible.
-  - Coincident boundaries count as visible, so where a shelf meets a partition the line is drawn once, solid.
+  - Coincident boundaries count as visible, so where a shelf meets a partition the line is drawn solid, never dashed. Each part keeps its own outline (so a selected part's outline is whole); where two outlines coincide the two paths overlap exactly and read as one line.
 - **Merge:** join collinear touching segments of the same kind and part.
 - **Cylinders:**
   - viewed along their axis, a circle;
   - viewed across it, a rectangle;
   - occlusion uses the rectangle in both cases.
-- **Cut parts:** draw the intersection rectangle with a cut style. Walls and floors get the 45° hatch pattern. Built parts get a darker wood fill and a heavier outline. Cut parts are drawn after beyond parts.
-- **Veil parts:** drawn last, as a translucent fill plus hatch, with no outline except along the opening (the reference's dashed blue opening).
+- **Cut parts:** draw the intersection rectangle with a cut style. Walls and floors get the 45° hatch pattern. Built parts get a darker wood fill and a heavier outline. Cut parts are drawn after beyond parts. For occlusion a cut part counts only up to the plane.
+- **Fills:** wall face for walls, wood for sheet goods, the lighter face colour for unfinished sheet parts that get a finish (the drawer and hamper faces), dark wood for hardwood boards, pale pine for softwood boards, translucent metal for hardware boxes and solid grey for rods. A floor seen edge-on (thinner than 1.5 × the text scale) is a solid dark bar, as on the concept sheet; seen from above it is a surface. Unfinished plywood is not hatched in drawings: on an elevation, hatching reads as a cut.
+- **Veil parts:** drawn last, as a translucent fill plus hatch, with no outline except along the opening (the reference's dashed blue opening): the outline of the union of the veil parts, less the edges on its bounding box. Veil elements ignore the pointer, so a click passes through to the part behind.
 - **Contents:** a translucent fill with a dashed outline, drawn after fills and before edges.
 
 #### 7.3.4 Dimensions and labels
 - **Resolving a `Ref`:** `"part.x0"` resolves to that part's box minimum on x in the current phase state; a number is used as is.
 - **Axis:** a dimension measures along the axis of its refs. Both refs must share an axis; a number takes the other ref's axis. It is drawn in views where that axis maps to `u` or `v`; elsewhere it is skipped silently.
-- **Placement:** `offset` is the coordinate along the other screen axis, in model units, the same as the reference's `dimH(x0, x1, y)`.
-- **Text:** the formatted length (`fmtLength`), with `{}` in `text` replaced by it.
+- **Placement:** `offset` is the position of the dimension line on the other screen axis, in view coordinates (u to the right, v up; section 7.3.1), in model units. (The reference's `dimH(x0, x1, y)` takes an SVG y whose origin is the ceiling, so its numbers cannot be copied as they are: the closet's plan dimension across the room was −7.7, inside the room, and is now 7.7.)
+- **Text:** the formatted length (`fmtLength`, no inch marks), with `{}` in `text` replaced by it. The text sits beside the line on the side away from the drawing's centre, so it never runs into the drawing. Each dimension also carries a transparent hit area over its line and text, so it is easy to click.
 - **Drawing:** extension ticks and 45° slashes, as in the reference's `dimH` and `dimV`.
 - **Tags:** each dimension `<g>` gets `data-part` set to the IDs of its refs, and `data-dim="<viewId>:<index>"`.
-- **Labels:** placed at the part's projected centre plus `dx`/`dy`, or at `at`. Tokens are replaced with formatted values. Labels get a paint-order stroke halo, as in the reference's `.s-lbl`.
+- **Labels:** placed at the part's projected centre plus `dx`/`dy` (`dy` up), or at `at`. A label on a part thinner on screen than two lines of label text (a rod, a shelf seen edge-on) sits just above the part unless `dy` is given. Tokens are replaced with formatted values with inch marks (`rod 81½″`). Labels get a paint-order stroke halo, as in the reference's `.s-lbl`.
 - **Collisions:** no automatic collision avoidance in v1. Authors adjust `dx`/`dy`. This is listed as a risk.
 
 #### 7.3.5 SVG structure
@@ -723,7 +725,7 @@ Every row was derived from the camera basis: right = forward × up, with up = +y
 </svg>
 ```
 - **`viewBox`:** the bounds of everything drawn, plus a margin of 6% of the larger side, plus dimension offsets.
-- **Styling:** all styling uses classes and CSS custom properties, with no inline colours, so light and dark themes work. Take the reference page's tokens and class names as the starting palette (`--wood`, `--face`, `--dim`, …).
+- **Styling:** all styling uses classes and CSS custom properties, with no inline colours, so light and dark themes work. Take the reference page's tokens and class names as the starting palette (`--wood`, `--face`, `--dim`, …). Every rule is scoped under `.wb-drawing` and gives the light palette as a fallback, so a saved file reads on its own. Text sizes and line widths are `calc(N px * var(--s))`, with `--s` set on the `<svg>` from the view's extent (or `scale`), so one stylesheet serves every view.
 - **Highlighting:** done by the app's generated stylesheet, not inside the SVG (section 9.8).
 
 ### 7.4 Build steps (`core/steps.ts`)
@@ -1107,7 +1109,7 @@ export default defineProject({
       dims: [{ from: "wall-back.z1", to: "top-shelf-left-nosing.z1", offset: R.height + 4 }, { from: "top-shelf-left-nosing.z1", to: "return-left.z0", offset: R.height + 4, text: "{} gap" }] });
     b.view({ id: "section-b", title: "Section B · center column", kind: "section", look: "+x", cut: (C0 + C1) / 2, hiddenLines: true });
     b.view({ id: "plan", title: "Plan", kind: "plan", look: "-y", cut: 45,
-      dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: -7.7 }, { from: "wall-back.z1", to: "return-left.z0", offset: -7.7 }] });
+      dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: 7.7 }, { from: "wall-back.z1", to: "return-left.z0", offset: -7.7 }] });
   },
 });
 

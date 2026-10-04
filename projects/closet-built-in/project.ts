@@ -296,7 +296,7 @@ export default defineProject({
       dims: [{ from: "wall-back.z1", to: "top-shelf-left-nosing.z1", offset: R.height + 4 }, { from: "top-shelf-left-nosing.z1", to: "return-left.z0", offset: R.height + 4, text: "{} gap" }] });
     b.view({ id: "section-b", title: "Section B · center column", kind: "section", look: "+x", cut: (C0 + C1) / 2, hiddenLines: true });
     b.view({ id: "plan", title: "Plan", kind: "plan", look: "-y", cut: 45,
-      dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: -7.7 }, { from: "wall-back.z1", to: "return-left.z0", offset: -7.7 }] });
+      dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: 7.7 }, { from: "wall-back.z1", to: "return-left.z0", offset: -7.7 }] });
   },
 });
 

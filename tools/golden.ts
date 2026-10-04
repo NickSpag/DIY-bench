@@ -8,6 +8,8 @@ import { cutList } from "../core/cutlist.ts";
 import { cutListText } from "../core/export/text.ts";
 import { nest } from "../core/nesting.ts";
 import { sheetSvg } from "../core/sheet-svg.ts";
+import { drawView } from "../core/drawings/index.ts";
+import { defaultConfig } from "../core/evaluate.ts";
 import { fmtSrc } from "../core/model/builder.ts";
 import type { AnyProject, Box, Resolved } from "../core/model/types.ts";
 import { loadProject, projectDir } from "./projects.ts";
@@ -54,6 +56,10 @@ export function goldenFiles(project: AnyProject): Map<string, string> {
     const ns = nest(r);
     files.set(`sheets.${key}.json`, toJson(ns));
     for (const n of ns) files.set(`sheets.${key}.${n.phase}.${n.material}.svg`, sheetSvg(n));
+    // Drawings: every declared view at every phase, for the default configuration only.
+    if (configKey(config) === configKey(defaultConfig(project))) {
+      for (const v of r.views) for (const ph of r.phases) files.set(`view.${v.id}.${ph.id}.svg`, drawView(r, v.id, { phase: ph.id, display: r.project.units }));
+    }
   }
   return files;
 }
