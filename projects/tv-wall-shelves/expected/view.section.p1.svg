@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="wb-drawing" viewBox="-12.5423 -108.5423 54.7428 115.7428" data-view="section" data-phase="p1" style="--s: 0.98">
+<style>
+.wb-drawing text { font-family: var(--f-mono, ui-monospace, "SF Mono", Menlo, monospace); }
+.wb-drawing .f-wall { fill: color-mix(in oklab, var(--wallface, #eff2f2) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-floor { fill: color-mix(in oklab, var(--ink, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-wood { fill: color-mix(in oklab, var(--wood, #ddb987) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-face { fill: color-mix(in oklab, var(--face, #e8cc9c) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-hardwood { fill: color-mix(in oklab, var(--wood-dark, #a77d45) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-mat { fill: color-mix(in oklab, var(--mat, #ddb987) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-fixture { fill: color-mix(in oklab, var(--metal, #8d979c) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-pine { fill: color-mix(in oklab, var(--pine, #ecdcb6) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-metal { fill: color-mix(in oklab, var(--metal, #8d979c) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.55; }
+.wb-drawing .f-rod { fill: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-cut { fill: color-mix(in oklab, var(--cut-wood, #b58c55) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-cutwall { fill: color-mix(in oklab, var(--hatch, #8f9ba1) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.25; }
+.wb-drawing .f-contents { fill: color-mix(in oklab, var(--fabric-1, #8a9ca7) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.16; }
+.wb-drawing .f-mat-contents { fill: color-mix(in oklab, var(--mat, #8a9ca7) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.9; }
+.wb-drawing .hatch-ln { stroke: var(--hatch, #8f9ba1); stroke-width: calc(0.13px * var(--s, 1)); }
+.wb-drawing .c-line { fill: none; stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.16px * var(--s, 1) * var(--hl-w, 1)); stroke-dasharray: calc(0.8px * var(--s, 1)) calc(0.6px * var(--s, 1)); }
+.wb-drawing .e { fill: none; stroke-linecap: square; stroke: color-mix(in oklab, var(--wood-dark, #a77d45) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.16px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .e.e-ctx { stroke: color-mix(in oklab, var(--ink, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.3px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .e.e-metal { stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .e.e-cut { stroke: color-mix(in oklab, var(--cut-edge, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.32px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .hid { fill: none; stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.12px * var(--s, 1) * var(--hl-w, 1)); stroke-dasharray: calc(0.7px * var(--s, 1)) calc(0.45px * var(--s, 1)); }
+.wb-drawing .veil { pointer-events: none; }
+.wb-drawing .v-fill { fill: var(--veil, rgba(28, 37, 41, 0.08)); }
+.wb-drawing .v-open { fill: none; stroke: var(--dim, #2b5d8c); stroke-width: calc(0.32px * var(--s, 1)); stroke-dasharray: calc(1.4px * var(--s, 1)) calc(0.8px * var(--s, 1)); }
+.wb-drawing .dim { cursor: pointer; }
+.wb-drawing .dim path { fill: none; stroke: color-mix(in oklab, var(--dim, #2b5d8c) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.18px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .dim text { fill: color-mix(in oklab, var(--dim, #2b5d8c) var(--hl-mix, 100%), var(--hl, #000)); font-size: calc(2.2px * var(--s, 1)); font-weight: 500; }
+.wb-drawing .dim-hit { fill: transparent; stroke: none; }
+.wb-drawing .lbl { fill: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); font-size: calc(1.7px * var(--s, 1)); paint-order: stroke; stroke: var(--sheet, #fafbfb); stroke-width: calc(0.6px * var(--s, 1)); stroke-linejoin: round; }
+</style>
+<defs><pattern id="wbd-hatch-section-p1" patternUnits="userSpaceOnUse" width="1.568" height="1.568" patternTransform="rotate(45)"><line class="hatch-ln" x1="0" y1="0" x2="0" y2="1.568"/></pattern></defs>
+<g class="fills"><rect data-part="wall-right" class="part k-context f-wall" x="-4.5" y="-97" width="40.5" height="98"/><rect data-part="side-right-1" class="part k-hardware f-metal" x="0" y="-22" width="8" height="0.075"/><rect data-part="side-right-1-flange" class="part k-hardware f-metal" x="0" y="-24.5" width="0.075" height="2.5"/><rect data-part="side-right-2" class="part k-hardware f-metal" x="0" y="-42" width="8" height="0.075"/><rect data-part="side-right-2-flange" class="part k-hardware f-metal" x="0" y="-44.5" width="0.075" height="2.5"/><rect data-part="span-right" class="part k-hardware f-metal" x="0" y="-62" width="8" height="0.075"/><rect data-part="span-right-flange" class="part k-hardware f-metal" x="0" y="-64.5" width="0.075" height="2.5"/></g>
+<g class="contents"></g>
+<g class="hidden"></g>
+<g class="edges"><path data-part="wall-right" class="e e-ctx" d="M-4.5 1H36M-4.5 -97H36M-4.5 1V-97M36 1V-97"/><path data-part="side-right-1" class="e e-metal" d="M0 -21.925H8M0 -22H8M0 -21.925V-22M8 -21.925V-22"/><path data-part="side-right-1-flange" class="e e-metal" d="M0 -22H0.075M0 -24.5H0.075M0 -22V-24.5M0.075 -22V-24.5"/><path data-part="side-right-2" class="e e-metal" d="M0 -41.925H1.5M4 -41.925H8M0 -42H1.5M4 -42H8M0 -41.925V-42M8 -41.925V-42"/><path data-part="side-right-2-flange" class="e e-metal" d="M0 -42H0.075M0 -44.5H0.075M0 -42V-44.5M0.075 -42V-44.5"/><path data-part="span-right" class="e e-metal" d="M0 -61.925H8M0 -62H8M0 -61.925V-62M8 -61.925V-62"/><path data-part="span-right-flange" class="e e-metal" d="M0 -62H0.075M0 -64.5H0.075M0 -62V-64.5M0.075 -62V-64.5"/></g>
+<g class="cut"><rect data-part="ac" class="part k-context f-mat" style="--mat:#e4e7ea" x="0" y="-96" width="9" height="15"/><rect data-part="ceiling" class="part k-context f-cutwall" x="-4.5" y="-97" width="40.5" height="1"/><rect class="hatch" data-part="ceiling" x="-4.5" y="-97" width="40.5" height="1" fill="url(#wbd-hatch-section-p1)"/><rect data-part="floor" class="part k-context f-cutwall" x="0" y="0" width="36" height="1"/><rect class="hatch" data-part="floor" x="0" y="0" width="36" height="1" fill="url(#wbd-hatch-section-p1)"/><rect data-part="span-middle" class="part k-hardware f-metal" x="0" y="-62" width="8" height="0.075"/><rect data-part="span-middle-flange" class="part k-hardware f-metal" x="0" y="-64.5" width="0.075" height="2.5"/><rect data-part="tv" class="part k-context f-mat" style="--mat:#1d1f23" x="1.5" y="-51" width="2.5" height="29"/><rect data-part="wall" class="part k-context f-cutwall" x="-4.5" y="-96" width="4.5" height="96"/><rect class="hatch" data-part="wall" x="-4.5" y="-96" width="4.5" height="96" fill="url(#wbd-hatch-section-p1)"/><path data-part="ac" class="e e-cut" d="M0 -81H9M0 -96H9M0 -81V-96M9 -81V-96"/><path data-part="ceiling" class="e e-cut" d="M-4.5 -96H36M-4.5 -97H36M-4.5 -96V-97M36 -96V-97"/><path data-part="floor" class="e e-cut" d="M0 1H36M0 0H36M0 1V0M36 1V0"/><path data-part="span-middle" class="e e-cut" d="M0 -61.925H8M0 -62H8M0 -61.925V-62M8 -61.925V-62"/><path data-part="span-middle-flange" class="e e-cut" d="M0 -62H0.075M0 -64.5H0.075M0 -62V-64.5M0.075 -62V-64.5"/><path data-part="tv" class="e e-cut" d="M1.5 -22H4M1.5 -51H4M1.5 -22V-51M4 -22V-51"/><path data-part="wall" class="e e-cut" d="M-4.5 0H0M-4.5 -96H0M-4.5 0V-96M0 0V-96"/></g>
+<g class="veil"></g>
+<g class="dims"><g class="dim" data-part="wall span-left" data-dim="section:0"><rect class="dim-hit" x="-1.372" y="-102.3418" width="10.744" height="4.7138"/><path d="M0 -99H8M-0.784 -98.216L0.784 -99.784M7.216 -98.216L8.784 -99.784M0 -100.372V-97.628M8 -100.372V-97.628"/><text x="4" y="-99.882" text-anchor="middle">8</text></g><g class="dim" data-part="span-left ac" data-dim="section:1"><rect class="dim-hit" x="-6.3418" y="-82.372" width="4.7138" height="21.744"/><path d="M-3 -81V-62M-3.784 -80.216L-2.216 -81.784M-3.784 -61.216L-2.216 -62.784M-4.372 -81H-1.628M-4.372 -62H-1.628"/><text x="-3.882" y="-71.5" text-anchor="middle" transform="rotate(-90 -3.882 -71.5)">19</text></g></g>
+<g class="labels"></g>
+</svg>
