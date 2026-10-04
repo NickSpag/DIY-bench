@@ -54,6 +54,7 @@ function partColor(p: ResolvedPart, pal: Palette): string {
   if (p.kind === "context") return p.role === "contents" ? pal.fabric : pal.wall;
   const m = p.materialDef;
   if (!m) return pal.wood;
+  if (m.color) return m.color;
   if (m.type === "sheet") {
     if (m.finish !== "none") return pal.wood;
     return p.finishApplied && p.finishApplied !== "none" ? pal.face : pal.raw;

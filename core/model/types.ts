@@ -27,6 +27,7 @@ export type Stock = {
 export type SheetMaterial = {
   type: "sheet"; name: string; thickness: number; grained: boolean; finish: Finish;
   thicknessLabel?: string; // display text for the thickness, e.g. "12 mm"; see section 5.6
+  color?: string; // display colour in the 3D view and drawings (a CSS colour), for a painted or coloured material
   kerf?: number; // default 0.125 in, 3 mm
   trim?: number; // edge trim per side before layout, default 0
   oversize?: number; // added to length and width of every cut size, default 0
@@ -35,6 +36,7 @@ export type SheetMaterial = {
 export type BoardMaterial = {
   type: "board"; name: string; thickness: number;
   thicknessLabel?: string; // display text for the thickness; see section 5.6
+  color?: string; // display colour in the 3D view and drawings (a CSS colour), for a painted or coloured material
   width?: number; // fixed section width for dimensional lumber (1×4 → 3.5); omit for glued-up panels
   nominal?: string; // "1×4"
   finish: Finish;

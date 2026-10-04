@@ -24,9 +24,9 @@ and the 3D view show the trellis and planter in place. None of it appears in the
   stands ¾″ off the wall and the vine can weave behind it. The first frame's bottom rail stands on
   the planter's back board. The full-width rails also screw into every stud they cross; rails are
   at most 24″ apart. Paint the frame the wall colour.
-- **Planter:** built from your 1½ × 9 board for its looks, resawn in half through its thickness
-  into two boards about 11/16″ thick: front, back and ends on edge, a plywood bottom inside, and a
-  liner. Its top is 38″ above the landing. It runs the full width of the vine wall with its back
+- **Planter:** the front and ends are your blue 1½ × 9 board, resawn in half through its thickness
+  into two boards about 11/16″ thick. The back, against the wall and never seen, is 23/32″ plywood
+  from the same sheet as the bottom, which saves the board. A liner goes inside. Its top is 38″ above the landing. It runs the full width of the vine wall with its back
   against the wall, so its right end overhangs flight 3, and sticks out 11″ into the landing.
   One board high or two is a design option; two (18″) gives about 16¾″ of soil, one (9″) about 7¾″.
 - **Legs:** two square legs, ripped full thickness from the same board before it is resawn, directly under the back of the planter, so they
@@ -57,7 +57,8 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 ## Open questions
 
 - The stair counts, rise and run are read from photos; count the steps in each flight to confirm.
-- The board's length: the two-high planter and its legs need about 130″.
+- The board's length. With the back in plywood, it needs about 85″ for a two-high planter with
+  both legs on the landing (92″ with the right leg down to the step), or about 61″ one high.
 - One board high or two (the planter option).
 - Which plant? It sets the soil depth.
 
@@ -65,6 +66,7 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 
 - 2026-10-04: lattice ripped to width; the lower sheet runs full length and the upper is cut to the ceiling.
 - 2026-10-04: horizontal standoff rails rather than vertical, so every rail reaches studs.
+- 2026-10-04: the blue board only on the planter's front and ends; the back is plywood.
 - 2026-10-04: planter top at 38″; the board is resawn in half; one or two boards high is an option.
 - 2026-10-04: the lattice and frame stand on the planter instead of reaching the landing; the planter's back goes against the wall; the second sheet moves to a phase 2.
 - 2026-10-04: planter widened to the full vine wall, legs moved under it; the stair-side (right) leg's placement is an option.

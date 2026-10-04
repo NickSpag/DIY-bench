@@ -29,6 +29,7 @@ export const DRAWING_STYLE = `
 .wb-drawing .f-wood { fill: color-mix(in oklab, var(--wood, #ddb987) var(--hl-mix, 100%), var(--hl, #000)); }
 .wb-drawing .f-face { fill: color-mix(in oklab, var(--face, #e8cc9c) var(--hl-mix, 100%), var(--hl, #000)); }
 .wb-drawing .f-hardwood { fill: color-mix(in oklab, var(--wood-dark, #a77d45) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-mat { fill: color-mix(in oklab, var(--mat, #ddb987) var(--hl-mix, 100%), var(--hl, #000)); }
 .wb-drawing .f-pine { fill: color-mix(in oklab, var(--pine, #ecdcb6) var(--hl-mix, 100%), var(--hl, #000)); }
 .wb-drawing .f-metal { fill: color-mix(in oklab, var(--metal, #8d979c) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.55; }
 .wb-drawing .f-rod { fill: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); }

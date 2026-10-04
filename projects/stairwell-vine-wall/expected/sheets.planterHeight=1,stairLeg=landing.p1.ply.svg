@@ -21,8 +21,9 @@
 <text class="wb-title" x="0" y="-0.84" font-size="1.2">4×4 · 23/32″ plywood (sold as ¾″), 48 × 48</text>
 <g class="wb-grain-arrow"><path class="wb-grain" d="M38.4 49.32H48M47.28 48.9L48 49.32L47.28 49.74"/><text class="wb-grain-label" x="37.92" y="49.68" font-size="0.96" text-anchor="end">grain</text></g>
 <rect class="wb-sheet-board" x="0" y="0" width="48" height="48"/>
-<g class="wb-offcut-g"><rect class="wb-offcut" x="0" y="9.75" width="48" height="38.25"/><text class="wb-offcut-label" x="24" y="29.163" font-size="0.96" text-anchor="middle">offcut 48 × 38¼</text></g>
-<g class="wb-offcut-g"><rect class="wb-offcut" x="43.875" y="0" width="4.125" height="9.625"/><g transform="rotate(-90 45.9375 4.8125)"><text class="wb-offcut-label" x="45.9375" y="5.1005" font-size="0.96" text-anchor="middle">offcut 4⅛ × 9⅝</text></g></g>
-<g class="wb-placement" data-part="planter-bottom"><title>Planter bottom · 43¾ × 9⅝ · planter-bottom</title><rect class="wb-part k-fin" x="0" y="0" width="43.75" height="9.625"/><text class="wb-label" x="21.875" y="4.4525" font-size="1.2" text-anchor="middle">Planter bottom</text><text class="wb-size" x="21.875" y="5.8925" font-size="1.2" text-anchor="middle">43¾ × 9⅝</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="0" y="18.8438" width="48" height="29.1563"/><text class="wb-offcut-label" x="24" y="33.7099" font-size="0.96" text-anchor="middle">offcut 48 × 29⁵⁄₃₂</text></g>
+<g class="wb-offcut-g"><rect class="wb-offcut" x="43.875" y="0" width="4.125" height="9.5938"/><g transform="rotate(-90 45.9375 4.7969)"><text class="wb-offcut-label" x="45.9375" y="5.029" font-size="0.7737" text-anchor="middle">offcut 4⅛ × 9¹⁹⁄₃₂</text></g></g>
+<g class="wb-placement" data-part="planter-bottom"><title>Planter bottom · 43¾ × 9¹⁹⁄₃₂ · planter-bottom</title><rect class="wb-part k-fin" x="0" y="0" width="43.75" height="9.5938"/><text class="wb-label" x="21.875" y="4.4369" font-size="1.2" text-anchor="middle">Planter bottom</text><text class="wb-size" x="21.875" y="5.8769" font-size="1.2" text-anchor="middle">43¾ × 9¹⁹⁄₃₂</text></g>
+<g class="wb-placement" data-part="planter-back"><title>Planter back · 45⅛ × 9 · planter-back</title><rect class="wb-part k-fin" x="0" y="9.7188" width="45.125" height="9"/><text class="wb-label" x="22.5625" y="13.8588" font-size="1.2" text-anchor="middle">Planter back</text><text class="wb-size" x="22.5625" y="15.2988" font-size="1.2" text-anchor="middle">45⅛ × 9</text></g>
 </g>
 </svg>

@@ -23,12 +23,13 @@ export type DrawItem = {
   fill: string; // fill class
 };
 
-/** Fill class of a part: wall, floor, wood, face, hardwood, pine, metal or rod. */
+/** Fill class of a part: wall, floor, wood, face, hardwood, pine, metal, rod, or the material's own colour. */
 function fillClass(p: ResolvedPart): string {
   if (p.kind === "context") return p.role === "floor" ? "f-floor" : p.role === "contents" ? "f-contents" : "f-wall";
   if (p.kind === "hardware") return p.cylinder ? "f-rod" : "f-metal";
   const m = p.materialDef;
   if (!m) return "f-wood";
+  if (m.color) return "f-mat";
   if (m.type === "sheet") return m.finish === "none" && p.finishApplied && p.finishApplied !== "none" ? "f-face" : "f-wood";
   return m.finish === "none" ? "f-pine" : "f-hardwood";
 }
@@ -108,7 +109,12 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
 
   const fillEl = (i: DrawItem, cls: string) => i.circle
     ? `<circle ${dp(i.id)} class="${cls}" cx="${num(i.circle.u)}" cy="${num(-i.circle.v)}" r="${num(i.circle.r)}"/>`
-    : `<rect ${dp(i.id)} class="${cls}" ${rectAttrs(i.u, i.v)}/>`;
+    : `<rect ${dp(i.id)} class="${cls}"${matStyle(i, cls)} ${rectAttrs(i.u, i.v)}/>`;
+  // A material with its own colour passes it to the f-mat rule, which still mixes in the highlight.
+  const matStyle = (i: DrawItem, cls: string) => {
+    const c = cls.includes("f-mat") ? i.part.materialDef?.color : undefined;
+    return c && /^[#\w(),.% -]+$/.test(c) ? ` style="--mat:${c}"` : "";
+  };
   const partClass = (i: DrawItem) => `part k-${i.part.kind}${i.part.kind === "panel" || i.part.kind === "board" ? ` m-${i.part.material}` : ""}`;
 
   const fills: string[] = beyond.map((i) => fillEl(i, `${partClass(i)} ${i.fill}`));

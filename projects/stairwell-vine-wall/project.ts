@@ -20,6 +20,7 @@ export const P = {
   edgeGap: 0.125,                        // inferred: clearance to the back wall and the ceiling
   frame: { maxSpan: 24 },                // inferred: 1×1 frame members behind the lattice at most this far apart
   board2x10: { t: 1.5, w: 9, length: 144 },  // your board, measured 1½ × 9; length inferred until measured
+  boardColor: "#4f7299",                 // the board is blue; for the 3D view and drawings
   resawKerf: 0.125,                      // inferred: the board is resawn in half through its thickness
   planter: { depth: 11, top: 38 },       // top 38″ above the landing; depth inferred
   leg: 1.5,                              // inferred: square legs ripped from the 2×10
@@ -52,8 +53,8 @@ export default defineProject({
     ply: { type: "sheet", name: "23/32″ plywood (sold as ¾″)", thickness: T, grained: true, finish: "clear", kerf: 0.125,
       stock: [{ id: "4x4", length: 48, width: 48, buy: true }, { id: "4x8", length: 96, width: 48, buy: true }] },
     "pine-1x1": { type: "board", name: "1×1", nominal: "1×1", thickness: S1, width: S1, finish: "paint", stockLengths: [96] },
-    "wood-resawn": { type: "board", name: "Your 1½ × 9 board, resawn in half", thickness: (P.board2x10.t - P.resawKerf) / 2, width: P.board2x10.w, finish: "clear" },
-    "wood-legs": { type: "board", name: "Your 1½ × 9 board, ripped to 1½ × 1½ for legs", thickness: P.leg, width: P.leg, finish: "clear" },
+    "wood-resawn": { type: "board", name: "Your blue 1½ × 9 board, resawn in half", thickness: (P.board2x10.t - P.resawKerf) / 2, width: P.board2x10.w, finish: "clear", color: P.boardColor },
+    "wood-legs": { type: "board", name: "Your blue 1½ × 9 board, ripped to 1½ × 1½ for legs", thickness: P.leg, width: P.leg, finish: "clear", color: P.boardColor },
   },
   banding: {},
   hardware: {
@@ -96,27 +97,28 @@ export default defineProject({
     b.context({ id: "window-wall", name: "Window wall", role: "wall", box: box([-wt, far], [lowerY, H], [P.backWall, P.backWall + wt]) });
     b.context({ id: "ceiling", name: "Ceiling", role: "wall", box: box([-wt, far], [H, H + 1.5], [-wt, P.backWall + wt]) });
 
-    // ---------- planter: the resawn board against the wall, raised on two legs under its back ----------
+    // ---------- planter: the blue board on the front and ends, a plywood back against the wall, raised on two legs ----------
     const bt = (P.board2x10.t - P.resawKerf) / 2, bh = P.board2x10.w, lg = P.leg;
     const layers = Number(opt.planterHeight);
     const px: Range = x;                                                // the full width of the vine wall
     const pz: Range = [0, P.planter.depth];                             // its back against the wall
     const py: Range = [P.planter.top - layers * bh, P.planter.top];
-    const lid = (base: string, i: number) => (i === 0 ? base : `${base}-${i + 1}`);   // the lower layer keeps the plain ids
+    const lid = (base: string, i: number) => (i === 0 ? base : `${base}-${i + 1}`);   // the lower course keeps the plain ids
+    b.panel({ id: "planter-back", name: "Planter back", material: "ply", phase: "p1", step: "planter",
+      box: box(px, py, span(pz[0], T)), grain: "x", exposure: "hidden",
+      notes: "Plywood: it is against the wall and never seen, which saves the blue board for the front and ends." });
     for (let i = 0; i < layers; i++) {
       const yr = span(py[0] + i * bh, bh), course = layers > 1 ? (i === 0 ? ", lower" : ", upper") : "";
-      b.board({ id: lid("planter-front", i), name: "Planter front or back", where: `front${course}`, material: "wood-resawn", phase: "p1", step: "planter",
+      b.board({ id: lid("planter-front", i), name: "Planter front", where: `front${course}`, material: "wood-resawn", phase: "p1", step: "planter",
         box: box(px, yr, [pz[1] - bt, pz[1]]), grain: "x" });
-      b.board({ id: lid("planter-back", i), name: "Planter front or back", where: `back${course}`, material: "wood-resawn", phase: "p1", step: "planter",
-        box: box(px, yr, span(pz[0], bt)), grain: "x", exposure: "limited", exposureNote: "Against the wall" });
       for (const [side, xr] of [["wall", span(px[0], bt)], ["stair", [px[1] - bt, px[1]] as Range]] as const)
         b.board({ id: lid(`planter-end-${side}`, i), name: "Planter end", where: `${side === "wall" ? "back-wall end" : "stair end"}${course}`, material: "wood-resawn", phase: "p1", step: "planter",
-          box: box(xr, yr, [pz[0] + bt, pz[1] - bt]), grain: "z",
-          joins: [{ to: lid("planter-front", i), by: "screws" }, { to: lid("planter-back", i), by: "screws" }] });
+          box: box(xr, yr, [pz[0] + T, pz[1] - bt]), grain: "z",
+          joins: [{ to: lid("planter-front", i), by: "screws" }, { to: "planter-back", by: "screws" }] });
     }
-    const topBack = lid("planter-back", layers - 1);
+    const topBack = "planter-back";
     b.panel({ id: "planter-bottom", name: "Planter bottom", material: "ply", phase: "p1", step: "planter",
-      box: box([px[0] + bt, px[1] - bt], span(py[0], T), [pz[0] + bt, pz[1] - bt]), grain: "x", exposure: "hidden",
+      box: box([px[0] + bt, px[1] - bt], span(py[0], T), [pz[0] + T, pz[1] - bt]), grain: "x", exposure: "hidden",
       joins: ["front", "back", "end-wall", "end-stair"].map(k => ({ to: `planter-${k}`, by: "screws" as const })),
       notes: "Sits inside the four sides, screwed through them. Drill a few weep holes in case the liner overflows." });
 
@@ -135,7 +137,7 @@ export default defineProject({
     const legLen = Math.max(...legs.map(([, , foot]) => py[0] - foot));
     const li = P.linerInset;
     b.hardware({ id: "planter-liner", name: "Liner", item: "liner", qty: 1, phase: "p1", step: "set-planter",
-      box: box([px[0] + bt + li, px[1] - bt - li], [py[0] + T, py[1] - 0.5], [pz[0] + bt + li, pz[1] - bt - li]) });
+      box: box([px[0] + bt + li, px[1] - bt - li], [py[0] + T, py[1] - 0.5], [pz[0] + T + li, pz[1] - bt - li]) });
     b.hardware({ id: "planter-feet", name: "Feet", item: "pads", qty: 1, phase: "p1", step: "set-planter" });
 
     // ---------- lattice on its 1×1 frame, standing on the planter's back: one sheet now, the second in phase 2 ----------
@@ -170,7 +172,7 @@ export default defineProject({
 
     // ---------- steps ----------
     b.step({ id: "planter", phase: "p1", title: "Build the planter",
-      text: "Cut a leg-length piece off the board first and keep it full thickness. Resaw the rest in half through its thickness, then cut the fronts, backs and ends. Screw the ends between the front and back; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
+      text: "Cut a leg-length piece off the blue board first and keep it full thickness. Resaw the rest in half through its thickness, then cut the fronts and ends. Screw the ends to the plywood back and the front to the ends; for two courses, join the courses with a cleat inside each corner. Fit the plywood bottom inside and finish it all before it gets wet." });
     b.step({ id: "set-planter", phase: "p1", title: "Legs and planter",
       text: "Rip two legs from the 2×10 offcut and screw them under the back of the planter. Stand it against the wall and level it. Pads under the legs, liner in." });
     b.step({ id: "frame-lower", phase: "p1", title: "Frame for the first sheet",
@@ -184,7 +186,7 @@ export default defineProject({
 
     // ---------- design rules ----------
     // One length is ripped for the legs at full thickness; the rest is resawn, so each length gives two pieces.
-    const perLayer = 2 * (px[1] - px[0]) + 2 * (pz[1] - pz[0] - 2 * bt) + 4 * 0.125;
+    const perLayer = (px[1] - px[0]) + 2 * (pz[1] - pz[0] - T - bt) + 3 * 0.125;   // a front and two ends
     const need = legLen + 0.125 + (layers * perLayer) / 2;
     b.check("board-enough", "The board is long enough for the planter and its legs", need <= P.board2x10.length,
       `needs about ${Math.round(need)}″ of the 1½ × 9 board; it is ${P.board2x10.length}″`, "error");
