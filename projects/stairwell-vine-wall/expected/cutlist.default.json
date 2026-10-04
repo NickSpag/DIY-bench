@@ -11,8 +11,8 @@
       "qty": 1,
       "ids": ["trellis-lower"],
       "where": ["lower"],
-      "finished": {"l": 96, "w": 45, "t": 0.5},
-      "cut": {"l": 96, "w": 45, "t": 0.5},
+      "finished": {"l": 96, "w": 45.125, "t": 0.5},
+      "cut": {"l": 96, "w": 45.125, "t": 0.5},
       "band": {},
       "tags": ["needs finish"],
       "notes": ["Rip to width; keep the factory end at the bottom."]
@@ -28,8 +28,8 @@
       "qty": 1,
       "ids": ["trellis-upper"],
       "where": ["upper"],
-      "finished": {"l": 52.875, "w": 45, "t": 0.5},
-      "cut": {"l": 52.875, "w": 45, "t": 0.5},
+      "finished": {"l": 52.875, "w": 45.125, "t": 0.5},
+      "cut": {"l": 52.875, "w": 45.125, "t": 0.5},
       "band": {},
       "tags": ["needs finish", "cut to fit"],
       "notes": ["Rip to width and cut to length; line up its diamonds with the lower sheet at the seam."]
@@ -45,8 +45,8 @@
       "qty": 1,
       "ids": ["planter-front"],
       "where": ["front"],
-      "finished": {"l": 37.25, "w": 16, "t": 0.7188},
-      "cut": {"l": 37.25, "w": 16, "t": 0.7188},
+      "finished": {"l": 35.25, "w": 16, "t": 0.7188},
+      "cut": {"l": 35.25, "w": 16, "t": 0.7188},
       "band": {},
       "tags": [],
       "notes": []
@@ -62,8 +62,8 @@
       "qty": 1,
       "ids": ["planter-back"],
       "where": ["back"],
-      "finished": {"l": 37.25, "w": 16, "t": 0.7188},
-      "cut": {"l": 37.25, "w": 16, "t": 0.7188},
+      "finished": {"l": 35.25, "w": 16, "t": 0.7188},
+      "cut": {"l": 35.25, "w": 16, "t": 0.7188},
       "band": {},
       "tags": ["hidden"],
       "notes": []
@@ -79,8 +79,8 @@
       "qty": 1,
       "ids": ["planter-bottom"],
       "where": [],
-      "finished": {"l": 35.8125, "w": 7.5625, "t": 0.7188},
-      "cut": {"l": 35.8125, "w": 7.5625, "t": 0.7188},
+      "finished": {"l": 33.8125, "w": 7.5625, "t": 0.7188},
+      "cut": {"l": 33.8125, "w": 7.5625, "t": 0.7188},
       "band": {},
       "tags": ["hidden"],
       "notes": ["Sits inside the four sides. Drill a few weep holes in case the liner overflows."]
@@ -113,15 +113,15 @@
       "qty": 5,
       "ids": ["rail-1", "rail-2", "rail-3", "rail-4", "rail-5"],
       "where": ["16″ up", "64″ up", "112″ up", "138″ up", "165″ up"],
-      "finished": {"l": 45, "w": 1.5, "t": 0.75},
-      "cut": {"l": 45, "w": 1.5, "t": 0.75},
+      "finished": {"l": 45.125, "w": 1.5, "t": 0.75},
+      "cut": {"l": 45.125, "w": 1.5, "t": 0.75},
       "band": {},
       "tags": ["Shows through the lattice; paint it the wall colour", "paint", "cut to fit"],
       "notes": []
     }
   ],
   "strips": [],
-  "boards": [{"material": "pine-1x2", "name": "1×2", "pieces": 5, "totalLength": 225}],
+  "boards": [{"material": "pine-1x2", "name": "1×2", "pieces": 5, "totalLength": 225.625}],
   "hardware": [
     {
       "item": "liner",

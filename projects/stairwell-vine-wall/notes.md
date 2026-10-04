@@ -4,9 +4,14 @@ The reasoning behind `project.ts`. The model holds the numbers; this file holds 
 
 ## Summary
 
-A climbing vine on the tall end wall of the stairwell, above the second landing. The stairwell
-turns 180°: three flights and two landings. The vine wall is 45¼″ wide and 165″ from the second
-landing to the ceiling.
+A climbing vine on the tall wall of the stairwell, above the second landing. The stairwell turns
+180° in two quarter turns. Flight 1 comes down from the upper floor to landing 1. Flight 2 runs
+along the 102″ back wall to landing 2. Flight 3 goes on down to the lower floor beside flight 1,
+with the stairwell's open centre between them. The vine wall rises 165″ from landing 2 to the
+ceiling and is 45¼″ wide: 35½″ over the landing, and the rest over the top of flight 3.
+
+The whole stairwell is modelled as room context (treads, landings, floors, walls), so the drawings
+and the 3D view show the trellis and planter in place. None of it appears in the cut list.
 
 - **Trellis:** the two 4×8 sheets of wood lattice you already have (¼″ slats in two layers, slats
   just under 1½″ wide). Both are ripped to 45″. The lower one runs its full 96″, and the upper one
@@ -23,20 +28,22 @@ Every value marked `// inferred` in `project.ts`, with why it was chosen.
 
 | Value | Assumed | Why |
 |---|---|---|
-| Landing orientation | its 37½″ side runs along the vine wall, from the wall's left end | The wall is 45¼″ wide, so about 7¾″ of it rises above the next flight rather than the landing. |
-| Planter size | 9″ deep × 16″ tall, as long as the landing | Deep enough soil for a vine without crowding a 35½″ landing. |
+| Landing orientation | its 35½″ side runs along the vine wall from the back-wall corner, and its 37½″ side along the back wall | Read from the photos; the other 9¾″ of the vine wall rises over flight 3. |
+| Stair layout | flight 1: 6 risers, flight 2: 4, flight 3: 5; 7½″ rise, 10″ treads, 1½″ thick | From the photos; flight 2's treads (9″) are what fits the 102″ back wall between two landings. |
+| Landing 1 | the same size as landing 2 | Not measured. |
+| Upper floor | 75″ above landing 2, so 90″ to the ceiling | Follows from the risers. |
+| Planter size | 9″ deep × 16″ tall, as long as the landing along the wall | Deep enough soil for a vine without crowding the landing. |
 | Side-wall clearance | ⅛″ each side and at the ceiling | Room to fit the lattice without binding. |
 | Rail spacing | at most 48″, plus one at each end and at the seam | Lattice this thin needs support every few feet. |
 | Side wall thickness | 4½″ | Drawing only. |
 
 ## Open questions
 
-- Which side of the vine wall is the landing on, and does its 37½″ or its 35½″ side run along the
-  wall?
+- The stair counts, rise and run are read from photos; count the steps in each flight to confirm.
 - Which plant? It sets the soil depth and the light the vine needs.
-- The 102″ back wall is recorded but not modelled yet. It matters if the vine is to turn the corner.
 
 ## Decisions log
 
 - 2026-10-04: lattice ripped to width; the lower sheet runs full length and the upper is cut to the ceiling.
 - 2026-10-04: horizontal standoff rails rather than vertical, so every rail reaches studs.
+- 2026-10-04: the whole stairwell modelled as context, from the 102″ back wall and the 37½ × 35½ landing.

@@ -1,16 +1,20 @@
-// Stairwell vine wall: lattice trellis on the tall end wall above the second landing, with a planter at its foot.
-// Axes: x across the vine wall (left to right, facing it), y up from the second landing, z out from the vine wall
-// toward the stairwell. Inches. Values marked "inferred" are placeholders until measured; see notes.md.
+// Stairwell vine wall: lattice trellis on the tall wall above the second landing, with a planter at its foot.
+// The stairwell turns 180° in two quarter turns: flight 1 comes down from the upper floor to landing 1, flight 2
+// runs along the back wall to landing 2, and flight 3 continues down to the lower floor beside flight 1.
+// Axes: x along the vine wall, from its corner with the back wall; y up from landing 2; z out from the vine wall
+// across the stairwell. Inches. Values marked "inferred" are placeholders until measured; see notes.md.
 import { defineProject, span, box, type Range } from "../../core/model/index.ts";
 
 const T = 23 / 32;   // plywood sold as ¾″
 const B = 0.75;      // 1× pine boards
 
 export const P = {
-  wall: { width: 45.25, height: 165 },   // the vine wall, landing to ceiling
-  landing: { width: 37.5, depth: 35.5 }, // second landing; width runs along the vine wall (inferred), from its left end (inferred)
-  backWall: 102,                         // the stairwell's long wall, for the notes; not modelled yet
-  sideWall: 4.5,                         // inferred: thickness, for drawing only
+  wall: { width: 45.25, height: 165 },   // the vine wall, landing 2 to ceiling
+  landing: { alongVineWall: 35.5, alongBackWall: 37.5 }, // landing 2; orientation inferred from the photos
+  backWall: 102,                         // landing 2 + flight 2 + landing 1, along the back wall
+  wallT: 4.5,                            // inferred: wall thickness, for drawing only
+  stair: { rise: 7.5, tread: 10, treadT: 1.5 },          // inferred: typical rise and run, solid wood treads
+  risers: { flight1: 6, flight2: 4, flight3: 5 },        // inferred from the photos: 6 + 4 down to landing 2, 5 more to the lower floor
   lattice: { slat: 0.25, slatWidth: 1.4375, sheet: [96, 48] as const },
   edgeGap: 0.125,                        // inferred: clearance to each side wall and the ceiling
   rail: { spacing: 48 },                 // inferred: horizontal 1×2 standoff rails, at most this far apart
@@ -42,18 +46,37 @@ export default defineProject({
   },
 
   build(b) {
-    const W = P.wall.width, H = P.wall.height, D = P.landing.depth, LW = P.landing.width, wt = P.sideWall;
-    const x: Range = [P.edgeGap, W - P.edgeGap];                       // trellis and rails stop short of the side walls
+    const W = P.wall.width, H = P.wall.height, LW = P.landing.alongVineWall, wt = P.wallT;
+    const x: Range = [P.edgeGap, W];                                    // from the back-wall corner to the vine wall's open end
     const latT = 2 * P.lattice.slat;
     const zLat: Range = span(B, latT);                                  // lattice sits on the rails, ¾″ off the wall
 
     // ---------- the stairwell (context) ----------
-    b.context({ id: "landing", name: "Second landing", role: "floor", box: box([-wt, LW], [-1, 0], [-wt, D]) });
-    // Past the landing's end the floor drops to the next flight; the vine wall carries on above it.
-    b.context({ id: "ceiling", name: "Ceiling", role: "wall", box: box([-wt, W + wt], [H, H + 1.5], [-wt, D]) });
-    b.context({ id: "vine-wall", name: "Vine wall", role: "wall", box: box([-wt, W + wt], [0, H], [-wt, 0]) });
-    b.context({ id: "wall-left", name: "Left wall", role: "wall", box: box([-wt, 0], [0, H], [0, D]) });
-    b.context({ id: "wall-right", name: "Right wall", role: "wall", box: box([W, W + wt], [0, H], [0, D]) });
+    const S = P.stair, R = P.risers, LD = P.landing.alongBackWall;
+    const f2Tread = Math.round((P.backWall - 2 * LD) / (R.flight2 - 1) * 16) / 16;   // flight 2 fills the back wall between the landings
+    const l1z: Range = [LD + (R.flight2 - 1) * f2Tread, P.backWall];                   // landing 1, same size as landing 2 (inferred)
+    const l1y = R.flight2 * S.rise;
+    const upperY = l1y + R.flight1 * S.rise, lowerY = -R.flight3 * S.rise;
+    const f1End = LW + (R.flight1 - 1) * S.tread, f3End = LW + (R.flight3 - 1) * S.tread;
+    const far = Math.max(f1End, f3End) + 36;                                           // how much of each floor to draw
+    const tread = (id: string, xr: Range, top: number, zr: Range, where: string) =>
+      b.context({ id, name: "Stair tread", where, role: "floor", box: box(xr, [top - S.treadT, top], zr) });
+
+    b.context({ id: "landing", name: "Landing 2", role: "floor", box: box([0, LW], [-S.treadT, 0], [0, LD]) });
+    b.context({ id: "landing-1", name: "Landing 1", role: "floor", box: box([0, LW], [l1y - S.treadT, l1y], l1z) });
+    b.context({ id: "lower-floor", name: "Lower floor", role: "floor", box: box([f3End, far], [lowerY - 1, lowerY], [0, LD]) });
+    b.context({ id: "upper-floor", name: "Upper floor", role: "floor", box: box([f1End, far], [upperY - 1, upperY], [0, P.backWall]) });
+    for (let i = 1; i < R.flight3; i++)                                                // flight 3: down from landing 2 along the vine wall
+      tread(`flight-3-tread-${i}`, span(LW + (i - 1) * S.tread, S.tread), -i * S.rise, [0, LD], `flight 3, step ${i}`);
+    for (let i = 1; i < R.flight2; i++)                                                // flight 2: up from landing 2 along the back wall
+      tread(`flight-2-tread-${i}`, [0, LW], i * S.rise, span(LD + (i - 1) * f2Tread, f2Tread), `flight 2, step ${i}`);
+    for (let i = 1; i < R.flight1; i++)                                                // flight 1: up from landing 1 to the upper floor
+      tread(`flight-1-tread-${i}`, span(LW + (i - 1) * S.tread, S.tread), l1y + i * S.rise, l1z, `flight 1, step ${i}`);
+
+    b.context({ id: "vine-wall", name: "Vine wall", role: "wall", box: box([-wt, W], [lowerY, H], [-wt, 0]) });
+    b.context({ id: "back-wall", name: "Back wall", role: "wall", box: box([-wt, 0], [lowerY, H], [0, P.backWall]) });
+    b.context({ id: "window-wall", name: "Window wall", role: "wall", box: box([-wt, far], [lowerY, H], [P.backWall, P.backWall + wt]) });
+    b.context({ id: "ceiling", name: "Ceiling", role: "wall", box: box([-wt, far], [H, H + 1.5], [-wt, P.backWall + wt]) });
 
     // ---------- planter at the foot of the wall ----------
     const pd = P.planter.depth, ph = P.planter.height;
@@ -125,7 +148,7 @@ export default defineProject({
     b.view({ id: "front", title: "Elevation", kind: "elevation", look: "-z",
       caption: "Looking at the vine wall from the stairwell.",
       dims: [
-        { from: "wall-left.x1", to: "wall-right.x0", offset: -6 },
+        { from: "back-wall.x1", to: "vine-wall.x1", offset: -6 },
         { from: "landing.y1", to: "ceiling.y0", offset: -8 },
         { from: "landing.y1", to: "trellis-lower.y0", offset: W + 4 },
         { from: "trellis-lower.y0", to: "trellis-lower.y1", offset: W + 4 },
@@ -135,6 +158,11 @@ export default defineProject({
       caption: "Cut through the middle, vine wall on the left, stairwell on the right.",
       dims: [{ from: "vine-wall.z1", to: "planter-front.z1", offset: -4 }] });
     b.view({ id: "plan", title: "Plan", kind: "plan", look: "-y", cut: ph / 2,
-      dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: 6 }, { from: "vine-wall.z1", to: "planter-front.z1", offset: 6 }] });
+      dims: [{ from: "back-wall.x1", to: "vine-wall.x1", offset: 6 }, { from: "vine-wall.z1", to: "planter-front.z1", offset: 6 }] });
+    b.view({ id: "stair-plan", title: "Stairwell plan", kind: "plan", look: "-y", cut: H - 10, showContents: true,
+      caption: "From above: landing 2 and the vine wall at the top left, flight 2 down the back wall, landing 1, flight 1 up to the upper floor.",
+      dims: [{ from: "vine-wall.z1", to: "window-wall.z0", offset: -8, text: "{} back wall" }, { from: "landing.z0", to: "landing.z1", offset: -4 }, { from: "landing.x0", to: "landing.x1", offset: -4 }] });
+    b.view({ id: "stair-section", title: "Section through flights 3 and 1", kind: "section", look: "+z", cut: LD / 2,
+      caption: "Cut through flight 3, looking toward flight 1 and the window wall." });
   },
 });

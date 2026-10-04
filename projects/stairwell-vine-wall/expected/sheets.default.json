@@ -21,7 +21,7 @@
             "x": 0,
             "y": 0,
             "l": 96,
-            "w": 45,
+            "w": 45.125,
             "turned": false,
             "needsFinish": true
           }
@@ -40,7 +40,7 @@
             "x": 0,
             "y": 0,
             "l": 52.875,
-            "w": 45,
+            "w": 45.125,
             "turned": false,
             "needsFinish": true
           }
@@ -74,7 +74,7 @@
             "name": "Planter front or back",
             "x": 0,
             "y": 0,
-            "l": 37.25,
+            "l": 35.25,
             "w": 16,
             "turned": false,
             "needsFinish": false
@@ -84,7 +84,7 @@
             "name": "Planter front or back",
             "x": 0,
             "y": 16.125,
-            "l": 37.25,
+            "l": 35.25,
             "w": 16,
             "turned": false,
             "needsFinish": false
@@ -94,7 +94,7 @@
             "name": "Planter bottom",
             "x": 0,
             "y": 32.25,
-            "l": 35.8125,
+            "l": 33.8125,
             "w": 7.5625,
             "turned": false,
             "needsFinish": false
@@ -120,10 +120,7 @@
             "needsFinish": false
           }
         ],
-        "offcuts": [
-          {"x": 37.375, "y": 0, "l": 10.625, "w": 48},
-          {"x": 32.25, "y": 39.9375, "l": 3.5625, "w": 7.5625}
-        ]
+        "offcuts": [{"x": 35.375, "y": 0, "l": 12.625, "w": 48}]
       }
     ],
     "unplaced": [],

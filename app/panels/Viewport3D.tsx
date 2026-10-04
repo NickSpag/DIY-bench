@@ -101,6 +101,14 @@ function sceneEntries(r: Resolved, phase: string, step: string | null): { entrie
   return { entries, centre: ex ? centreOf(ex) : [0, 0, 0], extentBox: ex };
 }
 
+/** Floors are drawn except the lowest, which the grid stands in for (it is drawn at that floor's
+ *  level). Landings, stair treads and the storeys above are drawn. */
+function drawnFloor(p: { kind: string; role?: string }, b: Box, lowest: number): boolean {
+  return p.kind === "context" && p.role === "floor" && b.y[1] > lowest + 1e-6;
+}
+const lowestFloor = (items: { part: { kind: string; role?: string }; box?: Box }[]): number =>
+  Math.min(...items.filter((e) => e.part.kind === "context" && e.part.role === "floor" && e.box).map((e) => (e.box as Box).y[1]));
+
 /** Explode offset of a part: (centre(part) − centre(all built parts)) × k. Context parts do not move. */
 export function explodeOffset(e: { part: ResolvedPart; box: Box }, centre: Vec3, k: number): Vec3 {
   if (e.part.kind === "context" || k === 0) return [0, 0, 0];
@@ -149,7 +157,7 @@ function PartMesh({ e, offset, pal, planes, selected, inStep, section }: {
   const isContext = p.kind === "context";
   const isContents = isContext && p.role === "contents";
   const translucent = e.ghost || isContext || (p.kind === "hardware" && !p.cylinder);
-  const opacity = e.ghost ? 0.22 : isContents ? 0.28 : isContext ? (p.id.startsWith("baseboard") ? 0.55 : p.role === "floor" ? 0.0 : 0.1) : p.kind === "hardware" ? 0.45 : 1;
+  const opacity = e.ghost ? 0.22 : isContents ? 0.28 : isContext ? (p.id.startsWith("baseboard") ? 0.55 : p.role === "floor" ? 0.85 : 0.1) : p.kind === "hardware" ? 0.45 : 1;
   const color = partColor(p, pal);
   const emissive = selected ? pal.select : inStep ? pal.step : "#000000";
   const emissiveIntensity = selected ? 0.55 : inStep ? 0.32 : 0;
@@ -199,12 +207,12 @@ function PartMesh({ e, offset, pal, planes, selected, inStep, section }: {
         clippingPlanes={planes} clipShadows side={translucent ? THREE.DoubleSide : THREE.FrontSide}
         polygonOffset polygonOffsetFactor={1} polygonOffsetUnits={1}
       />
-      {!(isContext && p.role === "floor") && (
+      {(
         <Edges
           threshold={15}
           color={isContext ? pal.wallEdge : selected ? pal.select : pal.edge}
           lineWidth={selected ? 1.6 : 1}
-          transparent opacity={isContext ? 0.35 : e.ghost ? 0.4 : 0.75}
+          transparent opacity={isContext ? (p.role === "floor" ? 0.8 : 0.35) : e.ghost ? 0.4 : 0.75}
           clippingPlanes={planes}
         />
       )}
@@ -240,10 +248,14 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
   // (the front returns and the header) and anything entirely above the built parts (the ceiling).
   const veiled = new Set(r.views.flatMap((v) => v.veil ?? []));
   const builtTop = Math.max(...entries.filter((e) => e.part.kind !== "context").map((e) => e.box.y[1]));
+  const lowest = lowestFloor(entries);
   const shown = entries.filter((e) => {
     if (e.part.kind !== "context") return true;
     if (e.part.role === "contents") return showContents;
-    if (!showRoom || e.part.role === "floor") return false; // the grid stands in for the floor
+    if (!showRoom) return false;
+    // The grid stands in for the lowest floor. Other floors (landings, stair treads, the
+    // storey above or below) are drawn.
+    if (e.part.role === "floor") return drawnFloor(e.part, e.box, lowest);
     return !veiled.has(e.part.id) && e.box.y[0] < builtTop;
   });
   return (
@@ -450,6 +462,7 @@ function Scene() {
   const phase = useWb((s) => s.phase);
   const showRoom = useWb((s) => s.showRoom);
   const boxRef = useRef<Box | null>(null);
+  const groundRef = useRef(0);
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera);
@@ -459,8 +472,13 @@ function Scene() {
   // The extent used for standard views: built parts in the final phase, so views do not jump between phases.
   if (r) {
     const last = r.phases[r.phases.length - 1]?.id;
-    const ex = last ? extent(r.stateAt(last).parts.filter((e) => e.part.kind !== "context" && e.box).map((e) => e.box as Box)) : null;
+    const parts = last ? r.stateAt(last).parts : [];
+    const lowest = lowestFloor(parts);
+    // With the room shown, floors above or below the build (landings, stairs) are framed too.
+    const framed = parts.filter((e) => e.box && (e.part.kind !== "context" || (showRoom && drawnFloor(e.part, e.box, lowest))));
+    const ex = last ? extent(framed.map((e) => e.box as Box)) : null;
     boxRef.current = ex;
+    groundRef.current = Number.isFinite(lowest) ? lowest : 0;
   }
   useEffect(() => {
     scene.background = new THREE.Color(pal.bg);
@@ -507,7 +525,7 @@ function Scene() {
       <directionalLight position={[60, 140, 120]} intensity={1.5} />
       <directionalLight position={[-120, 60, -40]} intensity={0.45} />
       <SceneParts pal={pal} plane={plane} />
-      {showRoom && <gridHelper key={`${pal.grid1}${gridSize}`} args={[gridSize, gridSize / 6, pal.grid1, pal.grid2]} position={[gridCentre[0], 0.01, gridCentre[2]]} raycast={noRaycast} />}
+      {showRoom && <gridHelper key={`${pal.grid1}${gridSize}`} args={[gridSize, gridSize / 6, pal.grid1, pal.grid2]} position={[gridCentre[0], groundRef.current + 0.01, gridCentre[2]]} raycast={noRaycast} />}
       <Tooltip />
       <CameraRig boxRef={boxRef} />
       <GizmoHelper alignment="bottom-right" margin={[62, 62]}>

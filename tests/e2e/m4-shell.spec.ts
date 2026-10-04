@@ -119,7 +119,9 @@ test("same-origin rule: POST /__wb/state from a foreign origin is refused", asyn
   const none = await request.post("/__wb/state", { data: body });
   expect(none.status()).toBe(403);
   const health = await request.get("/__wb/health");
-  expect(await health.json()).toEqual({ ok: true, projects: ["closet-built-in"] });
+  const status = await health.json();
+  expect(status.ok).toBe(true);
+  expect(status.projects).toContain("closet-built-in");
   expect(baseURL).toBeTruthy();
 });
 

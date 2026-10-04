@@ -47,10 +47,10 @@ describe("wb diff --against opt:top=0.75", () => {
 });
 
 test("wb diff against a git ref and against the last good model", () => {
-  const head = wbJson(["diff", "--against", "HEAD"]);
+  const head = wbJson(["diff", "--project", "closet-built-in", "--against", "HEAD"]);
   expect(head.parts.changed).toEqual([]);
-  execFileSync(join(ROOT, "wb"), ["check"], { cwd: ROOT });
-  const lg = wbJson(["diff", "--against", "last-good"]);
+  execFileSync(join(ROOT, "wb"), ["check", "--project", "closet-built-in"], { cwd: ROOT });
+  const lg = wbJson(["diff", "--project", "closet-built-in", "--against", "last-good"]);
   expect(lg.parts).toEqual({ added: [], removed: [], changed: [] });
 });
 
