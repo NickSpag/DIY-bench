@@ -3,7 +3,7 @@
 // explode, standard views, an orthographic toggle and a view cube. The <Canvas> and the camera
 // controls stay mounted across model reloads, so an edit never moves the camera.
 import { Canvas, useThree, type ThreeEvent } from "@react-three/fiber";
-import { CameraControls, Edges, GizmoHelper, GizmoViewcube, Html, Outlines } from "@react-three/drei";
+import { CameraControls, CameraControlsImpl, Edges, GizmoHelper, GizmoViewcube, Html, Outlines } from "@react-three/drei";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import { useWb, type Section } from "../store.ts";
@@ -332,6 +332,19 @@ function CameraRig({ boxRef }: { boxRef: React.MutableRefObject<Box | null> }) {
     return c;
   }, []);
   const fitted = useRef(false);
+  const dom = useThree((s) => s.gl.domElement);
+
+  // ⌘-drag (or Ctrl-drag) pans, like a right-drag. A capturing listener on the canvas runs
+  // before camera-controls' own pointerdown handler, so the left button's action is set per drag.
+  useEffect(() => {
+    const { ACTION } = CameraControlsImpl;
+    const onDown = (e: PointerEvent) => {
+      const cc = controls.current;
+      if (cc) cc.mouseButtons.left = e.metaKey || e.ctrlKey ? ACTION.TRUCK : ACTION.ROTATE;
+    };
+    dom.addEventListener("pointerdown", onDown, { capture: true });
+    return () => dom.removeEventListener("pointerdown", onDown, { capture: true });
+  }, [dom]);
 
   // Switch between perspective and orthographic, keeping the view: same target, same
   // direction, and an orthographic zoom that shows what the perspective camera showed.
@@ -608,7 +621,7 @@ export function Viewport3D() {
         <Scene />
       </Canvas>
       <Toolbar />
-      <div className="vp-hint">drag to orbit · right-drag to pan · scroll to zoom · 1–5 views · F frame</div>
+      <div className="vp-hint">drag to orbit · ⌘-drag or right-drag to pan · scroll to zoom · 1–5 views · F frame</div>
     </div>
   );
 }
