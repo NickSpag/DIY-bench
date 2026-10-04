@@ -5,8 +5,14 @@ description: Start a new DIY-bench project from room measurements. Use when the 
 
 # Start a new DIY-bench project
 
-Work through these steps in order. Ask one group of questions at a time, and wait for the
-answers; never invent a measurement.
+Work through these steps in order. Ask for what the user already has in one go: measurements,
+photos, a sketch, the materials they own. Start the model straight away with what you know, and
+mark everything else as a placeholder (`// inferred`) rather than waiting for every number. Never
+present a guessed measurement as a measured one.
+
+Photos are useful for layout, counts (steps, shelves, studs between marks) and rough
+proportions, but not for exact sizes: read what you can from them, mark it inferred, and say
+which numbers to check with a tape.
 
 ## 1. What and what to call it
 

@@ -188,3 +188,23 @@ b.check("hamper-under-rail", "The rolling hamper rolls out under the frame's top
 
 Plain sentences. Standard woodworking terms (dado, rabbet, nosing, cleat, face frame,
 overlay, inset, kerf, grain). No invented labels.
+
+## 16. Sharing the repo with other sessions
+
+Several Claude Code sessions may work in this checkout at once, usually one per project. They
+share the working tree, the dev server, the viewer and `.diy-bench/state.json`.
+
+- **Check the project in the `[diy-bench]` lines.** The viewer shows one project at a time. If
+  the lines name a project other than yours, the selection belongs to another session: ignore
+  it, and ask which part the user means.
+- **Stage only your own files.** Commit with explicit paths (`git add projects/<id>`, plus any
+  tool files you changed yourself). Never `git add -A`, `git add .` or `git commit -a`: they
+  sweep up another session's unfinished work.
+- **Update only your project's reference files:** `./wb snapshot --update <id>`, never for every
+  project at once. If a tool change alters another project's `expected/` files, say so and
+  update them in the same commit only after reading the diff.
+- **Don't start, stop or restart the dev server** if `./wb status` says it is running; another
+  session is using it. Editing `tools/vite-plugin.ts` restarts it for everyone.
+- **Tool changes affect every project.** Before committing a change to `core/`, `app/` or
+  `tools/`, run `./wb check --all-configs` and `npm test`, not only your own project's checks.
+
