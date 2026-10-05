@@ -1,5 +1,6 @@
 // M8 acceptance: `wb show` drives the open viewer through /__wb/control and its acknowledgement,
-// `wb render` writes a PNG of one panel, and render pages leave the viewer state alone.
+// `wb render` writes a PNG of one panel, render pages leave the viewer state alone, and errors
+// in the viewer reach .diy-bench/errors.json and `wb state`.
 //
 // These tests start their own dev server with WB_DIR pointing at a temporary folder, so its
 // server.json, state.json and the controls it relays never reach the user's dev server or viewer.
@@ -134,6 +135,45 @@ test("wb render --view front writes a PNG at least 1200 px wide whose centre is 
     return seen.size;
   }, png);
   expect(colours).toBeGreaterThan(8);
+});
+
+test("an error in the viewer reaches errors.json and wb state; a render crash shows a message; a reload marks them stale", async ({ page }) => {
+  type Rec = { kind: string; message: string; count: number; stale?: boolean; page: { render: string | null } };
+  const errors = (): Rec[] => {
+    try {
+      return (JSON.parse(readFileSync(join(wbDir, "errors.json"), "utf8")) as { errors: Rec[] }).errors;
+    } catch {
+      return [];
+    }
+  };
+  await openViewer(page);
+  await page.evaluate(() => {
+    setTimeout(() => {
+      throw new Error("e2e: thrown in the page");
+    });
+    for (let i = 0; i < 200; i++) console.error("e2e: the same console error");
+  });
+  await expect.poll(() => errors().map((e) => `${e.kind} ${e.message} ${e.count}`).sort()).toEqual([
+    "console e2e: the same console error 200", "error e2e: thrown in the page 1",
+  ]);
+  expect((await wb(["state"])).stdout).toMatch(/^\[diy-bench\] viewer error: \d+ s ago, uncaught error: e2e: thrown in the page$/m);
+
+  // A component that throws while rendering: the boundary's sentence, not an empty page.
+  await page.evaluate(() => {
+    try {
+      (window as any).__wb.store.setState({ resolved: { project: null } });
+    } catch {
+      // a store subscriber may throw too; the render is what matters here
+    }
+  });
+  await expect(page.getByTestId("crash")).toHaveText(/^The viewer crashed: .+\. Reload to try again\.$/);
+  await expect.poll(() => errors().some((e) => e.kind === "react")).toBe(true);
+
+  await openViewer(page); // a fresh load
+  await expect.poll(() => errors().every((e) => e.stale)).toBe(true);
+  const st = await wb(["state"]);
+  expect(st.stdout).not.toContain("viewer error:");
+  expect(st.stdout).toMatch(/viewer errors: \d+ from before the viewer was last reloaded/);
 });
 
 test("with the dev server stopped, wb show exits 3", async () => {

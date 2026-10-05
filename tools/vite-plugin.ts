@@ -2,6 +2,9 @@
 // - writes .diy-bench/server.json ({ url, pid, startedAt, token }) while the server runs;
 // - POST /__wb/state  (the app; same origin only) → .diy-bench/state.json, written atomically;
 // - GET  /__wb/state  (the CLI and hooks) → the last state, or 404;
+// - POST /__wb/errors (the app; same origin only) → merged into .diy-bench/errors.json, the
+//   latest 50 errors from every page (core/viewer-errors.ts: repeats counted, a fresh load of
+//   the viewer marks earlier pages' errors stale);
 // - POST /__wb/control (the CLI, with the token) → relayed to the open viewers as `wb:control`,
 //   answered { delivered } once one of them acknowledges, or after 2 s;
 // - GET  /__wb/health → { ok, projects }.
@@ -16,6 +19,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { controlProblem, type Control, type ControlAck } from "../core/control.ts";
+import { asErrorsFile, cleanPost, mergeErrors } from "../core/viewer-errors.ts";
 import { stateDir, writeAtomic } from "./files.ts";
 import { listProjectIds } from "./projects.ts";
 
@@ -84,6 +88,7 @@ export function diyBenchPlugin(): Plugin {
       // .diy-bench/, or WB_DIR when a test runs its own server.
       const STATE_FILE = join(stateDir(), "state.json");
       const SERVER_FILE = join(stateDir(), "server.json");
+      const ERRORS_FILE = join(stateDir(), "errors.json");
       const writeServerFile = () => {
         const url = server.resolvedUrls?.local[0]?.replace(/\/$/, "") ?? "";
         writeAtomic(SERVER_FILE, JSON.stringify({ url, pid: process.pid, startedAt: new Date().toISOString(), token }, null, 2) + "\n");
@@ -149,6 +154,28 @@ export function diyBenchPlugin(): Plugin {
               return send(res, 400, { error: "expected a ViewerState with version 1" });
             }
             writeAtomic(STATE_FILE, JSON.stringify(state, null, 2) + "\n");
+            return send(res, 204);
+          }
+          if (path === "/__wb/errors" && req.method === "POST") {
+            const origin = req.headers.origin;
+            if (!origin || !ownOrigins(server).has(origin)) return send(res, 403, { error: "foreign origin" });
+            let body: unknown;
+            try {
+              body = JSON.parse(await readBody(req));
+            } catch {
+              return send(res, 400, { error: "invalid JSON" });
+            }
+            const post = cleanPost(body);
+            if (!post) return send(res, 400, { error: "expected { page: { id, … }, errors: [...] }" });
+            let file = null;
+            try {
+              file = asErrorsFile(JSON.parse(readFileSync(ERRORS_FILE, "utf8")));
+            } catch {
+              // none yet, or unreadable: start again
+            }
+            // A clean load with nothing on record writes nothing, so errors.json appears with the first error.
+            if (!file && post.errors.length === 0) return send(res, 204);
+            writeAtomic(ERRORS_FILE, JSON.stringify(mergeErrors(file, post), null, 2) + "\n");
             return send(res, 204);
           }
           if (path === "/__wb/control" && req.method === "POST") {

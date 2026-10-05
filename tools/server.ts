@@ -1,15 +1,18 @@
 // Finding the running dev server and the viewer's state from Node (the CLI): .diy-bench/server.json
-// is written by tools/vite-plugin.ts while the server runs; .diy-bench/state.json by the app.
+// is written by tools/vite-plugin.ts while the server runs; .diy-bench/state.json and
+// .diy-bench/errors.json by the app, through it.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ViewerState } from "../core/viewer.ts";
 import { EXPIRED_MS } from "../core/viewer-text.ts";
+import { asErrorsFile, type ErrorsFile } from "../core/viewer-errors.ts";
 import { stateDir } from "./files.ts";
 
 export type ServerInfo = { url: string; pid: number; startedAt: string; token: string };
 
 export const serverFile = (): string => join(stateDir(), "server.json");
 export const stateFile = (): string => join(stateDir(), "state.json");
+export const errorsFile = (): string => join(stateDir(), "errors.json");
 
 function pidAlive(pid: number): boolean {
   try {
@@ -50,6 +53,15 @@ export function readState(now = Date.now()): ViewerState | null {
     const at = Date.parse(s.updatedAt);
     if (!Number.isFinite(at) || now - at > EXPIRED_MS) return null;
     return s;
+  } catch {
+    return null;
+  }
+}
+
+/** The viewer's recent errors, or null when there are none on record. */
+export function readErrors(): ErrorsFile | null {
+  try {
+    return asErrorsFile(JSON.parse(readFileSync(errorsFile(), "utf8")));
   } catch {
     return null;
   }

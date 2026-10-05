@@ -8,6 +8,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import * as THREE from "three";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { useWb, type Section } from "../store.ts";
+import { reportViewerError } from "../errors.ts";
 import { css } from "../theme.ts";
 import { useFmt } from "../fmt.ts";
 import { fmtPartSize } from "../../core/query.ts";
@@ -768,6 +769,14 @@ export function Viewport3D() {
         gl={{ localClippingEnabled: true, preserveDrawingBuffer: true, antialias: true }}
         frameloop="demand"
         dpr={[1, 2]}
+        onCreated={({ gl }) => {
+          // A lost context leaves the 3D view blank; three.js asks for it back, and the agent hears of it.
+          // Unmounting the canvas also loses the context, on purpose and after it has left the page.
+          gl.domElement.addEventListener("webglcontextlost", () => {
+            if (!gl.domElement.isConnected) return;
+            reportViewerError("webgl", "the 3D view lost its WebGL context (the GPU process restarted, or too many 3D views are open); reload if it stays blank");
+          });
+        }}
         onPointerMissed={(e) => {
           if (e.type === "click" && !e.shiftKey) useWb.getState().clearSelection();
         }}

@@ -100,6 +100,35 @@ describe("selection hook (UserPromptSubmit)", () => {
     expect(run(HOOK, "not json at all", { CLAUDE_PROJECT_DIR: dir })).toMatchObject({ code: 0, stdout: "" });
   });
 
+  test("viewer errors: one or two lines, each error once per session, render pages and reloaded pages left out", () => {
+    writeState(state({ selected: [] }));
+    const page = (id: string, render: string | null = null) => ({ id, loadedAt: ago(600_000), url: "http://127.0.0.1:5180/", render });
+    const rec = (message: string, at: number, over: Record<string, unknown> = {}) =>
+      ({ kind: "error", message, project: "closet-built-in", page: page("p1"), firstAt: ago(at), lastAt: ago(at), count: 1, ...over });
+    writeFileSync(join(dir, ".diy-bench", "errors.json"), JSON.stringify({ version: 1, updatedAt: ago(0), errors: [
+      rec("TypeError: x is undefined", 30_000, { kind: "react", count: 3, source: "app/panels/Viewport3D.tsx:120" }),
+      rec("render page only", 20_000, { page: page("r1", "front") }),
+      rec("before the reload", 40_000, { stale: true }),
+      rec("long ago", 3600_000),
+    ] }));
+    const session = { session_id: "s-1", cwd: dir };
+    const first = hook(session).stdout.trim().split("\n");
+    expect(first).toEqual([
+      "[diy-bench] closet-built-in · top=1 · phase p2 · view: front elevation (state 40 s old)",
+      "[diy-bench] selected: nothing",
+      "[diy-bench] viewer error: 30 s ago, 3 times, render crash: TypeError: x is undefined · app/panels/Viewport3D.tsx:120",
+    ]);
+    // The same session's next prompt has heard of it; another session has not.
+    expect(hook(session).stdout).not.toContain("viewer error");
+    expect(hook({ session_id: "s-2", cwd: dir }).stdout).toContain("[diy-bench] viewer error: 30 s ago");
+    // Errors are printed even when no viewer state was ever written (the page never loaded).
+    rmSync(join(dir, ".diy-bench", "state.json"));
+    expect(hook({ cwd: dir }).stdout).toBe("[diy-bench] viewer error: 30 s ago, 3 times, render crash: TypeError: x is undefined · app/panels/Viewport3D.tsx:120\n");
+    writeFileSync(join(dir, ".diy-bench", "errors.json"), "{ not json");
+    expect(hook({ cwd: dir })).toMatchObject({ code: 0, stdout: "", stderr: "" });
+    rmSync(join(dir, ".diy-bench", "errors.json"));
+  });
+
   test("it runs in under 300 ms", () => {
     writeState(state());
     hook(); // warm the file cache

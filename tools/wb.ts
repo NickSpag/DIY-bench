@@ -27,8 +27,9 @@ import { lastGoodFile, writeLastGood } from "./last-good.ts";
 import { stateDir } from "./files.ts";
 import { affectedProjects } from "./hook-scope.ts";
 import { checkForHook } from "./check-hook.ts";
-import { findServer, readState } from "./server.ts";
+import { findServer, readErrors, readState } from "./server.ts";
 import { viewerContextLines } from "../core/viewer-text.ts";
+import { errorListLines } from "../core/viewer-errors.ts";
 import { CONTROL_TABS, type Control } from "../core/control.ts";
 import { KEBAB } from "../core/model/builder.ts";
 
@@ -46,8 +47,8 @@ commands:
   diff [--against a]           what changes: a = opt:key=value[,…] (switching options), a git ref, or last-good (default)
   snapshot [--update]          compare (or rewrite) projects/<id>/expected/ (all projects unless --project)
   new <id> --template t [--title "…"]   start a project from a template: blank, shelf, cabinet, closet
-  status                       the dev server and what the viewer shows
-  state                        what the viewer shows and has selected (exit 3 if no viewer in 24 h)
+  status                       the dev server, what the viewer shows and its recent errors
+  state                        what the viewer shows and has selected, and its recent errors (exit 3 if no viewer in 24 h)
   show [--select ids] [--phase p] [--step s] [--opt k=v] [--view id] [--tab t] [--frame]
                                point the user's open viewer at something (exit 3 if none is open)
   render --view target [--phase p] [--step s] [--opt k=v] [--select ids] [--size 1600x1000] [--out f.png]
@@ -405,24 +406,33 @@ const NO_SERVER = "the dev server is not running; start it with `npm run dev` (o
 async function cmdStatus(flags: Flags): Promise<number> {
   const server = await findServer();
   const state = readState();
+  const errors = readErrors();
   if (flags.json) {
-    out(JSON.stringify({ server: server ? { url: server.url, pid: server.pid, startedAt: server.startedAt } : null, state }, null, 2));
+    out(JSON.stringify({ server: server ? { url: server.url, pid: server.pid, startedAt: server.startedAt } : null, state, errors: errors?.errors ?? [] }, null, 2));
     return 0;
   }
   const lines = [server ? `dev server: ${server.url} (pid ${server.pid}, started ${server.startedAt})` : "dev server: not running (npm run dev)"];
   if (state) lines.push(...viewerContextLines(state, Date.now(), { ignoreAge: true }).map((l) => l.replace(/^\[diy-bench\] /, "viewer: ")));
   else lines.push("viewer: no state in the last 24 h; open the app to see a project");
+  lines.push(...errorListLines(errors).map((l) => l.replace(/^\[diy-bench\] /, "")));
   out(lines.join("\n"));
   return 0;
 }
 
+// The viewer's errors are printed even without a state: a page that never loaded writes none.
 async function cmdState(flags: Flags): Promise<number> {
   const state = readState();
+  const errors = readErrors();
+  if (flags.json) {
+    if (state || errors) out(JSON.stringify(state ? { ...state, errors: errors?.errors ?? [] } : { errors: errors?.errors ?? [] }, null, 2));
+  } else {
+    const lines = [...(state ? viewerContextLines(state, Date.now(), { ignoreAge: true }) : []), ...errorListLines(errors)];
+    if (lines.length) out(lines.join("\n"));
+  }
   if (!state) {
     process.stderr.write("wb: the viewer has not written state in the last 24 h; open the app (./wb status)\n");
     return 3;
   }
-  out(flags.json ? JSON.stringify(state, null, 2) : viewerContextLines(state, Date.now(), { ignoreAge: true }).join("\n"));
   return 0;
 }
 

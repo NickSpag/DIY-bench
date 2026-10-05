@@ -77,6 +77,11 @@ delete or loosen a failing check to make the hook pass; tell the user it fails a
   `--opt k=v`, `--frame`. It exits 3 when no viewer is open.
 - `./wb state` prints what the viewer shows and has selected; `./wb status` also says
   whether the dev server is running.
+- Errors in the viewer (uncaught exceptions, scripts that fail to load, render crashes, a lost
+  WebGL context) are kept in `.diy-bench/errors.json`. `./wb state` and `./wb status` list them,
+  and a new one arrives with your next prompt as a `[diy-bench] viewer error:` line. When the
+  user says the viewer is blank or gray, read these before asking them to open DevTools.
+  Reloading the viewer marks older errors stale.
 
 ## 9. Materials, stock and cost
 

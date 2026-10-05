@@ -164,6 +164,12 @@ input[type="range"] { accent-color: var(--dim); width: 84px; }
 .errorbar .where { font-family: var(--f-mono); font-size: 0.8rem; }
 .errorbar .last { color: var(--ink-soft); font-size: 0.8rem; margin-left: auto; }
 
+/* The viewer crashed (components/CrashBoundary.tsx, errors.ts): one sentence in place of the app. */
+.crash {
+  margin: 24px; padding: 12px 16px; max-width: 60rem; background: var(--err-soft); border-left: 3px solid var(--err);
+  color: var(--ink); font-size: 0.95rem; word-break: break-word;
+}
+
 /* ---------- workspace: three panes, two, or one ---------- */
 .workspace { display: grid; min-height: 0; min-width: 0; height: 100%; position: relative; }
 .workspace.mode-3 {

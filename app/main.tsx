@@ -1,5 +1,7 @@
 // Entry point. The store is imported first and the loader second (section 9.9): the store
-// lives for the whole page, the loader re-runs on every project edit.
+// lives for the whole page, the loader re-runs on every project edit. errors.ts comes before
+// both; index.html also loads it on its own, so it runs even when this file's imports fail.
+import { reactRootOptions } from "./errors.ts";
 import "./theme.css";
 import { useWb, type SideTab } from "./store.ts";
 import { readUrl } from "./url-read.ts";
@@ -7,6 +9,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App.tsx";
 import { installTheme } from "./theme.ts";
 import { RenderView, renderSelection, renderTarget } from "./render.tsx";
+import { CrashBoundary } from "./components/CrashBoundary.tsx";
 
 // Counts full page loads in this tab. HMR never re-runs this module, so it stays 1 across edits.
 let count = 1;
@@ -42,4 +45,10 @@ if (!renderTarget) {
 }
 installTheme();
 
-createRoot(document.getElementById("root") as HTMLElement).render(renderTarget ? <RenderView target={renderTarget} /> : <App />);
+// A render page that crashes tells `wb render` at once, rather than leaving it to time out.
+const onRenderCrash = (text: string) => {
+  if (renderTarget) window.__wbRender = { target: renderTarget, ready: false, error: text };
+};
+createRoot(document.getElementById("root") as HTMLElement, reactRootOptions).render(
+  <CrashBoundary onCrash={onRenderCrash}>{renderTarget ? <RenderView target={renderTarget} /> : <App />}</CrashBoundary>,
+);
