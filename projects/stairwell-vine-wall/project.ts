@@ -258,9 +258,14 @@ export default defineProject({
       ] });
     b.view({ id: "section", title: "Section", kind: "section", look: "+x", cut: W / 2,
       caption: "Cut through the middle, vine wall on the left, stairwell on the right.",
-      dims: [{ from: "vine-wall.z1", to: "planter-front.z1", offset: -4 }] });
+      dims: [   // how far the planter comes out into landing 2, and the landing left in front of it, just above the planter
+        { from: "vine-wall.z1", to: "planter-front.z1", offset: py[1] + 10 },
+        { from: "planter-front.z1", to: "landing.z1", offset: py[1] + 10, text: "{} clear" },
+      ] });
     b.view({ id: "plan", title: "Plan", kind: "plan", look: "-y", cut: py[0] + 4,
-      dims: [{ from: "back-wall.x1", to: "vine-wall.x1", offset: 6 }, { from: "vine-wall.z1", to: "planter-front.z1", offset: 6 }] });
+      dims: [{ from: "back-wall.x1", to: "vine-wall.x1", offset: 6 },
+        { from: "vine-wall.z1", to: "planter-front.z1", offset: -wt - 6 },   // outside the back wall, clear of the planter
+        { from: "planter-front.z1", to: "landing.z1", offset: -wt - 6, text: "{} clear" }] });
     b.view({ id: "stair-plan", title: "Stairwell plan", kind: "plan", look: "-y", cut: H - 10, showContents: true,
       caption: "From above: landing 2 and the vine wall at the top left, flight 2 down the back wall, landing 1, flight 1 up to the upper floor.",
       dims: [{ from: "vine-wall.z1", to: "window-wall.z0", offset: -8, text: "{} back wall" }, { from: "landing.z0", to: "landing.z1", offset: -4 }, { from: "landing.x0", to: "landing.x1", offset: -4 }] });
