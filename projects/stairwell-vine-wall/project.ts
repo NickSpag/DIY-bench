@@ -250,9 +250,11 @@ export default defineProject({
       dims: [
         { from: "back-wall.x1", to: "vine-wall.x1", offset: -6 },
         { from: "landing.y1", to: "ceiling.y0", offset: -8 },
-        { from: "landing.y1", to: "trellis-lower.y0", offset: W + 7 },
-        { from: "trellis-lower.y0", to: "trellis-lower.y1", offset: W + 7 },
-        { from: "trellis-upper.y0", to: "trellis-upper.y1", offset: W + 7 },
+        { from: "landing.y1", to: "planter-back.y0", offset: W + 8 },              // clear under the planter
+        { from: "planter-back.y0", to: "planter-back.y1", offset: W + 8 },         // the planter's own height
+        { from: "landing.y1", to: "trellis-lower.y0", offset: W + 16 },
+        { from: "trellis-lower.y0", to: "trellis-lower.y1", offset: W + 16 },
+        { from: "trellis-upper.y0", to: "trellis-upper.y1", offset: W + 16 },
       ] });
     b.view({ id: "section", title: "Section", kind: "section", look: "+x", cut: W / 2,
       caption: "Cut through the middle, vine wall on the left, stairwell on the right.",
