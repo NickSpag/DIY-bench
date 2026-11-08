@@ -396,10 +396,10 @@
     {
       "id": "rack-raised",
       "kind": "context",
-      "name": "Rack, raised (height not measured)",
+      "name": "Rack, raised (height estimated)",
       "role": "space",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [12, 60], "y": [86.75, 96.875], "z": [2, 50]}},
+      "boxes": {"p1": {"x": [12, 60], "y": [91.875, 96.875], "z": [2, 50]}},
       "src": "projects/ceiling-storage/project.ts:259:7"
     },
     {
@@ -495,17 +495,10 @@
   ],
   "checks": [
     {"id": "beams-inside-alcove", "pass": true, "severity": "error"},
-    {"id": "rack-raised-clears-doors", "pass": false, "severity": "warning"},
+    {"id": "rack-raised-clears-doors", "pass": true, "severity": "warning"},
     {"id": "beam-strength", "pass": true, "severity": "error"},
     {"id": "back-door-swing-clear", "pass": true, "severity": "error"},
     {"id": "left-door-swing-clear", "pass": true, "severity": "error"}
   ],
-  "issues": [
-    {
-      "severity": "warning",
-      "code": "check:rack-raised-clears-doors",
-      "message": "The raised rack clears the tops of both doors (rack's raised height not measured yet: it may hang at most 11.125″ below the top of its rails (rails at 97.875″, left door 86.75″ tall))",
-      "src": "projects/ceiling-storage/project.ts:255:7"
-    }
-  ]
+  "issues": []
 }

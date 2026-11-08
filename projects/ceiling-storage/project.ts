@@ -31,7 +31,7 @@ export const P = {
   rack: {
     platform: 48,
     rail: { length: 48, spacing: 48, width: 2, thickness: 1 }, // spacing is centre to centre; inferred: spacing to be checked, width "2ish", thickness a guess
-    raisedDrop: null as number | null, // rail top to the platform's underside when fully raised: not measured yet
+    raisedDrop: 6 as number | null, // inferred: rail top to the platform's underside when fully raised; the rack ships in a box 5½″ thick
     capacity: 250, weight: 47,
   },
   angle: { leg: 2, t: 0.125 }, // steel angle, 2″ × 2″ × ⅛″, for the "on steel angles" option
@@ -255,8 +255,8 @@ export default defineProject({
     b.check("rack-raised-clears-doors", "The raised rack clears the tops of both doors", rackBottom !== null && rackBottom >= doorTop,
       rackBottom === null
         ? `rack's raised height not measured yet: it may hang at most ${budget}″ below the top of its rails (rails at ${railY[1]}″, left door ${doorTop}″ tall)`
-        : `platform underside ${rackBottom}″ off the floor; left door ${doorTop}″ tall`);
-    b.context({ id: "rack-raised", name: "Rack, raised (height not measured)", role: "space",
+        : `estimated platform underside ${rackBottom}″ off the floor, left door ${doorTop}″ tall: ${Math.round((rackBottom - doorTop) * 1000) / 1000}″ to spare; the rack may hang up to ${budget}″ below the top of its rails`);
+    b.context({ id: "rack-raised", name: "Rack, raised (height estimated)", role: "space",
       box: box(railX, [rackBottom ?? doorTop, railY[0]], [D / 2 - R.platform / 2, D / 2 + R.platform / 2]) });
 
     // Beam strength: each beam carries half the rack and its full load, spread along the 48″ rail, over the

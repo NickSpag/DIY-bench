@@ -78,6 +78,7 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 | Orientation | Back wall (with the exit doorway) at the far end of the 52″ depth, alcove open toward the room | "52″ deep looking at the exit door" |
 | Wall left of the alcove | about 30″ | "30 inches or so", for the drawing only |
 | Left door measurements | taken to the outside edge of the casing | gives a 33¾″ opening, about right for a door with its jamb |
+| Rack's raised height | 6″ from the top of the rails to the platform's underside | the rack ships in a box 5½″ thick; the steel-and-2×2 beam allows 9⅛″ |
 | Rail spacing | 48″ centre to centre | "about 48 inches apart", to be checked |
 | Rail width and thickness | 2″ × 1″ | "2ish inches"; thickness a guess |
 | Rail screws or bolts | 4 per rail | until the holes are counted |
@@ -119,3 +120,4 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
   rack's raised height is known).
 - 2026-11-08: Default beam: a 2×2 wrapped in a 72″ steel angle, rail screwed up through the angle (user's design).
   The ripped-beam choice is gone.
+- 2026-11-08: Rack's raised height estimated at 6″ from its 5½″-thick shipping box, leaving about 3″ over the left door.
