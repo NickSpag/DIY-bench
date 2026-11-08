@@ -41,25 +41,25 @@ bending stress and sag for a doubled 2×4 and both are well inside the limits fo
 
 The beams are a choice (the "Beams" option); the default is the user's design:
 
-- **2×2 wood with a steel angle along the bottom** (default). A 2″ × 2″ (actual) wood beam with a 2″ × 2″ × ⅛″
-  solid steel angle, 72″ long, wrapped around its bottom outer corner and screwed on through both legs every 8″.
-  The rail screws up through the angle's flat leg into the wood, centred under the beam. The beam is 2⅛″ deep,
-  so the tops of the rails are 95⅞″ off the floor and the raised rack may hang 9⅛″ below them. The steel does
-  three-quarters of the work: at full load the wood sees about 330 psi, the steel about 9,900 psi (21,600
-  allowed), and the pair sags about 5/32″ (3/16″ allowed, worked out as if the whole load hung at mid-span).
-  Nothing sits between the rails, where the rack's lifting parts move.
+- **Ripped 2×4 with a steel angle along the bottom** (default). A 2×4 ripped to 2″, on edge (1½″ × 2″), with a
+  2″ × 2″ × ⅛″ solid steel angle, 72″ long, wrapped around its bottom outer corner and screwed on through both
+  legs every 8″. The rail screws up through the angle's flat leg into the wood, centred under the beam. The beam
+  is 2⅛″ deep, so the tops of the rails are 95⅞″ off the floor and the raised rack may hang 9⅛″ below them. The
+  steel does four-fifths of the work: at full load the wood sees about 350 psi, the steel about 10,500 psi
+  (21,600 allowed), and the pair sags about 5/32″ (3/16″ allowed, worked out as if the whole load hung at
+  mid-span). Nothing sits between the rails, where the rack's lifting parts move.
 - **Doubled 2×4s, rail underneath.** Simplest, 3½″ deep: the raised rack may hang 7¾″.
 - **Doubled 2×4s, rail hung beside the beam** from a 48″ angle. Rails highest (97⅞″, 11⅛″ for the rack), but
   the beams sit just inside the rails, where the rack's lifting parts may hit them.
 
-With the steel-and-2×2 beams, the posts are 2×4s ripped to 2⅛″ to match the beam, 1½″ × 2⅛″. A post carries
-about 75 lb with the rack evenly loaded, and at worst about 170 lb (contents piled at one end, plus the frame).
-A 96″ post only 1½″ thick is too slender on its own (length over thickness 64; the limit for wood columns is
-50), so each post is screwed to the wall at the top, middle and bottom, no more than 32″ apart. Braced like that
-it holds about 630 lb, nearly four times the worst case (the `post-strength` rule). Across its 2⅛″ width the
-post is braced only top and bottom, at a slenderness of 45.
+With the steel-angle beams, the posts are 2×4s ripped to 2″, the depth of the beam and its angle front to back:
+1½″ × 2″. A post carries about 75 lb with the rack evenly loaded, and at worst about 170 lb (contents piled at
+one end, plus the frame). A 96″ post only 1½″ thick is too slender on its own (length over thickness 64; the
+limit for wood columns is 50), so each post is screwed to the wall at the top, middle and bottom, no more than
+32″ apart. Braced like that it holds about 530 lb, three times the worst case (the `post-strength` rule).
+Across its 2″ width the post is braced only top and bottom, at a slenderness of 48.
 
-The beams can no longer be ripped shallower: the steel-and-2×2 beam gains more than ripping did.
+The beams can no longer be ripped shallower: the steel-angle beam gains more than ripping did.
 
 With the third choice the rails hang from steel angles: a 2″ × 2″ × ⅛″ angle, 48″ long, lag-screwed
 to each beam's outer face with its flat leg flush with the beam top, and the rail bolted up under the flat leg.
@@ -78,6 +78,14 @@ With full-depth beams the tops of the rails are 94½″ off the floor. The left 
 swing, so the rack may hang at most 7¾″ below the tops of its rails when fully raised. The
 `rack-raised-clears-doors` rule warns until that height is measured.
 
+## Lumber on hand
+
+The user has five straight, premium 2×4s: two at 52″, one at 68″, one at 88″ and one at 120″. The shopping list
+cuts from them first: the 120″ gives one post, the 88″ one beam, and the two 52″ boards the two ties. Four 8 ft
+2×4s are still to buy, for three posts and the other beam; no other split needs fewer, since only the 120″ board
+is long enough for a 96″ post. The 68″ board is spare. The posts come out at 95⅞″, so an 8 ft (96″) board
+leaves only ⅛″: measure the ceiling at each corner first, and buy 10 ft boards for any corner over 98⅝″.
+
 ## Assumptions
 
 | Value | Assumed | Why |
@@ -85,12 +93,11 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 | Orientation | Back wall (with the exit doorway) at the far end of the 52″ depth, alcove open toward the room | "52″ deep looking at the exit door" |
 | Wall left of the alcove | about 30″ | "30 inches or so", for the drawing only |
 | Left door measurements | taken to the outside edge of the casing | gives a 33¾″ opening, about right for a door with its jamb |
-| Rack's raised height | 6″ from the top of the rails to the platform's underside | the rack ships in a box 5½″ thick; the steel-and-2×2 beam allows 9⅛″ |
+| Rack's raised height | 6″ from the top of the rails to the platform's underside | the rack ships in a box 5½″ thick; the steel-angle beam allows 9⅛″ |
 | Rail spacing | 48″ centre to centre | "about 48 inches apart", to be checked |
 | Rail width and thickness | 2″ × 1″ | "2ish inches"; thickness a guess |
 | Rail screws or bolts | 4 per rail | until the holes are counted |
 | Angle lag screws | 7 per angle (every 8″) | a common spacing |
-| 2×2 size | 2″ × 2″ actual | "2×2 (exact)"; a store-bought 2×2 is 1½″ × 1½″ |
 | Angle screws | every 8″ on both legs | a common spacing |
 | Post bracing | screwed to the wall every 32″ or closer | top, middle and bottom of a 96″ post |
 | Gap above the frame | ½″ | so the frame can be stood up under the ceiling |
@@ -130,3 +137,5 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
   The ripped-beam choice is gone.
 - 2026-11-08: Rack's raised height estimated at 6″ from its 5½″-thick shipping box, leaving about 3″ over the left door.
 - 2026-11-08: Posts ripped to 2⅛″ to match the steel-and-2×2 beams, screwed to the wall at top, middle and bottom.
+- 2026-11-08: The steel-angle beams use 2×4s ripped to 2″ instead of a 2″ × 2″, so the user's own 2×4s can supply
+  them; posts ripped to 2″ to match. The user's five 2×4s are used before anything is bought.

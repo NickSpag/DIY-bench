@@ -5,14 +5,14 @@
       "phase": "p1",
       "cutPhase": "p1",
       "material": "2x4-ripped",
-      "materialName": "2×4 ripped to 2⅛″ wide",
+      "materialName": "2×4 ripped narrower",
       "kind": "board",
       "name": "Post",
       "qty": 4,
       "ids": ["post-back-left", "post-back-right", "post-front-left", "post-front-right"],
       "where": ["back left", "back right", "front left", "front right"],
-      "finished": {"l": 95.875, "w": 2.125, "t": 1.5},
-      "cut": {"l": 95.875, "w": 2.125, "t": 1.5},
+      "finished": {"l": 95.875, "w": 2, "t": 1.5},
+      "cut": {"l": 95.875, "w": 2, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame"],
       "notes": [
@@ -23,15 +23,15 @@
       "type": "part",
       "phase": "p1",
       "cutPhase": "p1",
-      "material": "2x2",
-      "materialName": "2×2 wood, 2″ × 2″ actual",
+      "material": "2x4-ripped",
+      "materialName": "2×4 ripped narrower",
       "kind": "board",
       "name": "Beam",
       "qty": 2,
       "ids": ["beam-back", "beam-front"],
       "where": ["back", "front"],
-      "finished": {"l": 72, "w": 2, "t": 2},
-      "cut": {"l": 72, "w": 2, "t": 2},
+      "finished": {"l": 72, "w": 2, "t": 1.5},
+      "cut": {"l": 72, "w": 2, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame", "cut to fit"],
       "notes": []
@@ -40,25 +40,22 @@
       "type": "part",
       "phase": "p1",
       "cutPhase": "p1",
-      "material": "2x2",
-      "materialName": "2×2 wood, 2″ × 2″ actual",
+      "material": "2x4-ripped",
+      "materialName": "2×4 ripped narrower",
       "kind": "board",
       "name": "Tie",
       "qty": 2,
       "ids": ["tie-left", "tie-right"],
       "where": ["left", "right"],
-      "finished": {"l": 46, "w": 2, "t": 2},
-      "cut": {"l": 46, "w": 2, "t": 2},
+      "finished": {"l": 46.5, "w": 2, "t": 1.5},
+      "cut": {"l": 46.5, "w": 2, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame"],
       "notes": []
     }
   ],
   "strips": [],
-  "boards": [
-    {"material": "2x4-ripped", "name": "2×4 ripped to 2⅛″ wide", "pieces": 4, "totalLength": 383.5},
-    {"material": "2x2", "name": "2×2 wood, 2″ × 2″ actual", "pieces": 4, "totalLength": 236}
-  ],
+  "boards": [{"material": "2x4-ripped", "name": "2×4 ripped narrower", "pieces": 8, "totalLength": 620.5}],
   "hardware": [
     {
       "item": "rack",
@@ -111,7 +108,7 @@
       "qty": 36,
       "ids": ["angle-screws"],
       "notes": [],
-      "spec": "Steel angle to the 2×2, every 8″ on both legs, staggered"
+      "spec": "Steel angle to the wood, every 8″ on both legs, staggered"
     },
     {
       "item": "wall-screws",

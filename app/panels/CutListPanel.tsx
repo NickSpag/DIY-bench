@@ -138,7 +138,10 @@ export function CutListPanel() {
         ))}
         {shopping.boards.map((b) => (
           <tr key={`b:${b.material}`}><td>{b.name}</td><td className="q">{f.L(b.totalLength, true)}</td>
-            <td className="n">{b.suggested.length ? b.suggested.map((s) => `${s.count} × ${f.L(s.length, true)}`).join(", ") : `${b.pieces} pieces`}</td></tr>
+            <td className="n">{[
+              ...b.fromOwned.map((o) => `your ${f.L(o.length, true)} → ${o.cuts.map((c) => f.L(c, true)).join(" + ")}`),
+              b.suggested.length ? `buy ${b.suggested.map((s) => `${s.count} × ${f.L(s.length, true)}`).join(", ")}` : b.fromOwned.length ? "nothing to buy" : `${b.pieces} pieces`,
+            ].join("; ")}</td></tr>
         ))}
         {shopping.banding.map((b) => (
           <tr key={`bd:${b.banding}`}><td>{b.name}</td><td className="q">{f.L(b.withWaste, true)}</td><td className="n">with 10% waste</td></tr>

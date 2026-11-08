@@ -41,6 +41,7 @@ export type BoardMaterial = {
   nominal?: string; // "1×4"
   finish: Finish;
   stockLengths?: number[]; // e.g. [96, 120], for the shopping list
+  owned?: number[]; // lengths of boards the user already has, e.g. [52, 52, 120]; cut from before anything is bought
   kerf?: number; // saw kerf between pieces cut from one board, default 0.125 in, 3 mm
   oversize?: number; // added to length and width of every cut size, default 0
 };

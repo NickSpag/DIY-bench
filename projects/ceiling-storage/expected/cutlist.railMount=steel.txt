@@ -1,13 +1,11 @@
 CEILING STORAGE · CUT LIST (in) · railMount=steel
 
 PHASE 1 · BUILD
-2×4 ripped to 2⅛″ wide
-  4 × Post  —  95⅞ × 2⅛ × 1½  [basement storage frame]
+2×4 ripped narrower
+  4 × Post  —  95⅞ × 2 × 1½  [basement storage frame]
       Screw to the wall at the top, middle and bottom (no more than 32″ apart) so the post cannot bow and the frame cannot rack.
-
-2×2 wood, 2″ × 2″ actual
-  2 × Beam (back; front)  —  72 × 2 × 2  [basement storage frame; cut to fit]
-  2 × Tie (left; right)  —  46 × 2 × 2  [basement storage frame]
+  2 × Beam (back; front)  —  72 × 2 × 1½  [basement storage frame; cut to fit]
+  2 × Tie (left; right)  —  46½ × 2 × 1½  [basement storage frame]
 
 Hardware
   1 × KOKORACKER 4×4 ft ceiling storage lift  —  Already bought
@@ -15,9 +13,8 @@ Hardware
   8 × Lag screws for the rails, 5/16″ × 2½″, with washers  —  Or the bolts that come with the rack, if they are long enough to bite 2″ into the beams
   1 set × Structural wood screws, 3″ (e.g. GRK or Spax)
   2 × Steel angle, 2″ × 2″ × ⅛″, 72″ long, solid (not punched)  —  Cut to fit wall to wall; drill holes where needed
-  36 × Wood screws, #10 × 1¼″, pan head  —  Steel angle to the 2×2, every 8″ on both legs, staggered
+  36 × Wood screws, #10 × 1¼″, pan head  —  Steel angle to the wood, every 8″ on both legs, staggered
   1 set × Self-drilling screws for steel studs, #10 × 2½″  —  Post to wall stud, to keep the frame from racking
 
 BOARD TOTALS
-  2×4 ripped to 2⅛″ wide: 4 pieces, 383½ in all
-  2×2 wood, 2″ × 2″ actual: 4 pieces, 236 in all
+  2×4 ripped narrower: 8 pieces, 620½ in all

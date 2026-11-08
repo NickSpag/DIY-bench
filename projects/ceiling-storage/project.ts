@@ -41,7 +41,8 @@ export const P = {
   spf: { fb: 875 * 1.5, e: 1_400_000, fc: 1150 * 1.15, eMin: 510_000 },
   postBrace: 32,   // inferred: posts screwed to the wall at the top, middle and bottom, so no more than this between
   steel: { fb: 21_600, e: 29_000_000 },
-  wood2x2: 2, // inferred: "2×2 (exact)"; a store-bought 2×2 is 1½″ × 1½″
+  beamWood: { w: 1.5, d: 2 }, // the wood in the steel-angle beam: a 2×4 ripped to 2″, on edge
+  owned2x4: [52, 52, 68, 88, 120], // the user's straight, premium 2×4s, cut from before anything is bought
 };
 
 export default defineProject({
@@ -52,7 +53,7 @@ export default defineProject({
     railMount: {
       label: "Beams",
       choices: {
-        steel: "2×2 wood with a steel angle along the bottom (2⅛″ deep), rail underneath",
+        steel: "2×4 ripped to 2″ with a steel angle along the bottom (2⅛″ deep), rail underneath",
         under: "Doubled 2×4s (3½″ deep), rail underneath",
         angle: "Doubled 2×4s, rail hung from a steel angle beside the beam",
       },
@@ -61,9 +62,10 @@ export default defineProject({
   },
   phases: [{ id: "p1", title: "Build" }],
   materials: {
-    "2x4": { type: "board", name: "2×4 (spruce-pine-fir, No. 2 or better)", nominal: "2×4", thickness: P.lumber.t, width: P.lumber.w, finish: "none", stockLengths: [96] },
-    "2x4-ripped": { type: "board", name: "2×4 ripped to 2⅛″ wide", nominal: "2×4", thickness: P.lumber.t, finish: "none", stockLengths: [96] },
-    "2x2": { type: "board", name: "2×2 wood, 2″ × 2″ actual", thickness: 2, width: 2, finish: "none", stockLengths: [96] },
+    "2x4": { type: "board", name: "2×4 (spruce-pine-fir, No. 2 or better)", nominal: "2×4", thickness: P.lumber.t, width: P.lumber.w, finish: "none",
+      stockLengths: [96], owned: P.owned2x4 },
+    "2x4-ripped": { type: "board", name: "2×4 ripped narrower", nominal: "2×4", thickness: P.lumber.t, finish: "none",
+      stockLengths: [96], owned: P.owned2x4 },
   },
   banding: {},
   hardware: {
@@ -73,7 +75,7 @@ export default defineProject({
     "frame-screws": { name: "Structural wood screws, 3″ (e.g. GRK or Spax)", unit: "set" },
     angle: { name: "Steel angle, 2″ × 2″ × ⅛″, 48″ long", unit: "each", spec: "Plain or galvanized; holes drilled to suit the rail" },
     "angle-72": { name: "Steel angle, 2″ × 2″ × ⅛″, 72″ long, solid (not punched)", unit: "each", spec: "Cut to fit wall to wall; drill holes where needed" },
-    "angle-screws": { name: "Wood screws, #10 × 1¼″, pan head", unit: "each", spec: "Steel angle to the 2×2, every 8″ on both legs, staggered" },
+    "angle-screws": { name: "Wood screws, #10 × 1¼″, pan head", unit: "each", spec: "Steel angle to the wood, every 8″ on both legs, staggered" },
     "angle-lags": { name: "Lag screws, 5/16″ × 2½″, with washers", unit: "each", spec: "Through the angle's upright leg into the beam" },
     "angle-bolts": { name: "Machine bolts, ¼″ × 1″, with nuts and washers", unit: "each", spec: "Rail to the angle's flat leg, heads on top" },
     "wall-screws": { name: "Self-drilling screws for steel studs, #10 × 2½″", unit: "set", spec: "Post to wall stud, to keep the frame from racking" },
@@ -147,30 +149,31 @@ export default defineProject({
     const top = H - P.ceilingGap;              // the frame stops short of the ceiling
     // The rack sits centred front to back; side +1 is the back beam (its outer face toward the back wall).
     const railZ = [D / 2 - R.rail.spacing / 2, D / 2 + R.rail.spacing / 2];
-    const W2 = P.wood2x2;
-    const woodD = steel ? W2 : L.w;            // depth of the wood beam
+    const BW = P.beamWood;
+    const woodD = steel ? BW.d : L.w;          // depth of the wood beam
     const beamY: Range = [top - woodD, top];
     const beams = [
       { id: "beam-back", where: "back", c: railZ[0], side: 1 },
       { id: "beam-front", where: "front", c: railZ[1], side: -1 },
     ].map((bm) => {
-      if (steel) return { ...bm, z: [bm.c - W2 / 2, bm.c + W2 / 2] as Range, face: 0 };
+      if (steel) return { ...bm, z: [bm.c - BW.w / 2, bm.c + BW.w / 2] as Range, face: 0 };
       if (!onAngle) return { ...bm, z: [bm.c - T, bm.c + T] as Range, face: 0 };
       // Rail hung beside the beam: the beam sits just inside the rail, the angle bolted to its outer face.
       const face = bm.c + bm.side * (R.rail.width / 2 + A.t);
       return { ...bm, z: (bm.side > 0 ? [face, face + 2 * T] : [face - 2 * T, face]) as Range, face };
     });
     // Everything at the beam, steel included, front to back.
-    const extent = beams.map((bm) => (steel ? [bm.z[0] - (bm.side > 0 ? A.t : 0), bm.z[1] + (bm.side < 0 ? A.t : 0)] : bm.z) as Range);
+    const extent = beams.map((bm) => (!steel ? bm.z
+      : bm.side > 0 ? [bm.z[0] - A.t, Math.max(bm.z[1], bm.z[0] - A.t + A.leg)] : [Math.min(bm.z[0], bm.z[1] + A.t - A.leg), bm.z[1] + A.t]) as Range);
     const beamCheck = Math.min(extent[0][0], D - extent[1][1]);
     b.check("beams-inside-alcove", "Both beams fit inside the alcove front to back", beamCheck >= 0,
       `rails ${R.rail.spacing}″ apart; beams ${extent[0][0]}″ from the back wall and ${D - extent[1][1]}″ from the open side`, "error");
 
     // Posts: one in each corner, under the ends of the beams, 3½″ front to back. The back-left one stands
     // in front of the left door's casing, which reaches to 2½″ from the back wall. With the steel angle under
-    // the 2×2, the posts stop under the angle.
+    // the beam, the posts stop under the angle.
     const postTop = steel ? beamY[0] - A.t : beamY[0];
-    // With the steel-and-2×2 beams the posts are ripped to the beam's 2⅛″ depth; otherwise full 2×4s.
+    // With the steel-angle beams the posts are ripped to the beam's depth front to back, 2″; otherwise full 2×4s.
     const postD = steel ? extent[0][1] - extent[0][0] : L.w;
     const bz0 = Math.max(0, extent[0][1] - postD), fz1 = Math.min(D, extent[1][0] + postD);
     const postZ = { back: [bz0, bz0 + postD] as Range, front: [fz1 - postD, fz1] as Range };
@@ -188,13 +191,13 @@ export default defineProject({
       built.push(po.id);
     }
 
-    // Beams, spanning wall to wall and resting on the posts: a 2×2 wrapped in a steel angle, or two 2×4s on edge.
+    // Beams, spanning wall to wall and resting on the posts: a ripped 2×4 wrapped in a steel angle, or two 2×4s on edge.
     const restsOn = (bmId: string) => posts.filter((po) => po.beam === bmId)
       .map((po) => ({ to: po.id, by: "rests-on" as const, note: steel ? "screwed down through the angle into the post" : "screwed down into the post" }));
     const beamIds: Record<string, { inner: string }> = {};
     for (const bm of beams) {
       if (steel) {
-        b.board({ id: bm.id, name: "Beam", where: bm.where, material: "2x2", phase: "p1", step: "p1-beams",
+        b.board({ id: bm.id, name: "Beam", where: bm.where, material: "2x4-ripped", phase: "p1", step: "p1-beams",
           box: box([0, W], beamY, bm.z), grain: "x", fitToSite: true, exposure: "limited", exposureNote: "basement storage frame",
           joins: [...restsOn(bm.id), { to: `angle-${bm.where}`, by: "screws", note: "#10 screws every 8″ through both legs of the angle" }] });
         built.push(bm.id);
@@ -222,9 +225,9 @@ export default defineProject({
     }
 
     // Ties: between the beams at each side, closing the top into a rectangle.
-    const tieT = steel ? W2 : T;
+    const tieT = T;
     for (const [id, where, x] of [["tie-left", "left", 0], ["tie-right", "right", W - tieT]] as const) {
-      b.board({ id, name: "Tie", where, material: steel ? "2x2" : "2x4", phase: "p1", step: "p1-beams",
+      b.board({ id, name: "Tie", where, material: steel ? "2x4-ripped" : "2x4", phase: "p1", step: "p1-beams",
         box: box([x, x + tieT], beamY, [beams[0].z[1], beams[1].z[0]]), grain: "z", exposure: "limited", exposureNote: "basement storage frame",
         joins: [{ to: beamIds["beam-back"].inner, by: "screws", note: "two 3″ screws through the beam into the end" },
           { to: beamIds["beam-front"].inner, by: "screws", note: "two 3″ screws through the beam into the end" }] });
@@ -276,8 +279,8 @@ export default defineProject({
       const I = (leg * t ** 3) / 12 + A1 * (yc - y1) ** 2 + (t * (leg - t) ** 3) / 12 + A2 * (y2 - yc) ** 2;
       return { I, S: I / Math.max(yc, leg - yc) };
     };
-    const wood = steel ? rect(W2, W2) : rect(2 * T, L.w);
-    const members = [{ name: steel ? "2×2" : "doubled 2×4", E: P.spf.e, fb: P.spf.fb, ...wood },
+    const wood = steel ? rect(BW.w, BW.d) : rect(2 * T, L.w);
+    const members = [{ name: steel ? "ripped 2×4" : "doubled 2×4", E: P.spf.e, fb: P.spf.fb, ...wood },
       ...(steel ? [{ name: "steel angle", E: P.steel.e, fb: P.steel.fb, ...angleProps(A.leg, A.t) }] : [])];
     const EI = members.reduce((sum, m) => sum + m.E * m.I, 0);
     const stresses = members.map((m) => ({ ...m, stress: Math.round((M * (m.E * m.I / EI)) / m.S) }));
@@ -306,11 +309,11 @@ export default defineProject({
     } else {
       b.hardware({ id: "rail-screws", name: "Rail screws", item: "rail-screws", qty: 8, phase: "p1", step: "p1-rails" }); // inferred: 4 per rail until the holes are counted
     }
-    if (steel) b.hardware({ id: "angle-screws", name: "Angle-to-2×2 screws", item: "angle-screws", qty: 36, phase: "p1", step: "p1-rails" }); // inferred: every 8″ on both legs of both 72″ angles
+    if (steel) b.hardware({ id: "angle-screws", name: "Angle-to-beam screws", item: "angle-screws", qty: 36, phase: "p1", step: "p1-rails" }); // inferred: every 8″ on both legs of both 72″ angles
 
     b.step({ id: "p1-rails", phase: "p1", title: "Rails onto the beams",
       text: steel
-        ? "On the floor, fit each steel angle around the bottom outer corner of a 2×2 and screw it on through both legs every 8″, staggered. Drill the angle's flat leg to match the rail's holes, then lag-screw the rail up through the angle into the 2×2, centred along it. Mounting the rails now saves working overhead."
+        ? "On the floor, rip the beam 2×4s to 2″, fit each steel angle around the bottom outer corner of one and screw it on through both legs every 8″, staggered. Drill the angle's flat leg to match the rail's holes, then lag-screw the rail up through the angle into the wood, centred along it. Mounting the rails now saves working overhead."
         : onAngle
         ? "On the floor, screw each pair of 2×4s into a beam. Drill each steel angle's flat leg to match the rail's holes, bolt the rail under it (bolt heads on top, since the ceiling leaves only ½″), then lag-screw the angle's upright leg to the beam's outer face with the flat leg flush with the beam top, centred along it. Mounting the rails now saves working overhead."
         : "On the floor, screw each pair of 2×4s into a beam, then screw one rack rail to the underside of each beam, centred along it and down its middle. Mounting the rails now saves working overhead." });

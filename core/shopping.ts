@@ -11,6 +11,7 @@ export type ShoppingList = {
   boards: {
     material: string; name: string; pieces: number; totalLength: number;
     suggested: { length: number; count: number }[]; // first-fit into stockLengths; empty when the material has none
+    fromOwned: { length: number; cuts: number[] }[]; // owned boards used, longest first, with the pieces cut from each
   }[];
   hardware: { item: string; name: string; qty: number; unit: string; spec?: string; notes: string[]; cost?: number }[];
   banding: { banding: string; name: string; length: number; withWaste: number }[]; // +10 %
@@ -27,6 +28,28 @@ export const BANDING_WASTE = 0.1;
  */
 export function suggestBoards(pieces: number[], stockLengths: number[], kerf: number): { length: number; count: number }[] {
   if (stockLengths.length === 0 || pieces.length === 0) return [];
+  return buyBoards(pieces, stockLengths, kerf);
+}
+
+/**
+ * Pieces cut from boards the user owns first: longest piece first, each into the owned board with the
+ * least room left that still holds it (best fit). What no owned board holds is left over to buy.
+ */
+export function useOwnedBoards(pieces: number[], owned: number[], kerf: number): { fromOwned: { length: number; cuts: number[] }[]; rest: number[] } {
+  const boards = [...owned].sort((a, b) => b - a).map((length) => ({ length, used: 0, cuts: [] as number[] }));
+  const rest: number[] = [];
+  for (const p of [...pieces].sort((a, b) => b - a)) {
+    const room = (bd: { length: number; used: number; cuts: number[] }) => bd.length - bd.used - (bd.cuts.length ? kerf : 0);
+    const fit = boards.filter((bd) => room(bd) >= p - 1e-9).sort((a, b) => room(a) - room(b))[0];
+    if (!fit) { rest.push(p); continue; }
+    fit.used += (fit.cuts.length ? kerf : 0) + p;
+    fit.cuts.push(p);
+  }
+  return { fromOwned: boards.filter((bd) => bd.cuts.length).map(({ length, cuts }) => ({ length, cuts })), rest };
+}
+
+function buyBoards(pieces: number[], stockLengths: number[], kerf: number): { length: number; count: number }[] {
+  if (pieces.length === 0) return [];
   const lengths = [...stockLengths].sort((a, b) => a - b);
   const longest = lengths[lengths.length - 1];
   const boards: { cap: number; used: number }[] = [];
@@ -86,7 +109,8 @@ export function shoppingList(r: Resolved, opts: { phase?: string; nestings?: Nes
     const pieces = cl.rows.filter((row) => row.type === "part" && row.material === b.material).flatMap((row) => Array(row.qty).fill(row.cut.l) as number[]);
     const stockLengths = m.type === "board" ? m.stockLengths ?? [] : [];
     const kerf = (m.type === "board" ? m.kerf : undefined) ?? defaultKerf(r.project.units);
-    return { material: b.material, name: b.name, pieces: b.pieces, totalLength: b.totalLength, suggested: suggestBoards(pieces, stockLengths, kerf) };
+    const { fromOwned, rest } = useOwnedBoards(pieces, m.type === "board" ? m.owned ?? [] : [], kerf);
+    return { material: b.material, name: b.name, pieces: b.pieces, totalLength: b.totalLength, suggested: suggestBoards(rest, stockLengths, kerf), fromOwned };
   });
 
   const hardware: ShoppingList["hardware"] = cl.hardware.map((h) => {

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import closet from "../../projects/closet-built-in/project.ts";
 import { evaluate } from "../../core/evaluate.ts";
-import { shoppingList, suggestBoards } from "../../core/shopping.ts";
+import { shoppingList, suggestBoards, useOwnedBoards } from "../../core/shopping.ts";
 import { box } from "../../core/model/index.ts";
 import { mini, SHEET } from "./helpers.ts";
 
@@ -34,6 +34,14 @@ test("suggestBoards: first-fit decreasing, then each board shortened to the shor
   expect(suggestBoards([10, 10, 10], [96], 0.125)).toEqual([{ length: 96, count: 1 }]);
   expect(suggestBoards([130], [96, 120], 0.125)).toEqual([{ length: 130, count: 1 }]);
   expect(suggestBoards([], [96], 0.125)).toEqual([]);
+});
+
+test("useOwnedBoards: longest piece first, each into the owned board with the least room that holds it", () => {
+  const { fromOwned, rest } = useOwnedBoards([95.875, 95.875, 72, 72, 46, 46], [52, 52, 68, 88, 120], 0.125);
+  expect(fromOwned).toEqual([{ length: 120, cuts: [95.875] }, { length: 88, cuts: [72] }, { length: 52, cuts: [46] }, { length: 52, cuts: [46] }]);
+  expect(rest).toEqual([95.875, 72]);
+  expect(useOwnedBoards([40, 40], [81], 0.125).fromOwned).toEqual([{ length: 81, cuts: [40, 40] }]);
+  expect(useOwnedBoards([40, 40], [80], 0.125).rest).toEqual([40]);
 });
 
 test("costs add up when stock and hardware have them", () => {

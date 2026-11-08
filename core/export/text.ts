@@ -99,6 +99,7 @@ export function shoppingText(r: Resolved, s: ShoppingList): string {
     for (const b of s.boards) {
       const sug = b.suggested.length ? `; buy ${b.suggested.map((x) => `${x.count} @ ${L(x.length)}`).join(", ")}` : "";
       out.push(`  ${b.name}: ${b.pieces} piece${b.pieces === 1 ? "" : "s"}, ${L(b.totalLength)} in all${sug}`);
+      for (const o of b.fromOwned) out.push(`    from your ${L(o.length)} board: ${o.cuts.map((c) => L(c)).join(" + ")}`);
     }
   }
   if (s.hardware.length) {
