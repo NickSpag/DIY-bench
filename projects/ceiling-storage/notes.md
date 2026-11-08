@@ -54,7 +54,7 @@ The beams are a choice (the "Beams" option); the default is the user's design:
 
 The beams can no longer be ripped shallower: the steel-and-2×2 beam gains more than ripping did.
 
-The rails can instead hang from steel angles (the "Rails" option): a 2″ × 2″ × ⅛″ angle, 48″ long, lag-screwed
+With the third choice the rails hang from steel angles: a 2″ × 2″ × ⅛″ angle, 48″ long, lag-screwed
 to each beam's outer face with its flat leg flush with the beam top, and the rail bolted up under the flat leg.
 The beams move just inside the rails. The tops of the rails go from 94½″ to 97⅞″ off the floor, so the raised
 rack may hang 11⅛″ below them instead of 7¾″. With the angles, ripping the beams gains nothing, because the
