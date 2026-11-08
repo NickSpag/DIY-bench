@@ -52,7 +52,9 @@ function columnsFor(mode: Mode, c: Collapsed): string | undefined {
     if (!c["3d"] && !c.draw && !c.side) return undefined;
     const flex: PaneId = !c.draw ? "draw" : !c["3d"] ? "3d" : "side";      // the open pane that takes up the slack
     const col = (id: PaneId, w: string) => (c[id] ? STRIP : id === flex ? "minmax(0, 1fr)" : w);
-    const s1 = c["3d"] || c.draw ? "0px" : "6px", s2 = c.draw || c.side ? "0px" : "6px";
+    // A splitter shows wherever it has an open pane on each side of it. With the drawings collapsed, the 3D view
+    // and the side panel are split by the second one, beside the drawings' strip.
+    const s1 = c["3d"] || c.draw ? "0px" : "6px", s2 = c.side || (c.draw && c["3d"]) ? "0px" : "6px";
     return `${col("3d", "var(--w3d, 38%)")} ${s1} ${col("draw", "minmax(0, 1fr)")} ${s2} ${col("side", "var(--wside, 30%)")}`;
   }
   if (mode === 2 && c["3d"]) return `${STRIP} 0px minmax(0, 1fr)`;
@@ -188,7 +190,7 @@ function Workspace() {
         <DrawingPanel />
       </section>
       <Splitter className="split-2"
-        onMove={(x) => setSizes((s) => ({ ...s, wside: Math.min(Math.max(0.15, 1 - fraction(x)), 0.98 - (s.w3d ?? 0.36) - 0.15) }))}
+        onMove={(x) => setSizes((s) => ({ ...s, wside: Math.min(Math.max(0.15, 1 - fraction(x)), collapsed.draw ? 0.8 : 0.98 - (s.w3d ?? 0.36) - 0.15) }))}
         onDone={save} />
       <section className="pane pane-side" data-off={!showSidePane} data-collapsed={collapsed.side} aria-label="Side panel">
         <PaneToggle id="side" collapsed={collapsed.side} can={can("side")} toggle={toggle} />

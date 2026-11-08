@@ -154,6 +154,23 @@ test("layout: three panes when wide, two under 1100 px, one tabbed pane under 70
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
+test("layout: with the drawings collapsed, the splitter between the 3D view and the side panel still resizes them", async ({ page }) => {
+  await openApp(page);
+  await page.getByRole("button", { name: "Collapse the drawings" }).click();
+  const split = page.locator(".split-2");
+  const box = await split.boundingBox();
+  expect(box?.width ?? 0).toBeGreaterThan(0);
+  const before = (await page.locator(".pane-side").boundingBox())!.width;
+  const x = box!.x + box!.width / 2, y = box!.y + box!.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x - 150, y, { steps: 5 });
+  await page.mouse.up();
+  const after = (await page.locator(".pane-side").boundingBox())!.width;
+  expect(after - before).toBeGreaterThan(100);
+  await page.evaluate(() => localStorage.removeItem("wb-panes"));
+});
+
 test("layout: drawings collapsed in the wide layout stay hidden in the two-pane one until asked for", async ({ page }) => {
   await openApp(page);
   await page.getByRole("button", { name: "Collapse the drawings" }).click();
