@@ -10,7 +10,7 @@
       "role": "floor",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-30, 77], "y": [-1, 0], "z": [-5, 88]}},
-      "src": "projects/ceiling-storage/project.ts:93:7"
+      "src": "projects/ceiling-storage/project.ts:95:7"
     },
     {
       "id": "ceiling",
@@ -19,7 +19,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 77], "y": [98.5, 100], "z": [-5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:94:7"
+      "src": "projects/ceiling-storage/project.ts:96:7"
     },
     {
       "id": "wall-back-left",
@@ -29,7 +29,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 27.5], "y": [0, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:95:7"
+      "src": "projects/ceiling-storage/project.ts:97:7"
     },
     {
       "id": "wall-back-right",
@@ -39,7 +39,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [65.5, 77], "y": [0, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:96:7"
+      "src": "projects/ceiling-storage/project.ts:98:7"
     },
     {
       "id": "door-header",
@@ -48,7 +48,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [27.5, 65.5], "y": [83, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:97:7"
+      "src": "projects/ceiling-storage/project.ts:99:7"
     },
     {
       "id": "wall-left-back",
@@ -58,7 +58,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [0, 6.25]}},
-      "src": "projects/ceiling-storage/project.ts:98:7"
+      "src": "projects/ceiling-storage/project.ts:100:7"
     },
     {
       "id": "wall-left",
@@ -68,7 +68,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [40, 52]}},
-      "src": "projects/ceiling-storage/project.ts:99:7"
+      "src": "projects/ceiling-storage/project.ts:101:7"
     },
     {
       "id": "wall-left-header",
@@ -77,7 +77,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [86.75, 98.5], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:100:7"
+      "src": "projects/ceiling-storage/project.ts:102:7"
     },
     {
       "id": "back-door-frame-l",
@@ -87,7 +87,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [27.5, 28.5], "y": [0, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:104:7"
+      "src": "projects/ceiling-storage/project.ts:106:7"
     },
     {
       "id": "back-door-frame-r",
@@ -97,7 +97,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [64.5, 65.5], "y": [0, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:105:7"
+      "src": "projects/ceiling-storage/project.ts:107:7"
     },
     {
       "id": "back-door-frame-head",
@@ -107,7 +107,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [82, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:106:7"
+      "src": "projects/ceiling-storage/project.ts:108:7"
     },
     {
       "id": "back-door",
@@ -116,7 +116,7 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:107:7"
+      "src": "projects/ceiling-storage/project.ts:109:7"
     },
     {
       "id": "left-door-casing-back",
@@ -126,7 +126,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [2.5, 6.25]}},
-      "src": "projects/ceiling-storage/project.ts:111:7"
+      "src": "projects/ceiling-storage/project.ts:113:7"
     },
     {
       "id": "left-door-casing-front",
@@ -136,7 +136,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [40, 43.75]}},
-      "src": "projects/ceiling-storage/project.ts:112:7"
+      "src": "projects/ceiling-storage/project.ts:114:7"
     },
     {
       "id": "left-door-casing-head",
@@ -146,7 +146,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [86.75, 90.5], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:113:7"
+      "src": "projects/ceiling-storage/project.ts:115:7"
     },
     {
       "id": "left-door",
@@ -155,7 +155,7 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-1.75, 0], "y": [0, 86.75], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:114:7"
+      "src": "projects/ceiling-storage/project.ts:116:7"
     },
     {
       "id": "wall-left-return",
@@ -164,7 +164,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-30, -5], "y": [0, 98.5], "z": [47, 52]}},
-      "src": "projects/ceiling-storage/project.ts:115:7"
+      "src": "projects/ceiling-storage/project.ts:117:7"
     },
     {
       "id": "wall-right",
@@ -173,7 +173,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [72, 77], "y": [0, 98.5], "z": [0, 80]}},
-      "src": "projects/ceiling-storage/project.ts:116:7"
+      "src": "projects/ceiling-storage/project.ts:118:7"
     },
     {
       "id": "back-door-swing",
@@ -182,7 +182,7 @@
       "role": "space",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-3, 33]}},
-      "src": "projects/ceiling-storage/project.ts:126:9"
+      "src": "projects/ceiling-storage/project.ts:128:9"
     },
     {
       "id": "left-door-swing",
@@ -191,59 +191,59 @@
       "role": "space",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 33.75], "y": [0, 86.75], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:126:9"
+      "src": "projects/ceiling-storage/project.ts:128:9"
     },
     {
       "id": "post-back-left",
       "kind": "board",
       "name": "Post",
       "where": "back left",
-      "material": "2x4",
+      "material": "2x4-ripped",
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.875, 3.5, 1.5],
-      "boxes": {"p1": {"x": [0.75, 2.25], "y": [0, 95.875], "z": [0, 3.5]}},
-      "src": "projects/ceiling-storage/project.ts:181:9"
+      "size": [95.875, 2.125, 1.5],
+      "boxes": {"p1": {"x": [0.75, 2.25], "y": [0, 95.875], "z": [0.875, 3]}},
+      "src": "projects/ceiling-storage/project.ts:185:9"
     },
     {
       "id": "post-back-right",
       "kind": "board",
       "name": "Post",
       "where": "back right",
-      "material": "2x4",
+      "material": "2x4-ripped",
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.875, 3.5, 1.5],
-      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.875], "z": [0, 3.5]}},
-      "src": "projects/ceiling-storage/project.ts:181:9"
+      "size": [95.875, 2.125, 1.5],
+      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.875], "z": [0.875, 3]}},
+      "src": "projects/ceiling-storage/project.ts:185:9"
     },
     {
       "id": "post-front-left",
       "kind": "board",
       "name": "Post",
       "where": "front left",
-      "material": "2x4",
+      "material": "2x4-ripped",
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.875, 3.5, 1.5],
-      "boxes": {"p1": {"x": [0, 1.5], "y": [0, 95.875], "z": [48.5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:181:9"
+      "size": [95.875, 2.125, 1.5],
+      "boxes": {"p1": {"x": [0, 1.5], "y": [0, 95.875], "z": [49, 51.125]}},
+      "src": "projects/ceiling-storage/project.ts:185:9"
     },
     {
       "id": "post-front-right",
       "kind": "board",
       "name": "Post",
       "where": "front right",
-      "material": "2x4",
+      "material": "2x4-ripped",
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.875, 3.5, 1.5],
-      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.875], "z": [48.5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:181:9"
+      "size": [95.875, 2.125, 1.5],
+      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.875], "z": [49, 51.125]}},
+      "src": "projects/ceiling-storage/project.ts:185:9"
     },
     {
       "id": "beam-back",
@@ -256,7 +256,7 @@
       "cutPhase": "p1",
       "size": [72, 2, 2],
       "boxes": {"p1": {"x": [0, 72], "y": [96, 98], "z": [1, 3]}},
-      "src": "projects/ceiling-storage/project.ts:193:11"
+      "src": "projects/ceiling-storage/project.ts:197:11"
     },
     {
       "id": "angle-back",
@@ -268,7 +268,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 72], "y": [95.875, 96], "z": [0.875, 2.875]}},
-      "src": "projects/ceiling-storage/project.ts:202:11"
+      "src": "projects/ceiling-storage/project.ts:206:11"
     },
     {
       "id": "angle-back-upright",
@@ -280,7 +280,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 72], "y": [96, 97.875], "z": [0.875, 1]}},
-      "src": "projects/ceiling-storage/project.ts:204:11"
+      "src": "projects/ceiling-storage/project.ts:208:11"
     },
     {
       "id": "beam-front",
@@ -293,7 +293,7 @@
       "cutPhase": "p1",
       "size": [72, 2, 2],
       "boxes": {"p1": {"x": [0, 72], "y": [96, 98], "z": [49, 51]}},
-      "src": "projects/ceiling-storage/project.ts:193:11"
+      "src": "projects/ceiling-storage/project.ts:197:11"
     },
     {
       "id": "angle-front",
@@ -305,7 +305,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 72], "y": [95.875, 96], "z": [49.125, 51.125]}},
-      "src": "projects/ceiling-storage/project.ts:202:11"
+      "src": "projects/ceiling-storage/project.ts:206:11"
     },
     {
       "id": "angle-front-upright",
@@ -317,7 +317,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 72], "y": [96, 97.875], "z": [51, 51.125]}},
-      "src": "projects/ceiling-storage/project.ts:204:11"
+      "src": "projects/ceiling-storage/project.ts:208:11"
     },
     {
       "id": "tie-left",
@@ -330,7 +330,7 @@
       "cutPhase": "p1",
       "size": [46, 2, 2],
       "boxes": {"p1": {"x": [0, 2], "y": [96, 98], "z": [3, 49]}},
-      "src": "projects/ceiling-storage/project.ts:223:9"
+      "src": "projects/ceiling-storage/project.ts:227:9"
     },
     {
       "id": "tie-right",
@@ -343,7 +343,7 @@
       "cutPhase": "p1",
       "size": [46, 2, 2],
       "boxes": {"p1": {"x": [70, 72], "y": [96, 98], "z": [3, 49]}},
-      "src": "projects/ceiling-storage/project.ts:223:9"
+      "src": "projects/ceiling-storage/project.ts:227:9"
     },
     {
       "id": "rail-back",
@@ -354,7 +354,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [12, 60], "y": [94.875, 95.875], "z": [1, 3]}},
-      "src": "projects/ceiling-storage/project.ts:237:9"
+      "src": "projects/ceiling-storage/project.ts:241:9"
     },
     {
       "id": "rail-front",
@@ -365,7 +365,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [12, 60], "y": [94.875, 95.875], "z": [49, 51]}},
-      "src": "projects/ceiling-storage/project.ts:237:9"
+      "src": "projects/ceiling-storage/project.ts:241:9"
     },
     {
       "id": "rack-raised",
@@ -374,7 +374,7 @@
       "role": "space",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [12, 60], "y": [89.875, 94.875], "z": [2, 50]}},
-      "src": "projects/ceiling-storage/project.ts:259:7"
+      "src": "projects/ceiling-storage/project.ts:263:7"
     },
     {
       "id": "rack",
@@ -385,7 +385,7 @@
       "step": "p1-beams",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:284:7"
+      "src": "projects/ceiling-storage/project.ts:300:7"
     },
     {
       "id": "frame-screws",
@@ -396,7 +396,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:285:7"
+      "src": "projects/ceiling-storage/project.ts:301:7"
     },
     {
       "id": "wall-screws",
@@ -407,7 +407,7 @@
       "step": "p1-posts",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:286:7"
+      "src": "projects/ceiling-storage/project.ts:302:7"
     },
     {
       "id": "rail-screws",
@@ -418,7 +418,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:291:9"
+      "src": "projects/ceiling-storage/project.ts:307:9"
     },
     {
       "id": "angle-screws",
@@ -429,7 +429,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:293:18"
+      "src": "projects/ceiling-storage/project.ts:309:18"
     }
   ],
   "steps": [
@@ -463,6 +463,7 @@
     {"id": "beams-inside-alcove", "pass": true, "severity": "error"},
     {"id": "rack-raised-clears-doors", "pass": true, "severity": "warning"},
     {"id": "beam-strength", "pass": true, "severity": "error"},
+    {"id": "post-strength", "pass": true, "severity": "error"},
     {"id": "back-door-swing-clear", "pass": true, "severity": "error"},
     {"id": "left-door-swing-clear", "pass": true, "severity": "error"}
   ],

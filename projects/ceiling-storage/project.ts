@@ -38,7 +38,8 @@ export const P = {
   ceilingGap: 0.5, // inferred: the frame stops short of the ceiling so it stands up without jamming
   lumber: { t: 1.5, w: 3.5 }, // 2×4
   // Values for the beam rule: spruce-pine-fir No. 2 (2×4 size factor included) and mild steel (A36, 0.6 × yield).
-  spf: { fb: 875 * 1.5, e: 1_400_000 },
+  spf: { fb: 875 * 1.5, e: 1_400_000, fc: 1150 * 1.15, eMin: 510_000 },
+  postBrace: 32,   // inferred: posts screwed to the wall at the top, middle and bottom, so no more than this between
   steel: { fb: 21_600, e: 29_000_000 },
   wood2x2: 2, // inferred: "2×2 (exact)"; a store-bought 2×2 is 1½″ × 1½″
 };
@@ -61,6 +62,7 @@ export default defineProject({
   phases: [{ id: "p1", title: "Build" }],
   materials: {
     "2x4": { type: "board", name: "2×4 (spruce-pine-fir, No. 2 or better)", nominal: "2×4", thickness: P.lumber.t, width: P.lumber.w, finish: "none", stockLengths: [96] },
+    "2x4-ripped": { type: "board", name: "2×4 ripped to 2⅛″ wide", nominal: "2×4", thickness: P.lumber.t, finish: "none", stockLengths: [96] },
     "2x2": { type: "board", name: "2×2 wood, 2″ × 2″ actual", thickness: 2, width: 2, finish: "none", stockLengths: [96] },
   },
   banding: {},
@@ -168,8 +170,10 @@ export default defineProject({
     // in front of the left door's casing, which reaches to 2½″ from the back wall. With the steel angle under
     // the 2×2, the posts stop under the angle.
     const postTop = steel ? beamY[0] - A.t : beamY[0];
-    const bz0 = Math.max(0, extent[0][1] - L.w), fz1 = Math.min(D, extent[1][0] + L.w);
-    const postZ = { back: [bz0, bz0 + L.w] as Range, front: [fz1 - L.w, fz1] as Range };
+    // With the steel-and-2×2 beams the posts are ripped to the beam's 2⅛″ depth; otherwise full 2×4s.
+    const postD = steel ? extent[0][1] - extent[0][0] : L.w;
+    const bz0 = Math.max(0, extent[0][1] - postD), fz1 = Math.min(D, extent[1][0] + postD);
+    const postZ = { back: [bz0, bz0 + postD] as Range, front: [fz1 - postD, fz1] as Range };
     const clearOfCasing = (z: Range) => (z[0] < casing.z[1] && z[1] > casing.z[0] ? LD.casingProud : 0);
     const posts = [
       { id: "post-back-left", where: "back left", x: clearOfCasing(postZ.back), z: postZ.back, beam: "beam-back" },
@@ -178,9 +182,9 @@ export default defineProject({
       { id: "post-front-right", where: "front right", x: W - T, z: postZ.front, beam: "beam-front" },
     ];
     for (const po of posts) {
-      b.board({ id: po.id, name: "Post", where: po.where, material: "2x4", phase: "p1", step: "p1-posts",
+      b.board({ id: po.id, name: "Post", where: po.where, material: steel ? "2x4-ripped" : "2x4", phase: "p1", step: "p1-posts",
         box: box([po.x, po.x + T], [0, postTop], po.z), grain: "y", exposure: "limited", exposureNote: "basement storage frame",
-        notes: "Screw to a wall stud near the top and bottom so the frame cannot rack." });
+        notes: `Screw to the wall at the top, middle and bottom (no more than ${P.postBrace}″ apart) so the post cannot bow and the frame cannot rack.` });
       built.push(po.id);
     }
 
@@ -281,6 +285,18 @@ export default defineProject({
     b.check("beam-strength", "Each beam carries half the loaded rack", stresses.every((m) => m.stress <= m.fb) && defl <= span / 360,
       `${load} lb per beam over a ${span}″ span: ${stresses.map((m) => `${m.name} ${m.stress} psi (allowed ${m.fb})`).join(", ")}; sag ${defl}″ (allowed ${Math.round((span / 360) * 1000) / 1000}″)`, "error");
 
+    // Post strength: a column, braced by the wall screws on its thin side and free over its full height on its
+    // wide side. Worst case, one post carries half a beam's load plus the frame (contents piled to one end).
+    const postH = postTop, postLoad = load + 20;
+    const colCp = (le: number, d: number) => {
+      const fcE = (0.822 * P.spf.eMin) / (le / d) ** 2, al = fcE / P.spf.fc, c = 0.8;
+      return (1 + al) / (2 * c) - Math.sqrt(((1 + al) / (2 * c)) ** 2 - al / c);
+    };
+    const slender = Math.max(P.postBrace / T, postH / postD);
+    const postCap = Math.round(P.spf.fc * Math.min(colCp(P.postBrace, T), colCp(postH, postD)) * T * postD);
+    b.check("post-strength", "Each post carries its share of the loaded rack", slender <= 50 && postCap >= postLoad,
+      `${T}″ × ${postD}″ post, ${postH}″ tall, screwed to the wall every ${P.postBrace}″: slenderness ${Math.round(slender)} (limit 50), holds ${postCap} lb against ${postLoad} lb at worst`, "error");
+
     b.hardware({ id: "rack", name: "Ceiling storage lift", item: "rack", qty: 1, phase: "p1", step: "p1-beams" });
     b.hardware({ id: "frame-screws", name: "Frame screws", item: "frame-screws", qty: 1, phase: "p1", step: "p1-rails" });
     b.hardware({ id: "wall-screws", name: "Post-to-stud screws", item: "wall-screws", qty: 1, phase: "p1", step: "p1-posts" });
@@ -299,7 +315,7 @@ export default defineProject({
         ? "On the floor, screw each pair of 2×4s into a beam. Drill each steel angle's flat leg to match the rail's holes, bolt the rail under it (bolt heads on top, since the ceiling leaves only ½″), then lag-screw the angle's upright leg to the beam's outer face with the flat leg flush with the beam top, centred along it. Mounting the rails now saves working overhead."
         : "On the floor, screw each pair of 2×4s into a beam, then screw one rack rail to the underside of each beam, centred along it and down its middle. Mounting the rails now saves working overhead." });
     b.step({ id: "p1-posts", phase: "p1", title: "Stand the posts",
-      text: "Cut the four posts to fit under the beams (check the ceiling height at each corner first). Stand one in each corner, plumb it, and screw it to a wall stud near the top and bottom. The back-left post stands in front of the left door's casing." });
+      text: "Cut the four posts to fit under the beams (check the ceiling height at each corner first). Stand one in each corner, plumb it, and screw it to the wall at the top, middle and bottom, into studs where you can find them. The back-left post stands in front of the left door's casing." });
     b.step({ id: "p1-beams", phase: "p1", title: "Lift the beams and tie the top",
       text: "With a helper, lift each beam onto its two posts, rails facing down, and screw down into the posts. Fit the ties between the beams at each side. Then hang the rack from the rails as its instructions say." });
 

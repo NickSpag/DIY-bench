@@ -15,7 +15,9 @@
       "cut": {"l": 94.5, "w": 3.5, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame"],
-      "notes": ["Screw to a wall stud near the top and bottom so the frame cannot rack."]
+      "notes": [
+        "Screw to the wall at the top, middle and bottom (no more than 32″ apart) so the post cannot bow and the frame cannot rack."
+      ]
     },
     {
       "type": "part",

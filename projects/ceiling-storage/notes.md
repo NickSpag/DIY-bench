@@ -52,6 +52,13 @@ The beams are a choice (the "Beams" option); the default is the user's design:
 - **Doubled 2×4s, rail hung beside the beam** from a 48″ angle. Rails highest (97⅞″, 11⅛″ for the rack), but
   the beams sit just inside the rails, where the rack's lifting parts may hit them.
 
+With the steel-and-2×2 beams, the posts are 2×4s ripped to 2⅛″ to match the beam, 1½″ × 2⅛″. A post carries
+about 75 lb with the rack evenly loaded, and at worst about 170 lb (contents piled at one end, plus the frame).
+A 96″ post only 1½″ thick is too slender on its own (length over thickness 64; the limit for wood columns is
+50), so each post is screwed to the wall at the top, middle and bottom, no more than 32″ apart. Braced like that
+it holds about 630 lb, nearly four times the worst case (the `post-strength` rule). Across its 2⅛″ width the
+post is braced only top and bottom, at a slenderness of 45.
+
 The beams can no longer be ripped shallower: the steel-and-2×2 beam gains more than ripping did.
 
 With the third choice the rails hang from steel angles: a 2″ × 2″ × ⅛″ angle, 48″ long, lag-screwed
@@ -85,6 +92,7 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 | Angle lag screws | 7 per angle (every 8″) | a common spacing |
 | 2×2 size | 2″ × 2″ actual | "2×2 (exact)"; a store-bought 2×2 is 1½″ × 1½″ |
 | Angle screws | every 8″ on both legs | a common spacing |
+| Post bracing | screwed to the wall every 32″ or closer | top, middle and bottom of a 96″ post |
 | Gap above the frame | ½″ | so the frame can be stood up under the ceiling |
 | Door thickness | 1¾″ | for drawing only |
 | Wall thickness | 5″ | for drawing only; deep enough for the back doorway's 3″ recess and a door |
@@ -121,3 +129,4 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 - 2026-11-08: Default beam: a 2×2 wrapped in a 72″ steel angle, rail screwed up through the angle (user's design).
   The ripped-beam choice is gone.
 - 2026-11-08: Rack's raised height estimated at 6″ from its 5½″-thick shipping box, leaving about 3″ over the left door.
+- 2026-11-08: Posts ripped to 2⅛″ to match the steel-and-2×2 beams, screwed to the wall at top, middle and bottom.

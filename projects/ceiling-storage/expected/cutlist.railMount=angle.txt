@@ -3,7 +3,7 @@ CEILING STORAGE · CUT LIST (in) · railMount=angle
 PHASE 1 · BUILD
 2×4 (spruce-pine-fir, No. 2 or better)
   4 × Post  —  94½ × 3½ × 1½  [basement storage frame]
-      Screw to a wall stud near the top and bottom so the frame cannot rack.
+      Screw to the wall at the top, middle and bottom (no more than 32″ apart) so the post cannot bow and the frame cannot rack.
   4 × Beam  —  72 × 3½ × 1½  [basement storage frame; cut to fit]
   2 × Tie (left; right)  —  39¾ × 3½ × 1½  [basement storage frame]
 

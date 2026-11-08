@@ -1,9 +1,9 @@
 CEILING STORAGE · CUT LIST (in) · railMount=steel
 
 PHASE 1 · BUILD
-2×4 (spruce-pine-fir, No. 2 or better)
-  4 × Post  —  95⅞ × 3½ × 1½  [basement storage frame]
-      Screw to a wall stud near the top and bottom so the frame cannot rack.
+2×4 ripped to 2⅛″ wide
+  4 × Post  —  95⅞ × 2⅛ × 1½  [basement storage frame]
+      Screw to the wall at the top, middle and bottom (no more than 32″ apart) so the post cannot bow and the frame cannot rack.
 
 2×2 wood, 2″ × 2″ actual
   2 × Beam (back; front)  —  72 × 2 × 2  [basement storage frame; cut to fit]
@@ -19,5 +19,5 @@ Hardware
   1 set × Self-drilling screws for steel studs, #10 × 2½″  —  Post to wall stud, to keep the frame from racking
 
 BOARD TOTALS
-  2×4 (spruce-pine-fir, No. 2 or better): 4 pieces, 383½ in all
+  2×4 ripped to 2⅛″ wide: 4 pieces, 383½ in all
   2×2 wood, 2″ × 2″ actual: 4 pieces, 236 in all

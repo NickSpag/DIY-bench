@@ -4,18 +4,20 @@
       "type": "part",
       "phase": "p1",
       "cutPhase": "p1",
-      "material": "2x4",
-      "materialName": "2×4 (spruce-pine-fir, No. 2 or better)",
+      "material": "2x4-ripped",
+      "materialName": "2×4 ripped to 2⅛″ wide",
       "kind": "board",
       "name": "Post",
       "qty": 4,
       "ids": ["post-back-left", "post-back-right", "post-front-left", "post-front-right"],
       "where": ["back left", "back right", "front left", "front right"],
-      "finished": {"l": 95.875, "w": 3.5, "t": 1.5},
-      "cut": {"l": 95.875, "w": 3.5, "t": 1.5},
+      "finished": {"l": 95.875, "w": 2.125, "t": 1.5},
+      "cut": {"l": 95.875, "w": 2.125, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame"],
-      "notes": ["Screw to a wall stud near the top and bottom so the frame cannot rack."]
+      "notes": [
+        "Screw to the wall at the top, middle and bottom (no more than 32″ apart) so the post cannot bow and the frame cannot rack."
+      ]
     },
     {
       "type": "part",
@@ -54,12 +56,7 @@
   ],
   "strips": [],
   "boards": [
-    {
-      "material": "2x4",
-      "name": "2×4 (spruce-pine-fir, No. 2 or better)",
-      "pieces": 4,
-      "totalLength": 383.5
-    },
+    {"material": "2x4-ripped", "name": "2×4 ripped to 2⅛″ wide", "pieces": 4, "totalLength": 383.5},
     {"material": "2x2", "name": "2×2 wood, 2″ × 2″ actual", "pieces": 4, "totalLength": 236}
   ],
   "hardware": [
