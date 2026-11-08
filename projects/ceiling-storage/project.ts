@@ -34,6 +34,7 @@ export const P = {
     raisedDrop: null as number | null, // rail top to the platform's underside when fully raised: not measured yet
     capacity: 250, weight: 47,
   },
+  angle: { leg: 2, t: 0.125 }, // steel angle, 2″ × 2″ × ⅛″, for the "on steel angles" option
   ceilingGap: 0.5, // inferred: the frame stops short of the ceiling so it stands up without jamming
   lumber: { t: 1.5, w: 3.5 }, // 2×4
   // Lumber values for the beam rule: spruce-pine-fir No. 2, 2×4 size factor included.
@@ -50,6 +51,11 @@ export default defineProject({
       choices: { "3.5": "Full 2×4s (3½″ deep)", "3": "2×4s ripped to 3″", "2.75": "2×4s ripped to 2¾″" },
       default: "3.5",
     },
+    railMount: {
+      label: "Rails",
+      choices: { under: "Screwed under the beams", angle: "On steel angles beside the beams (about 3⅜″ higher)" },
+      default: "under",
+    },
   },
   phases: [{ id: "p1", title: "Build" }],
   materials: {
@@ -62,6 +68,9 @@ export default defineProject({
     "rack-rail": { name: "Rack mounting rail", unit: "each", spec: "Comes with the rack" },
     "rail-screws": { name: "Lag screws for the rails, 5/16″ × 2½″, with washers", unit: "each", spec: "Or the bolts that come with the rack, if they are long enough to bite 2″ into the beams" },
     "frame-screws": { name: "Structural wood screws, 3″ (e.g. GRK or Spax)", unit: "box" },
+    angle: { name: "Steel angle, 2″ × 2″ × ⅛″, 48″ long", unit: "each", spec: "Plain or galvanized; holes drilled to suit the rail" },
+    "angle-lags": { name: "Lag screws, 5/16″ × 2½″, with washers", unit: "each", spec: "Through the angle's upright leg into the beam" },
+    "angle-bolts": { name: "Machine bolts, ¼″ × 1″, with nuts and washers", unit: "each", spec: "Rail to the angle's flat leg, heads on top" },
     "wall-screws": { name: "Self-drilling screws for steel studs, #10 × 2½″", unit: "box", spec: "Post to wall stud, to keep the frame from racking" },
   },
 
@@ -132,12 +141,18 @@ export default defineProject({
     const beamD = Number(opt.beamDepth);
     const beamMaterial = beamD === L.w ? "2x4" : "2x4-ripped";
     const beamY: Range = [H - P.ceilingGap - beamD, H - P.ceilingGap];
-    // The rack sits centred front to back; each beam is two 2×4s on edge, centred under its rail.
+    // The rack sits centred front to back. Each beam is two 2×4s on edge: centred over its rail when the rail
+    // screws under it, or just inside the rail when the rail hangs from a steel angle bolted to the beam's face.
+    const onAngle = opt.railMount === "angle", A = P.angle;
     const railZ = [D / 2 - R.rail.spacing / 2, D / 2 + R.rail.spacing / 2];
     const beams = [
-      { id: "beam-back", where: "back", c: railZ[0] },
-      { id: "beam-front", where: "front", c: railZ[1] },
-    ].map((bm) => ({ ...bm, z: [bm.c - T, bm.c + T] as Range }));
+      { id: "beam-back", where: "back", c: railZ[0], side: 1 },
+      { id: "beam-front", where: "front", c: railZ[1], side: -1 },
+    ].map((bm) => {
+      if (!onAngle) return { ...bm, z: [bm.c - T, bm.c + T] as Range, face: 0 };
+      const face = bm.c + bm.side * (R.rail.width / 2 + A.t);   // the beam face the angle bolts to
+      return { ...bm, z: (bm.side > 0 ? [face, face + 2 * T] : [face - 2 * T, face]) as Range, face };
+    });
     const beamCheck = Math.min(beams[0].z[0], D - beams[1].z[1]);
     b.check("beams-inside-alcove", "Both beams fit inside the alcove front to back", beamCheck >= 0,
       `rails ${R.rail.spacing}″ apart; beams ${beams[0].z[0]}″ from the back wall and ${D - beams[1].z[1]}″ from the open side`, "error");
@@ -182,12 +197,23 @@ export default defineProject({
 
     // The rack's rails, centred left to right, screwed up into the beams.
     const railX: Range = [W / 2 - R.rail.length / 2, W / 2 + R.rail.length / 2];
-    const railY: Range = [beamY[0] - R.rail.thickness, beamY[0]];
+    const railTop = onAngle ? beamY[1] - A.t : beamY[0];
+    const railY: Range = [railTop - R.rail.thickness, railTop];
     for (const bm of beams) {
       const id = `rail-${bm.where}`;
       b.hardware({ id, name: "Rack mounting rail", item: "rack-rail", qty: 1, phase: "p1", step: "p1-rails",
         box: box(railX, railY, [bm.c - R.rail.width / 2, bm.c + R.rail.width / 2]) });
       built.push(id);
+      if (!onAngle) continue;
+      // The angle: its upright leg lag-screwed to the beam face, its flat leg flush with the beam top, over the rail.
+      const s = bm.side, f = bm.face;
+      const upright: Range = s > 0 ? [f - A.t, f] : [f, f + A.t];
+      const flat: Range = s > 0 ? [f - A.leg, f - A.t] : [f + A.t, f + A.leg];
+      b.hardware({ id: `angle-${bm.where}`, name: "Steel angle", where: `${bm.where}, flat leg`, item: "angle", qty: 1, phase: "p1", step: "p1-rails",
+        box: box(railX, [beamY[1] - A.t, beamY[1]], flat) });
+      b.hardware({ id: `angle-${bm.where}-upright`, name: "Steel angle", where: `${bm.where}, upright leg (same piece)`, item: "angle", qty: 0, phase: "p1", step: "p1-rails",
+        box: box(railX, [beamY[1] - A.leg, beamY[1]], upright) });
+      built.push(`angle-${bm.where}`, `angle-${bm.where}-upright`);
     }
 
     // The raised rack has to clear the doors, which swing under it.
@@ -215,10 +241,17 @@ export default defineProject({
     b.hardware({ id: "rack", name: "Ceiling storage lift", item: "rack", qty: 1, phase: "p1", step: "p1-beams" });
     b.hardware({ id: "frame-screws", name: "Frame screws", item: "frame-screws", qty: 1, phase: "p1", step: "p1-rails" });
     b.hardware({ id: "wall-screws", name: "Post-to-stud screws", item: "wall-screws", qty: 1, phase: "p1", step: "p1-posts" });
-    b.hardware({ id: "rail-screws", name: "Rail screws", item: "rail-screws", qty: 8, phase: "p1", step: "p1-rails" }); // inferred: 4 per rail until the holes are counted
+    if (onAngle) {
+      b.hardware({ id: "angle-lags", name: "Angle-to-beam lag screws", item: "angle-lags", qty: 14, phase: "p1", step: "p1-rails" }); // inferred: every 8″ along each 48″ angle
+      b.hardware({ id: "angle-bolts", name: "Rail-to-angle bolts", item: "angle-bolts", qty: 8, phase: "p1", step: "p1-rails" }); // inferred: 4 per rail until the holes are counted
+    } else {
+      b.hardware({ id: "rail-screws", name: "Rail screws", item: "rail-screws", qty: 8, phase: "p1", step: "p1-rails" }); // inferred: 4 per rail until the holes are counted
+    }
 
     b.step({ id: "p1-rails", phase: "p1", title: "Rails onto the beams",
-      text: "On the floor, screw each pair of 2×4s into a beam, then screw one rack rail to the underside of each beam, centred along it and down its middle. Mounting the rails now saves working overhead." });
+      text: onAngle
+        ? "On the floor, screw each pair of 2×4s into a beam. Drill each steel angle's flat leg to match the rail's holes, bolt the rail under it (bolt heads on top, since the ceiling leaves only ½″), then lag-screw the angle's upright leg to the beam's outer face with the flat leg flush with the beam top, centred along it. Mounting the rails now saves working overhead."
+        : "On the floor, screw each pair of 2×4s into a beam, then screw one rack rail to the underside of each beam, centred along it and down its middle. Mounting the rails now saves working overhead." });
     b.step({ id: "p1-posts", phase: "p1", title: "Stand the posts",
       text: "Cut the four posts to fit under the beams (check the ceiling height at each corner first). Stand one in each corner, plumb it, and screw it to a wall stud near the top and bottom. The back-left post stands in front of the left door's casing." });
     b.step({ id: "p1-beams", phase: "p1", title: "Lift the beams and tie the top",

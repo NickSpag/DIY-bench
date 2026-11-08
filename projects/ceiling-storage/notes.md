@@ -45,6 +45,15 @@ they gain ¾″. Sag at full load, worked out as if the whole load hung at mid-s
 exceed that, so the option stops at 2¾″. Ripping a 2×4 can release stress in the wood and make it bow, so rip
 the beam pieces first and pick the straightest four.
 
+The rails can instead hang from steel angles (the "Rails" option): a 2″ × 2″ × ⅛″ angle, 48″ long, lag-screwed
+to each beam's outer face with its flat leg flush with the beam top, and the rail bolted up under the flat leg.
+The beams move just inside the rails. The tops of the rails go from 94½″ to 97⅞″ off the floor, so the raised
+rack may hang 11⅛″ below them instead of 7¾″. With the angles, ripping the beams gains nothing, because the
+rails hang from the beam tops. The rail's load now sits about 1″ out from the beam face, so it twists the
+beam a little; the ties at each end and the posts hold the beam ends square, and the angle's flat leg is
+stiff enough at that length. Bolt heads go on top of the flat leg, since only ½″ is left under the ceiling,
+so the rails go on before the beams are lifted.
+
 Pressure-treated lumber is not used: it is sold wet, so it shrinks and bows more as it dries indoors, and it is
 meant for outdoor and ground contact. Kiln-dried 2×4s (stamped KD or S-DRY), picked straight at the store and
 installed crown up, bow least.
@@ -62,7 +71,8 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 | Left door measurements | taken to the outside edge of the casing | gives a 33¾″ opening, about right for a door with its jamb |
 | Rail spacing | 48″ centre to centre | "about 48 inches apart", to be checked |
 | Rail width and thickness | 2″ × 1″ | "2ish inches"; thickness a guess |
-| Rail screws | 4 per rail | until the holes are counted |
+| Rail screws or bolts | 4 per rail | until the holes are counted |
+| Angle lag screws | 7 per angle (every 8″) | a common spacing |
 | Gap above the frame | ½″ | so the frame can be stood up under the ceiling |
 | Door thickness | 1¾″ | for drawing only |
 | Wall thickness | 5″ | for drawing only; deep enough for the back doorway's 3″ recess and a door |
@@ -94,3 +104,5 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
   sides. The rails run left to right and go onto the beams before the beams go up.
 - 2026-11-08: Beams may be ripped to 3″ or 2¾″ for headroom (an option until the rack's raised height is known).
   No pressure-treated lumber indoors; kiln-dried 2×4s instead.
+- 2026-11-08: Rails may hang from steel angles beside the beams for 3⅜″ more headroom (an option until the
+  rack's raised height is known).

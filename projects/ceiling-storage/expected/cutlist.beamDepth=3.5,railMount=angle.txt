@@ -1,18 +1,20 @@
-CEILING STORAGE · CUT LIST (in) · beamDepth=3.5
+CEILING STORAGE · CUT LIST (in) · beamDepth=3.5,railMount=angle
 
 PHASE 1 · BUILD
 2×4 (spruce-pine-fir, No. 2 or better)
   4 × Post  —  94½ × 3½ × 1½  [basement storage frame]
       Screw to a wall stud near the top and bottom so the frame cannot rack.
   4 × Beam  —  72 × 3½ × 1½  [basement storage frame; cut to fit]
-  2 × Tie (left; right)  —  45 × 3½ × 1½  [basement storage frame]
+  2 × Tie (left; right)  —  39¾ × 3½ × 1½  [basement storage frame]
 
 Hardware
   1 × KOKORACKER 4×4 ft ceiling storage lift  —  Already bought
   2 × Rack mounting rail  —  Comes with the rack
-  8 × Lag screws for the rails, 5/16″ × 2½″, with washers  —  Or the bolts that come with the rack, if they are long enough to bite 2″ into the beams
   1 box × Structural wood screws, 3″ (e.g. GRK or Spax)
+  2 × Steel angle, 2″ × 2″ × ⅛″, 48″ long  —  Plain or galvanized; holes drilled to suit the rail
+  14 × Lag screws, 5/16″ × 2½″, with washers  —  Through the angle's upright leg into the beam
+  8 × Machine bolts, ¼″ × 1″, with nuts and washers  —  Rail to the angle's flat leg, heads on top
   1 box × Self-drilling screws for steel studs, #10 × 2½″  —  Post to wall stud, to keep the frame from racking
 
 BOARD TOTALS
-  2×4 (spruce-pine-fir, No. 2 or better): 10 pieces, 756 in all
+  2×4 (spruce-pine-fir, No. 2 or better): 10 pieces, 745½ in all

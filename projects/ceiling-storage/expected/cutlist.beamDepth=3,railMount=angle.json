@@ -1,0 +1,135 @@
+{
+  "rows": [
+    {
+      "type": "part",
+      "phase": "p1",
+      "cutPhase": "p1",
+      "material": "2x4",
+      "materialName": "2×4 (spruce-pine-fir, No. 2 or better)",
+      "kind": "board",
+      "name": "Post",
+      "qty": 4,
+      "ids": ["post-back-left", "post-back-right", "post-front-left", "post-front-right"],
+      "where": ["back left", "back right", "front left", "front right"],
+      "finished": {"l": 95, "w": 3.5, "t": 1.5},
+      "cut": {"l": 95, "w": 3.5, "t": 1.5},
+      "band": {},
+      "tags": ["basement storage frame"],
+      "notes": ["Screw to a wall stud near the top and bottom so the frame cannot rack."]
+    },
+    {
+      "type": "part",
+      "phase": "p1",
+      "cutPhase": "p1",
+      "material": "2x4-ripped",
+      "materialName": "2×4 ripped narrower on the table saw",
+      "kind": "board",
+      "name": "Beam",
+      "qty": 4,
+      "ids": ["beam-back-a", "beam-back-b", "beam-front-a", "beam-front-b"],
+      "where": ["back, back half", "back, front half", "front, back half", "front, front half"],
+      "finished": {"l": 72, "w": 3, "t": 1.5},
+      "cut": {"l": 72, "w": 3, "t": 1.5},
+      "band": {},
+      "tags": ["basement storage frame", "cut to fit"],
+      "notes": []
+    },
+    {
+      "type": "part",
+      "phase": "p1",
+      "cutPhase": "p1",
+      "material": "2x4-ripped",
+      "materialName": "2×4 ripped narrower on the table saw",
+      "kind": "board",
+      "name": "Tie",
+      "qty": 2,
+      "ids": ["tie-left", "tie-right"],
+      "where": ["left", "right"],
+      "finished": {"l": 39.75, "w": 3, "t": 1.5},
+      "cut": {"l": 39.75, "w": 3, "t": 1.5},
+      "band": {},
+      "tags": ["basement storage frame"],
+      "notes": []
+    }
+  ],
+  "strips": [],
+  "boards": [
+    {
+      "material": "2x4",
+      "name": "2×4 (spruce-pine-fir, No. 2 or better)",
+      "pieces": 4,
+      "totalLength": 380
+    },
+    {
+      "material": "2x4-ripped",
+      "name": "2×4 ripped narrower on the table saw",
+      "pieces": 6,
+      "totalLength": 367.5
+    }
+  ],
+  "hardware": [
+    {
+      "item": "rack",
+      "name": "KOKORACKER 4×4 ft ceiling storage lift",
+      "unit": "each",
+      "qty": 1,
+      "ids": ["rack"],
+      "notes": [],
+      "spec": "Already bought"
+    },
+    {
+      "item": "rack-rail",
+      "name": "Rack mounting rail",
+      "unit": "each",
+      "qty": 2,
+      "ids": ["rail-back", "rail-front"],
+      "notes": [],
+      "spec": "Comes with the rack"
+    },
+    {
+      "item": "frame-screws",
+      "name": "Structural wood screws, 3″ (e.g. GRK or Spax)",
+      "unit": "box",
+      "qty": 1,
+      "ids": ["frame-screws"],
+      "notes": []
+    },
+    {
+      "item": "angle",
+      "name": "Steel angle, 2″ × 2″ × ⅛″, 48″ long",
+      "unit": "each",
+      "qty": 2,
+      "ids": ["angle-back", "angle-back-upright", "angle-front", "angle-front-upright"],
+      "notes": [],
+      "spec": "Plain or galvanized; holes drilled to suit the rail"
+    },
+    {
+      "item": "angle-lags",
+      "name": "Lag screws, 5/16″ × 2½″, with washers",
+      "unit": "each",
+      "qty": 14,
+      "ids": ["angle-lags"],
+      "notes": [],
+      "spec": "Through the angle's upright leg into the beam"
+    },
+    {
+      "item": "angle-bolts",
+      "name": "Machine bolts, ¼″ × 1″, with nuts and washers",
+      "unit": "each",
+      "qty": 8,
+      "ids": ["angle-bolts"],
+      "notes": [],
+      "spec": "Rail to the angle's flat leg, heads on top"
+    },
+    {
+      "item": "wall-screws",
+      "name": "Self-drilling screws for steel studs, #10 × 2½″",
+      "unit": "box",
+      "qty": 1,
+      "ids": ["wall-screws"],
+      "notes": [],
+      "spec": "Post to wall stud, to keep the frame from racking"
+    }
+  ],
+  "banding": []
+}
