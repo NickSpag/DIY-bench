@@ -1,6 +1,6 @@
 {
   "project": {"id": "ceiling-storage", "title": "Ceiling storage", "units": "in"},
-  "config": {"beamDepth": "2.75", "railMount": "under"},
+  "config": {"railMount": "steel"},
   "phases": ["p1"],
   "parts": [
     {
@@ -10,7 +10,7 @@
       "role": "floor",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-30, 77], "y": [-1, 0], "z": [-5, 88]}},
-      "src": "projects/ceiling-storage/project.ts:90:7"
+      "src": "projects/ceiling-storage/project.ts:93:7"
     },
     {
       "id": "ceiling",
@@ -19,7 +19,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 77], "y": [98.5, 100], "z": [-5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:91:7"
+      "src": "projects/ceiling-storage/project.ts:94:7"
     },
     {
       "id": "wall-back-left",
@@ -29,7 +29,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 27.5], "y": [0, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:92:7"
+      "src": "projects/ceiling-storage/project.ts:95:7"
     },
     {
       "id": "wall-back-right",
@@ -39,7 +39,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [65.5, 77], "y": [0, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:93:7"
+      "src": "projects/ceiling-storage/project.ts:96:7"
     },
     {
       "id": "door-header",
@@ -48,7 +48,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [27.5, 65.5], "y": [83, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:94:7"
+      "src": "projects/ceiling-storage/project.ts:97:7"
     },
     {
       "id": "wall-left-back",
@@ -58,7 +58,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [0, 6.25]}},
-      "src": "projects/ceiling-storage/project.ts:95:7"
+      "src": "projects/ceiling-storage/project.ts:98:7"
     },
     {
       "id": "wall-left",
@@ -68,7 +68,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [40, 52]}},
-      "src": "projects/ceiling-storage/project.ts:96:7"
+      "src": "projects/ceiling-storage/project.ts:99:7"
     },
     {
       "id": "wall-left-header",
@@ -77,7 +77,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [86.75, 98.5], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:97:7"
+      "src": "projects/ceiling-storage/project.ts:100:7"
     },
     {
       "id": "back-door-frame-l",
@@ -87,7 +87,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [27.5, 28.5], "y": [0, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:101:7"
+      "src": "projects/ceiling-storage/project.ts:104:7"
     },
     {
       "id": "back-door-frame-r",
@@ -97,7 +97,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [64.5, 65.5], "y": [0, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:102:7"
+      "src": "projects/ceiling-storage/project.ts:105:7"
     },
     {
       "id": "back-door-frame-head",
@@ -107,7 +107,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [82, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:103:7"
+      "src": "projects/ceiling-storage/project.ts:106:7"
     },
     {
       "id": "back-door",
@@ -116,7 +116,7 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:104:7"
+      "src": "projects/ceiling-storage/project.ts:107:7"
     },
     {
       "id": "left-door-casing-back",
@@ -126,7 +126,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [2.5, 6.25]}},
-      "src": "projects/ceiling-storage/project.ts:108:7"
+      "src": "projects/ceiling-storage/project.ts:111:7"
     },
     {
       "id": "left-door-casing-front",
@@ -136,7 +136,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [40, 43.75]}},
-      "src": "projects/ceiling-storage/project.ts:109:7"
+      "src": "projects/ceiling-storage/project.ts:112:7"
     },
     {
       "id": "left-door-casing-head",
@@ -146,7 +146,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [86.75, 90.5], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:110:7"
+      "src": "projects/ceiling-storage/project.ts:113:7"
     },
     {
       "id": "left-door",
@@ -155,7 +155,7 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-1.75, 0], "y": [0, 86.75], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:111:7"
+      "src": "projects/ceiling-storage/project.ts:114:7"
     },
     {
       "id": "wall-left-return",
@@ -164,7 +164,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-30, -5], "y": [0, 98.5], "z": [47, 52]}},
-      "src": "projects/ceiling-storage/project.ts:112:7"
+      "src": "projects/ceiling-storage/project.ts:115:7"
     },
     {
       "id": "wall-right",
@@ -173,7 +173,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [72, 77], "y": [0, 98.5], "z": [0, 80]}},
-      "src": "projects/ceiling-storage/project.ts:113:7"
+      "src": "projects/ceiling-storage/project.ts:116:7"
     },
     {
       "id": "back-door-swing",
@@ -182,7 +182,7 @@
       "role": "space",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-3, 33]}},
-      "src": "projects/ceiling-storage/project.ts:123:9"
+      "src": "projects/ceiling-storage/project.ts:126:9"
     },
     {
       "id": "left-door-swing",
@@ -191,7 +191,7 @@
       "role": "space",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 33.75], "y": [0, 86.75], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:123:9"
+      "src": "projects/ceiling-storage/project.ts:126:9"
     },
     {
       "id": "post-back-left",
@@ -202,9 +202,9 @@
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.25, 3.5, 1.5],
-      "boxes": {"p1": {"x": [0.75, 2.25], "y": [0, 95.25], "z": [0, 3.5]}},
-      "src": "projects/ceiling-storage/project.ts:171:9"
+      "size": [95.875, 3.5, 1.5],
+      "boxes": {"p1": {"x": [0.75, 2.25], "y": [0, 95.875], "z": [0, 3.5]}},
+      "src": "projects/ceiling-storage/project.ts:181:9"
     },
     {
       "id": "post-back-right",
@@ -215,9 +215,9 @@
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.25, 3.5, 1.5],
-      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.25], "z": [0, 3.5]}},
-      "src": "projects/ceiling-storage/project.ts:171:9"
+      "size": [95.875, 3.5, 1.5],
+      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.875], "z": [0, 3.5]}},
+      "src": "projects/ceiling-storage/project.ts:181:9"
     },
     {
       "id": "post-front-left",
@@ -228,9 +228,9 @@
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.25, 3.5, 1.5],
-      "boxes": {"p1": {"x": [0, 1.5], "y": [0, 95.25], "z": [48.5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:171:9"
+      "size": [95.875, 3.5, 1.5],
+      "boxes": {"p1": {"x": [0, 1.5], "y": [0, 95.875], "z": [48.5, 52]}},
+      "src": "projects/ceiling-storage/project.ts:181:9"
     },
     {
       "id": "post-front-right",
@@ -241,87 +241,109 @@
       "phase": "p1",
       "step": "p1-posts",
       "cutPhase": "p1",
-      "size": [95.25, 3.5, 1.5],
-      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.25], "z": [48.5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:171:9"
+      "size": [95.875, 3.5, 1.5],
+      "boxes": {"p1": {"x": [70.5, 72], "y": [0, 95.875], "z": [48.5, 52]}},
+      "src": "projects/ceiling-storage/project.ts:181:9"
     },
     {
-      "id": "beam-back-a",
+      "id": "beam-back",
       "kind": "board",
       "name": "Beam",
-      "where": "back, back half",
-      "material": "2x4-ripped",
+      "where": "back",
+      "material": "2x2",
       "phase": "p1",
       "step": "p1-beams",
       "cutPhase": "p1",
-      "size": [72, 2.75, 1.5],
-      "boxes": {"p1": {"x": [0, 72], "y": [95.25, 98], "z": [0.5, 2]}},
-      "src": "projects/ceiling-storage/project.ts:181:11"
+      "size": [72, 2, 2],
+      "boxes": {"p1": {"x": [0, 72], "y": [96, 98], "z": [1, 3]}},
+      "src": "projects/ceiling-storage/project.ts:193:11"
     },
     {
-      "id": "beam-back-b",
+      "id": "angle-back",
+      "kind": "hardware",
+      "name": "Steel angle",
+      "where": "back beam, flat leg",
+      "item": "angle-72",
+      "phase": "p1",
+      "step": "p1-rails",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 72], "y": [95.875, 96], "z": [0.875, 2.875]}},
+      "src": "projects/ceiling-storage/project.ts:202:11"
+    },
+    {
+      "id": "angle-back-upright",
+      "kind": "hardware",
+      "name": "Steel angle",
+      "where": "back beam, upright leg (same piece)",
+      "item": "angle-72",
+      "phase": "p1",
+      "step": "p1-rails",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 72], "y": [96, 97.875], "z": [0.875, 1]}},
+      "src": "projects/ceiling-storage/project.ts:204:11"
+    },
+    {
+      "id": "beam-front",
       "kind": "board",
       "name": "Beam",
-      "where": "back, front half",
-      "material": "2x4-ripped",
+      "where": "front",
+      "material": "2x2",
       "phase": "p1",
       "step": "p1-beams",
       "cutPhase": "p1",
-      "size": [72, 2.75, 1.5],
-      "boxes": {"p1": {"x": [0, 72], "y": [95.25, 98], "z": [2, 3.5]}},
-      "src": "projects/ceiling-storage/project.ts:181:11"
+      "size": [72, 2, 2],
+      "boxes": {"p1": {"x": [0, 72], "y": [96, 98], "z": [49, 51]}},
+      "src": "projects/ceiling-storage/project.ts:193:11"
     },
     {
-      "id": "beam-front-a",
-      "kind": "board",
-      "name": "Beam",
-      "where": "front, back half",
-      "material": "2x4-ripped",
+      "id": "angle-front",
+      "kind": "hardware",
+      "name": "Steel angle",
+      "where": "front beam, flat leg",
+      "item": "angle-72",
       "phase": "p1",
-      "step": "p1-beams",
+      "step": "p1-rails",
       "cutPhase": "p1",
-      "size": [72, 2.75, 1.5],
-      "boxes": {"p1": {"x": [0, 72], "y": [95.25, 98], "z": [48.5, 50]}},
-      "src": "projects/ceiling-storage/project.ts:181:11"
+      "boxes": {"p1": {"x": [0, 72], "y": [95.875, 96], "z": [49.125, 51.125]}},
+      "src": "projects/ceiling-storage/project.ts:202:11"
     },
     {
-      "id": "beam-front-b",
-      "kind": "board",
-      "name": "Beam",
-      "where": "front, front half",
-      "material": "2x4-ripped",
+      "id": "angle-front-upright",
+      "kind": "hardware",
+      "name": "Steel angle",
+      "where": "front beam, upright leg (same piece)",
+      "item": "angle-72",
       "phase": "p1",
-      "step": "p1-beams",
+      "step": "p1-rails",
       "cutPhase": "p1",
-      "size": [72, 2.75, 1.5],
-      "boxes": {"p1": {"x": [0, 72], "y": [95.25, 98], "z": [50, 51.5]}},
-      "src": "projects/ceiling-storage/project.ts:181:11"
+      "boxes": {"p1": {"x": [0, 72], "y": [96, 97.875], "z": [51, 51.125]}},
+      "src": "projects/ceiling-storage/project.ts:204:11"
     },
     {
       "id": "tie-left",
       "kind": "board",
       "name": "Tie",
       "where": "left",
-      "material": "2x4-ripped",
+      "material": "2x2",
       "phase": "p1",
       "step": "p1-beams",
       "cutPhase": "p1",
-      "size": [45, 2.75, 1.5],
-      "boxes": {"p1": {"x": [0, 1.5], "y": [95.25, 98], "z": [3.5, 48.5]}},
-      "src": "projects/ceiling-storage/project.ts:192:9"
+      "size": [46, 2, 2],
+      "boxes": {"p1": {"x": [0, 2], "y": [96, 98], "z": [3, 49]}},
+      "src": "projects/ceiling-storage/project.ts:223:9"
     },
     {
       "id": "tie-right",
       "kind": "board",
       "name": "Tie",
       "where": "right",
-      "material": "2x4-ripped",
+      "material": "2x2",
       "phase": "p1",
       "step": "p1-beams",
       "cutPhase": "p1",
-      "size": [45, 2.75, 1.5],
-      "boxes": {"p1": {"x": [70.5, 72], "y": [95.25, 98], "z": [3.5, 48.5]}},
-      "src": "projects/ceiling-storage/project.ts:192:9"
+      "size": [46, 2, 2],
+      "boxes": {"p1": {"x": [70, 72], "y": [96, 98], "z": [3, 49]}},
+      "src": "projects/ceiling-storage/project.ts:223:9"
     },
     {
       "id": "rail-back",
@@ -331,8 +353,8 @@
       "phase": "p1",
       "step": "p1-rails",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [12, 60], "y": [94.25, 95.25], "z": [1, 3]}},
-      "src": "projects/ceiling-storage/project.ts:204:9"
+      "boxes": {"p1": {"x": [12, 60], "y": [94.875, 95.875], "z": [1, 3]}},
+      "src": "projects/ceiling-storage/project.ts:237:9"
     },
     {
       "id": "rail-front",
@@ -342,8 +364,8 @@
       "phase": "p1",
       "step": "p1-rails",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [12, 60], "y": [94.25, 95.25], "z": [49, 51]}},
-      "src": "projects/ceiling-storage/project.ts:204:9"
+      "boxes": {"p1": {"x": [12, 60], "y": [94.875, 95.875], "z": [49, 51]}},
+      "src": "projects/ceiling-storage/project.ts:237:9"
     },
     {
       "id": "rack-raised",
@@ -351,8 +373,8 @@
       "name": "Rack, raised (height not measured)",
       "role": "space",
       "cutPhase": "p1",
-      "boxes": {"p1": {"x": [12, 60], "y": [86.75, 94.25], "z": [2, 50]}},
-      "src": "projects/ceiling-storage/project.ts:227:7"
+      "boxes": {"p1": {"x": [12, 60], "y": [86.75, 94.875], "z": [2, 50]}},
+      "src": "projects/ceiling-storage/project.ts:259:7"
     },
     {
       "id": "rack",
@@ -363,7 +385,7 @@
       "step": "p1-beams",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:241:7"
+      "src": "projects/ceiling-storage/project.ts:284:7"
     },
     {
       "id": "frame-screws",
@@ -374,7 +396,7 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:242:7"
+      "src": "projects/ceiling-storage/project.ts:285:7"
     },
     {
       "id": "wall-screws",
@@ -385,7 +407,7 @@
       "step": "p1-posts",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:243:7"
+      "src": "projects/ceiling-storage/project.ts:286:7"
     },
     {
       "id": "rail-screws",
@@ -396,14 +418,35 @@
       "step": "p1-rails",
       "cutPhase": "p1",
       "boxes": {"p1": null},
-      "src": "projects/ceiling-storage/project.ts:248:9"
+      "src": "projects/ceiling-storage/project.ts:291:9"
+    },
+    {
+      "id": "angle-screws",
+      "kind": "hardware",
+      "name": "Angle-to-2×2 screws",
+      "item": "angle-screws",
+      "phase": "p1",
+      "step": "p1-rails",
+      "cutPhase": "p1",
+      "boxes": {"p1": null},
+      "src": "projects/ceiling-storage/project.ts:293:18"
     }
   ],
   "steps": [
     {
       "id": "p1-rails",
       "phase": "p1",
-      "parts": ["rail-back", "rail-front", "frame-screws", "rail-screws"]
+      "parts": [
+        "angle-back",
+        "angle-back-upright",
+        "angle-front",
+        "angle-front-upright",
+        "rail-back",
+        "rail-front",
+        "frame-screws",
+        "rail-screws",
+        "angle-screws"
+      ]
     },
     {
       "id": "p1-posts",
@@ -413,15 +456,7 @@
     {
       "id": "p1-beams",
       "phase": "p1",
-      "parts": [
-        "beam-back-a",
-        "beam-back-b",
-        "beam-front-a",
-        "beam-front-b",
-        "tie-left",
-        "tie-right",
-        "rack"
-      ]
+      "parts": ["beam-back", "beam-front", "tie-left", "tie-right", "rack"]
     }
   ],
   "checks": [
@@ -435,8 +470,8 @@
     {
       "severity": "warning",
       "code": "check:rack-raised-clears-doors",
-      "message": "The raised rack clears the tops of both doors (rack's raised height not measured yet: it may hang at most 8.5″ below the top of its rails (rails at 95.25″, left door 86.75″ tall))",
-      "src": "projects/ceiling-storage/project.ts:223:7"
+      "message": "The raised rack clears the tops of both doors (rack's raised height not measured yet: it may hang at most 9.125″ below the top of its rails (rails at 95.875″, left door 86.75″ tall))",
+      "src": "projects/ceiling-storage/project.ts:255:7"
     }
   ]
 }

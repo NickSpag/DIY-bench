@@ -39,11 +39,20 @@ to right, so the frame carries them on two beams that span wall to wall across t
 Each beam carries half the loaded rack (149 lb) over a 70½″ span: the `beam-strength` rule works out the
 bending stress and sag for a doubled 2×4 and both are well inside the limits for spruce-pine-fir No. 2.
 
-The beams can be ripped shallower to raise the rails (the "Beams" option): ripped to 3″ they gain ½″, to 2¾″
-they gain ¾″. Sag at full load, worked out as if the whole load hung at mid-span (an upper bound), is about
-1/16″ full depth, 1/8″ at 3″ and 5/32″ at 2¾″, against 3/16″ allowed (span ÷ 360). At 2½″ it would just
-exceed that, so the option stops at 2¾″. Ripping a 2×4 can release stress in the wood and make it bow, so rip
-the beam pieces first and pick the straightest four.
+The beams are a choice (the "Beams" option); the default is the user's design:
+
+- **2×2 wood with a steel angle along the bottom** (default). A 2″ × 2″ (actual) wood beam with a 2″ × 2″ × ⅛″
+  solid steel angle, 72″ long, wrapped around its bottom outer corner and screwed on through both legs every 8″.
+  The rail screws up through the angle's flat leg into the wood, centred under the beam. The beam is 2⅛″ deep,
+  so the tops of the rails are 95⅞″ off the floor and the raised rack may hang 9⅛″ below them. The steel does
+  three-quarters of the work: at full load the wood sees about 330 psi, the steel about 9,900 psi (21,600
+  allowed), and the pair sags about 5/32″ (3/16″ allowed, worked out as if the whole load hung at mid-span).
+  Nothing sits between the rails, where the rack's lifting parts move.
+- **Doubled 2×4s, rail underneath.** Simplest, 3½″ deep: the raised rack may hang 7¾″.
+- **Doubled 2×4s, rail hung beside the beam** from a 48″ angle. Rails highest (97⅞″, 11⅛″ for the rack), but
+  the beams sit just inside the rails, where the rack's lifting parts may hit them.
+
+The beams can no longer be ripped shallower: the steel-and-2×2 beam gains more than ripping did.
 
 The rails can instead hang from steel angles (the "Rails" option): a 2″ × 2″ × ⅛″ angle, 48″ long, lag-screwed
 to each beam's outer face with its flat leg flush with the beam top, and the rail bolted up under the flat leg.
@@ -73,6 +82,8 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 | Rail width and thickness | 2″ × 1″ | "2ish inches"; thickness a guess |
 | Rail screws or bolts | 4 per rail | until the holes are counted |
 | Angle lag screws | 7 per angle (every 8″) | a common spacing |
+| 2×2 size | 2″ × 2″ actual | "2×2 (exact)"; a store-bought 2×2 is 1½″ × 1½″ |
+| Angle screws | every 8″ on both legs | a common spacing |
 | Gap above the frame | ½″ | so the frame can be stood up under the ceiling |
 | Door thickness | 1¾″ | for drawing only |
 | Wall thickness | 5″ | for drawing only; deep enough for the back doorway's 3″ recess and a door |
@@ -106,3 +117,5 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
   No pressure-treated lumber indoors; kiln-dried 2×4s instead.
 - 2026-11-08: Rails may hang from steel angles beside the beams for 3⅜″ more headroom (an option until the
   rack's raised height is known).
+- 2026-11-08: Default beam: a 2×2 wrapped in a 72″ steel angle, rail screwed up through the angle (user's design).
+  The ripped-beam choice is gone.

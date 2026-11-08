@@ -1,4 +1,4 @@
-CEILING STORAGE · CUT LIST (in) · beamDepth=3.5,railMount=angle
+CEILING STORAGE · CUT LIST (in) · railMount=angle
 
 PHASE 1 · BUILD
 2×4 (spruce-pine-fir, No. 2 or better)
@@ -10,11 +10,11 @@ PHASE 1 · BUILD
 Hardware
   1 × KOKORACKER 4×4 ft ceiling storage lift  —  Already bought
   2 × Rack mounting rail  —  Comes with the rack
-  1 box × Structural wood screws, 3″ (e.g. GRK or Spax)
+  1 set × Structural wood screws, 3″ (e.g. GRK or Spax)
   2 × Steel angle, 2″ × 2″ × ⅛″, 48″ long  —  Plain or galvanized; holes drilled to suit the rail
   14 × Lag screws, 5/16″ × 2½″, with washers  —  Through the angle's upright leg into the beam
   8 × Machine bolts, ¼″ × 1″, with nuts and washers  —  Rail to the angle's flat leg, heads on top
-  1 box × Self-drilling screws for steel studs, #10 × 2½″  —  Post to wall stud, to keep the frame from racking
+  1 set × Self-drilling screws for steel studs, #10 × 2½″  —  Post to wall stud, to keep the frame from racking
 
 BOARD TOTALS
   2×4 (spruce-pine-fir, No. 2 or better): 10 pieces, 745½ in all

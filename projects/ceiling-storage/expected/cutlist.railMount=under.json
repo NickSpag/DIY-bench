@@ -92,7 +92,7 @@
     {
       "item": "frame-screws",
       "name": "Structural wood screws, 3″ (e.g. GRK or Spax)",
-      "unit": "box",
+      "unit": "set",
       "qty": 1,
       "ids": ["frame-screws"],
       "notes": []
@@ -100,7 +100,7 @@
     {
       "item": "wall-screws",
       "name": "Self-drilling screws for steel studs, #10 × 2½″",
-      "unit": "box",
+      "unit": "set",
       "qty": 1,
       "ids": ["wall-screws"],
       "notes": [],
