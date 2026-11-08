@@ -2,6 +2,8 @@
 // byte-identical output. Every placement carries data-part with its part ids, so the app's
 // highlight stylesheet can select it; colours come from CSS custom properties with defaults.
 import type { Nesting, Placement, SheetLayout } from "./nesting.ts";
+import type { BoardLayout } from "./shopping.ts";
+import type { Units } from "./model/types.ts";
 import { fmtLength, round4 } from "./units.ts";
 
 const num = (n: number): string => String(round4(n));
@@ -109,6 +111,44 @@ export function sheetSvg(n: Nesting): string {
     `<style>${STYLE}</style>`,
     `<defs><pattern id="${patternId}" patternUnits="userSpaceOnUse" width="${num(hatch)}" height="${num(hatch)}" patternTransform="rotate(45)">` +
       `<rect class="wb-hatch-bg" width="${num(hatch)}" height="${num(hatch)}"/><line class="wb-hatch-line" x1="0" y1="0" x2="0" y2="${num(hatch)}"/></pattern></defs>`,
+    ...body,
+    `</svg>`,
+  ].join("\n") + "\n";
+}
+
+/**
+ * One SVG for the boards of one material: each board as a bar, owned boards first, with the parts cut from it
+ * left to right and the offcut at the end. Bars are drawn taller than the board is wide so the labels can be
+ * read; lengths are to scale.
+ */
+export function boardSvg(materialName: string, units: Units, layout: BoardLayout[], kerf: number): string {
+  const L = (v: number) => fmtLength(v, { units });
+  const maxL = Math.max(1, ...layout.map((b) => b.length));
+  const fs = maxL / 40, h = maxL / 11, titleH = fs * 2.2, gap = fs * 1.4;
+  const body: string[] = [];
+  let y = titleH;
+  for (const [i, bd] of layout.entries()) {
+    body.push(`<g class="wb-sheet wb-board" data-board="${i}" data-owned="${bd.owned}" transform="translate(0 ${num(y)})">`);
+    body.push(`<text class="wb-title" x="0" y="${num(-fs * 0.7)}" font-size="${num(fs)}">${esc(`${bd.owned ? "Your" : "Buy a"} ${fmtLength(bd.length, { units, marks: true })} board · ${materialName}`)}</text>`);
+    body.push(`<rect class="wb-sheet-board" x="0" y="0" width="${num(bd.length)}" height="${num(h)}"/>`);
+    let x = 0;
+    for (const c of bd.cuts) {
+      body.push(`<g class="wb-placement" data-part="${esc(c.id)}"><title>${esc(`${c.name} · ${L(c.l)} · ${c.id}`)}</title>` +
+        `<rect class="wb-part k-fin" x="${num(x)}" y="0" width="${num(c.l)}" height="${num(h)}"/>` +
+        label(x, 0, c.l, h, [{ text: c.name, cls: "wb-label" }, { text: L(c.l), cls: "wb-size" }], fs) + `</g>`);
+      x += c.l + kerf;
+    }
+    const off = bd.length - x + kerf;
+    if (off > kerf) body.push(`<g class="wb-offcut-g">` + label(x, 0, off - kerf, h, [{ text: `offcut ${L(off - kerf)}`, cls: "wb-offcut-label" }], fs * 0.8) + `</g>`);
+    body.push(`</g>`);
+    y += h + gap + titleH;
+  }
+  const m = fs;
+  const bottom = Math.max(y - gap - titleH, titleH);   // the last board's lower edge
+  const vb = [-m, -m, maxL + 2 * m, bottom + 2 * m].map(num).join(" ");
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" class="wb-sheets wb-boards" data-material="${esc(materialName)}" font-family="ui-monospace, monospace">`,
+    `<style>${STYLE}</style>`,
     ...body,
     `</svg>`,
   ].join("\n") + "\n";

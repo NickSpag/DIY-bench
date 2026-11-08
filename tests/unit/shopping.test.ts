@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import closet from "../../projects/closet-built-in/project.ts";
 import { evaluate } from "../../core/evaluate.ts";
-import { shoppingList, suggestBoards, useOwnedBoards } from "../../core/shopping.ts";
+import { planBoards, shoppingList, suggestBoards, useOwnedBoards } from "../../core/shopping.ts";
 import { box } from "../../core/model/index.ts";
 import { mini, SHEET } from "./helpers.ts";
 
@@ -34,6 +34,16 @@ test("suggestBoards: first-fit decreasing, then each board shortened to the shor
   expect(suggestBoards([10, 10, 10], [96], 0.125)).toEqual([{ length: 96, count: 1 }]);
   expect(suggestBoards([130], [96, 120], 0.125)).toEqual([{ length: 130, count: 1 }]);
   expect(suggestBoards([], [96], 0.125)).toEqual([]);
+});
+
+test("planBoards: owned boards first with their cuts by part, then boards to buy, shortened to fit", () => {
+  const cuts = [{ id: "post-1", name: "Post", l: 95 }, { id: "post-2", name: "Post", l: 95 }, { id: "tie", name: "Tie", l: 40 }];
+  expect(planBoards(cuts, [100, 30], [96, 120], 0.125)).toEqual([
+    { length: 100, owned: true, cuts: [{ id: "post-1", name: "Post", l: 95 }] },
+    { length: 96, owned: false, cuts: [{ id: "post-2", name: "Post", l: 95 }] },
+    { length: 96, owned: false, cuts: [{ id: "tie", name: "Tie", l: 40 }] },
+  ]);
+  expect(planBoards(cuts, [], [], 0.125)).toEqual([]);
 });
 
 test("useOwnedBoards: longest piece first, each into the owned board with the least room that holds it", () => {
