@@ -315,8 +315,14 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
   // Room walls that would hide the build are left out: the ones a drawing view draws as a veil
   // (the front returns and the header) and anything entirely above the built parts (the ceiling).
   const veiled = new Set(r.views.flatMap((v) => v.veil ?? []));
-  const builtTop = Math.max(...entries.filter((e) => e.part.kind !== "context").map((e) => e.box.y[1]));
   const lowest = lowestFloor(entries);
+  // Nothing built yet (a project that is only the room so far): leave out only what sits on top of every
+  // other wall (the ceiling); a header over a doorway is still drawn.
+  const builtBoxes = entries.filter((e) => e.part.kind !== "context").map((e) => e.box);
+  const builtTop = builtBoxes.length ? Math.max(...builtBoxes.map((b) => b.y[1])) : null;
+  const walls = entries.filter((e) => e.part.kind === "context" && e.part.role === "wall");
+  const belowTop = (e: Entry) => builtTop !== null ? e.box.y[0] < builtTop
+    : walls.some((w) => w !== e && w.box.y[1] > e.box.y[0] + 1e-6);
   const shown = entries.filter((e) => {
     if (e.part.kind !== "context") return true;
     if (e.part.role === "contents") return showContents;
@@ -326,7 +332,7 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
     // storey above or below) are drawn.
     if (e.part.role === "floor") return drawnFloor(e.part, e.box, lowest);
     if (e.part.role === "fixture") return !veiled.has(e.part.id);   // drawn even above the build: an AC at the ceiling
-    return !veiled.has(e.part.id) && e.box.y[0] < builtTop;
+    return !veiled.has(e.part.id) && belowTop(e);
   });
   return (
     <group>
@@ -639,7 +645,9 @@ function Scene() {
     const lowest = lowestFloor(parts);
     // With the room shown, floors above or below the build (landings, stairs) are framed too.
     const framed = parts.filter((e) => e.box && (e.part.kind !== "context" || (showRoom && drawnFloor(e.part, e.box, lowest))));
-    const ex = last ? extent(framed.map((e) => e.box as Box)) : null;
+    // Nothing built yet: frame the room instead.
+    const room = framed.length ? framed : parts.filter((e) => e.box && e.part.kind === "context" && (e.part.role === "wall" || e.part.role === "floor"));
+    const ex = last ? extent(room.map((e) => e.box as Box)) : null;
     boxRef.current = ex;
     groundRef.current = Number.isFinite(lowest) ? lowest : 0;
   }

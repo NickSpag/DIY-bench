@@ -1,0 +1,182 @@
+{
+  "project": {"id": "ceiling-storage", "title": "Ceiling storage", "units": "in"},
+  "config": {},
+  "phases": ["p1"],
+  "parts": [
+    {
+      "id": "floor",
+      "kind": "context",
+      "name": "Floor",
+      "role": "floor",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-30, 77], "y": [-1, 0], "z": [-5, 88]}},
+      "src": "projects/ceiling-storage/project.ts:51:7"
+    },
+    {
+      "id": "ceiling",
+      "kind": "context",
+      "name": "Ceiling",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-5, 77], "y": [98.5, 100], "z": [-5, 52]}},
+      "src": "projects/ceiling-storage/project.ts:52:7"
+    },
+    {
+      "id": "wall-back-left",
+      "kind": "context",
+      "name": "Back wall",
+      "where": "left of the doorway",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-5, 27.5], "y": [0, 98.5], "z": [-5, 0]}},
+      "src": "projects/ceiling-storage/project.ts:53:7"
+    },
+    {
+      "id": "wall-back-right",
+      "kind": "context",
+      "name": "Back wall",
+      "where": "right of the doorway",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [65.5, 77], "y": [0, 98.5], "z": [-5, 0]}},
+      "src": "projects/ceiling-storage/project.ts:54:7"
+    },
+    {
+      "id": "door-header",
+      "kind": "context",
+      "name": "Wall above the doorway",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [27.5, 65.5], "y": [83, 98.5], "z": [-5, 0]}},
+      "src": "projects/ceiling-storage/project.ts:55:7"
+    },
+    {
+      "id": "wall-left-back",
+      "kind": "context",
+      "name": "Left wall",
+      "where": "between the back wall and the door",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [0, 6.25]}},
+      "src": "projects/ceiling-storage/project.ts:56:7"
+    },
+    {
+      "id": "wall-left",
+      "kind": "context",
+      "name": "Left wall",
+      "where": "between the door and the open side",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [40, 52]}},
+      "src": "projects/ceiling-storage/project.ts:57:7"
+    },
+    {
+      "id": "wall-left-header",
+      "kind": "context",
+      "name": "Wall above the left door",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-5, 0], "y": [86.75, 98.5], "z": [6.25, 40]}},
+      "src": "projects/ceiling-storage/project.ts:58:7"
+    },
+    {
+      "id": "back-door-frame-l",
+      "kind": "context",
+      "name": "Back door frame",
+      "where": "left",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [27.5, 28.5], "y": [0, 83], "z": [-4.75, -3]}},
+      "src": "projects/ceiling-storage/project.ts:62:7"
+    },
+    {
+      "id": "back-door-frame-r",
+      "kind": "context",
+      "name": "Back door frame",
+      "where": "right",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [64.5, 65.5], "y": [0, 83], "z": [-4.75, -3]}},
+      "src": "projects/ceiling-storage/project.ts:63:7"
+    },
+    {
+      "id": "back-door-frame-head",
+      "kind": "context",
+      "name": "Back door frame",
+      "where": "head",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [28.5, 64.5], "y": [82, 83], "z": [-4.75, -3]}},
+      "src": "projects/ceiling-storage/project.ts:64:7"
+    },
+    {
+      "id": "back-door",
+      "kind": "context",
+      "name": "Back door",
+      "role": "fixture",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-4.75, -3]}},
+      "src": "projects/ceiling-storage/project.ts:65:7"
+    },
+    {
+      "id": "left-door-casing-back",
+      "kind": "context",
+      "name": "Left door casing",
+      "where": "back-wall side",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [2.5, 6.25]}},
+      "src": "projects/ceiling-storage/project.ts:69:7"
+    },
+    {
+      "id": "left-door-casing-front",
+      "kind": "context",
+      "name": "Left door casing",
+      "where": "open side",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [40, 43.75]}},
+      "src": "projects/ceiling-storage/project.ts:70:7"
+    },
+    {
+      "id": "left-door-casing-head",
+      "kind": "context",
+      "name": "Left door casing",
+      "where": "head",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 0.75], "y": [86.75, 90.5], "z": [6.25, 40]}},
+      "src": "projects/ceiling-storage/project.ts:71:7"
+    },
+    {
+      "id": "left-door",
+      "kind": "context",
+      "name": "Left door",
+      "role": "fixture",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-1.75, 0], "y": [0, 86.75], "z": [6.25, 40]}},
+      "src": "projects/ceiling-storage/project.ts:72:7"
+    },
+    {
+      "id": "wall-left-return",
+      "kind": "context",
+      "name": "Wall left of the alcove",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [-30, -5], "y": [0, 98.5], "z": [47, 52]}},
+      "src": "projects/ceiling-storage/project.ts:73:7"
+    },
+    {
+      "id": "wall-right",
+      "kind": "context",
+      "name": "Right wall",
+      "role": "wall",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [72, 77], "y": [0, 98.5], "z": [0, 80]}},
+      "src": "projects/ceiling-storage/project.ts:74:7"
+    }
+  ],
+  "steps": [],
+  "checks": [],
+  "issues": []
+}

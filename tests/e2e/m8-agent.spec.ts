@@ -26,7 +26,7 @@ function wb(args: string[]): Promise<{ code: number; stdout: string; stderr: str
 }
 
 async function openViewer(page: Page): Promise<void> {
-  await page.goto(`${url}/`);
+  await page.goto(`${url}/?project=closet-built-in`);
   await page.waitForFunction(() => !!(window as any).__wb?.store?.getState().resolved && (window as any).__wb.meshes?.size > 0);
 }
 
@@ -55,7 +55,7 @@ test.afterAll(async () => {
 });
 
 test("a render page reports ready, posts no viewer state and does not answer wb show", async ({ page }) => {
-  await page.goto(`${url}/?render=front&select=partition-left`);
+  await page.goto(`${url}/?project=closet-built-in&render=front&select=partition-left`);
   await page.waitForFunction(() => (window as any).__wbRender?.ready === true, undefined, { timeout: 20_000 });
   await expect(page.locator(".render-root .drawing-wrap svg")).toBeVisible();
   await page.waitForTimeout(400); // longer than the state debounce

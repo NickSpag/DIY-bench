@@ -11,8 +11,10 @@ export const PROJECT_FILE = join(ROOT, "projects", "closet-built-in", "project.t
 export const STATE_FILE = join(ROOT, ".diy-bench", "state.json");
 export const ORIGINAL = readFileSync(PROJECT_FILE, "utf8");
 
-/** Opens the app and waits until a model is on screen. */
+/** Opens the app on the closet (unless the query names a project) and waits until a model is on screen.
+ *  The viewer otherwise opens the first project by id, which changes whenever a project is added. */
 export async function openApp(page: Page, query = ""): Promise<void> {
+  if (!/[?&]project=/.test(query)) query = query ? `${query}&project=closet-built-in` : "?project=closet-built-in";
   await page.goto(`/${query}`);
   await page.waitForFunction(() => {
     const w = (window as any).__wb;

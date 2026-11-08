@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="wb-drawing" viewBox="-13.8907 -106.4466 108.3374 120.3374" data-view="section" data-phase="p1" style="--s: 1.01">
+<style>
+.wb-drawing text { font-family: var(--f-mono, ui-monospace, "SF Mono", Menlo, monospace); }
+.wb-drawing .f-wall { fill: color-mix(in oklab, var(--wallface, #eff2f2) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-floor { fill: color-mix(in oklab, var(--ink, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-wood { fill: color-mix(in oklab, var(--wood, #ddb987) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-face { fill: color-mix(in oklab, var(--face, #e8cc9c) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-hardwood { fill: color-mix(in oklab, var(--wood-dark, #a77d45) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-mat { fill: color-mix(in oklab, var(--mat, #ddb987) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-fixture { fill: color-mix(in oklab, var(--metal, #8d979c) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-pine { fill: color-mix(in oklab, var(--pine, #ecdcb6) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-metal { fill: color-mix(in oklab, var(--metal, #8d979c) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.55; }
+.wb-drawing .f-rod { fill: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-cut { fill: color-mix(in oklab, var(--cut-wood, #b58c55) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .f-cutwall { fill: color-mix(in oklab, var(--hatch, #8f9ba1) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.25; }
+.wb-drawing .f-contents { fill: color-mix(in oklab, var(--fabric-1, #8a9ca7) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.16; }
+.wb-drawing .f-mat-contents { fill: color-mix(in oklab, var(--mat, #8a9ca7) var(--hl-mix, 100%), var(--hl, #000)); fill-opacity: 0.9; }
+.wb-drawing .hatch-ln { stroke: var(--hatch, #8f9ba1); stroke-width: calc(0.13px * var(--s, 1)); }
+.wb-drawing .c-space { stroke-width: calc(0.22px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .c-line { fill: none; stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.16px * var(--s, 1) * var(--hl-w, 1)); stroke-dasharray: calc(0.8px * var(--s, 1)) calc(0.6px * var(--s, 1)); }
+.wb-drawing .e { fill: none; stroke-linecap: square; stroke: color-mix(in oklab, var(--wood-dark, #a77d45) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.16px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .e.e-ctx { stroke: color-mix(in oklab, var(--ink, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.3px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .e.e-metal { stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); }
+.wb-drawing .e.e-cut { stroke: color-mix(in oklab, var(--cut-edge, #1c2529) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.32px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .hid { fill: none; stroke: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.12px * var(--s, 1) * var(--hl-w, 1)); stroke-dasharray: calc(0.7px * var(--s, 1)) calc(0.45px * var(--s, 1)); }
+.wb-drawing .veil { pointer-events: none; }
+.wb-drawing .v-fill { fill: var(--veil, rgba(28, 37, 41, 0.08)); }
+.wb-drawing .v-open { fill: none; stroke: var(--dim, #2b5d8c); stroke-width: calc(0.32px * var(--s, 1)); stroke-dasharray: calc(1.4px * var(--s, 1)) calc(0.8px * var(--s, 1)); }
+.wb-drawing .dim { cursor: pointer; }
+.wb-drawing .dim path { fill: none; stroke: color-mix(in oklab, var(--dim, #2b5d8c) var(--hl-mix, 100%), var(--hl, #000)); stroke-width: calc(0.18px * var(--s, 1) * var(--hl-w, 1)); }
+.wb-drawing .dim text { fill: color-mix(in oklab, var(--dim, #2b5d8c) var(--hl-mix, 100%), var(--hl, #000)); font-size: calc(2.2px * var(--s, 1)); font-weight: 500; }
+.wb-drawing .dim-hit { fill: transparent; stroke: none; }
+.wb-drawing .lbl { fill: color-mix(in oklab, var(--ink-soft, #56646b) var(--hl-mix, 100%), var(--hl, #000)); font-size: calc(1.7px * var(--s, 1)); paint-order: stroke; stroke: var(--sheet, #fafbfb); stroke-width: calc(0.6px * var(--s, 1)); stroke-linejoin: round; }
+</style>
+<defs><pattern id="wbd-hatch-section-p1" patternUnits="userSpaceOnUse" width="1.616" height="1.616" patternTransform="rotate(45)"><line class="hatch-ln" x1="0" y1="0" x2="0" y2="1.616"/></pattern></defs>
+<g class="fills"><rect data-part="wall-right" class="part k-context f-wall" x="0" y="-98.5" width="80" height="98.5"/><rect data-part="wall-back-right" class="part k-context f-wall" x="-5" y="-98.5" width="5" height="98.5"/><rect data-part="back-door-frame-r" class="part k-context f-wall" x="-4.75" y="-83" width="1.75" height="83"/></g>
+<g class="contents"></g>
+<g class="hidden"></g>
+<g class="edges"><path data-part="wall-right" class="e e-ctx" d="M0 0H80M0 -98.5H80M0 0V-98.5M80 0V-98.5"/><path data-part="wall-back-right" class="e e-ctx" d="M-5 0H0M-5 -98.5H0M-5 0V-98.5M0 0V-98.5"/><path data-part="back-door-frame-r" class="e e-ctx" d="M-4.75 0H-3M-4.75 -83H-3M-4.75 0V-83M-3 0V-83"/></g>
+<g class="cut"><rect data-part="back-door" class="part k-context f-mat" style="--mat:#cfc8bb" x="-4.75" y="-82" width="1.75" height="82"/><rect data-part="back-door-frame-head" class="part k-context f-cutwall" x="-4.75" y="-83" width="1.75" height="1"/><rect class="hatch" data-part="back-door-frame-head" x="-4.75" y="-83" width="1.75" height="1" fill="url(#wbd-hatch-section-p1)"/><rect data-part="ceiling" class="part k-context f-cutwall" x="-5" y="-100" width="57" height="1.5"/><rect class="hatch" data-part="ceiling" x="-5" y="-100" width="57" height="1.5" fill="url(#wbd-hatch-section-p1)"/><rect data-part="door-header" class="part k-context f-cutwall" x="-5" y="-98.5" width="5" height="15.5"/><rect class="hatch" data-part="door-header" x="-5" y="-98.5" width="5" height="15.5" fill="url(#wbd-hatch-section-p1)"/><rect data-part="floor" class="part k-context f-cutwall" x="-5" y="0" width="93" height="1"/><rect class="hatch" data-part="floor" x="-5" y="0" width="93" height="1" fill="url(#wbd-hatch-section-p1)"/><path data-part="back-door" class="e e-cut" d="M-4.75 0H-3M-4.75 -82H-3M-4.75 0V-82M-3 0V-82"/><path data-part="back-door-frame-head" class="e e-cut" d="M-4.75 -82H-3M-4.75 -83H-3M-4.75 -82V-83M-3 -82V-83"/><path data-part="ceiling" class="e e-cut" d="M-5 -98.5H52M-5 -100H52M-5 -98.5V-100M52 -98.5V-100"/><path data-part="door-header" class="e e-cut" d="M-5 -83H0M-5 -98.5H0M-5 -83V-98.5M0 -83V-98.5"/><path data-part="floor" class="e e-cut" d="M-5 1H88M-5 0H88M-5 1V0M88 1V0"/></g>
+<g class="veil"></g>
+<g class="dims"><g class="dim" data-part="wall-back-left wall-left" data-dim="section:0"><rect class="dim-hit" x="-1.414" y="2.586" width="54.828" height="4.8581"/><path d="M0 4H52M-0.808 4.808L0.808 3.192M51.192 4.808L52.808 3.192M0 2.586V5.414M52 2.586V5.414"/><text x="26" y="6.6422" text-anchor="middle">52</text></g><g class="dim" data-part="floor ceiling" data-dim="section:1"><rect class="dim-hit" x="-7.4441" y="-99.914" width="4.8581" height="101.328"/><path d="M-4 -98.5V0M-4.808 -97.692L-3.192 -99.308M-4.808 0.808L-3.192 -0.808M-5.414 -98.5H-2.586M-5.414 0H-2.586"/><text x="-4.909" y="-49.25" text-anchor="middle" transform="rotate(-90 -4.909 -49.25)">98½</text></g></g>
+<g class="labels"></g>
+</svg>
