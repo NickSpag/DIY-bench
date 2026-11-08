@@ -1,11 +1,13 @@
-CEILING STORAGE · CUT LIST (in)
+CEILING STORAGE · CUT LIST (in) · beamDepth=3
 
 PHASE 1 · BUILD
 2×4 (spruce-pine-fir, No. 2 or better)
-  4 × Post  —  94½ × 3½ × 1½  [basement storage frame]
+  4 × Post  —  95 × 3½ × 1½  [basement storage frame]
       Screw to a wall stud near the top and bottom so the frame cannot rack.
-  4 × Beam  —  72 × 3½ × 1½  [basement storage frame; cut to fit]
-  2 × Tie (left; right)  —  45 × 3½ × 1½  [basement storage frame]
+
+2×4 ripped narrower on the table saw
+  4 × Beam  —  72 × 3 × 1½  [basement storage frame; cut to fit]
+  2 × Tie (left; right)  —  45 × 3 × 1½  [basement storage frame]
 
 Hardware
   1 × KOKORACKER 4×4 ft ceiling storage lift  —  Already bought
@@ -15,4 +17,5 @@ Hardware
   1 box × Self-drilling screws for steel studs, #10 × 2½″  —  Post to wall stud, to keep the frame from racking
 
 BOARD TOTALS
-  2×4 (spruce-pine-fir, No. 2 or better): 10 pieces, 756 in all
+  2×4 (spruce-pine-fir, No. 2 or better): 4 pieces, 380 in all
+  2×4 ripped narrower on the table saw: 6 pieces, 378 in all

@@ -39,7 +39,17 @@ to right, so the frame carries them on two beams that span wall to wall across t
 Each beam carries half the loaded rack (149 lb) over a 70½″ span: the `beam-strength` rule works out the
 bending stress and sag for a doubled 2×4 and both are well inside the limits for spruce-pine-fir No. 2.
 
-The tops of the rails are 94½″ off the floor. The left door is 86¾″ tall and the raised rack hangs over its
+The beams can be ripped shallower to raise the rails (the "Beams" option): ripped to 3″ they gain ½″, to 2¾″
+they gain ¾″. Sag at full load, worked out as if the whole load hung at mid-span (an upper bound), is about
+1/16″ full depth, 1/8″ at 3″ and 5/32″ at 2¾″, against 3/16″ allowed (span ÷ 360). At 2½″ it would just
+exceed that, so the option stops at 2¾″. Ripping a 2×4 can release stress in the wood and make it bow, so rip
+the beam pieces first and pick the straightest four.
+
+Pressure-treated lumber is not used: it is sold wet, so it shrinks and bows more as it dries indoors, and it is
+meant for outdoor and ground contact. Kiln-dried 2×4s (stamped KD or S-DRY), picked straight at the store and
+installed crown up, bow least.
+
+With full-depth beams the tops of the rails are 94½″ off the floor. The left door is 86¾″ tall and the raised rack hangs over its
 swing, so the rack may hang at most 7¾″ below the tops of its rails when fully raised. The
 `rack-raised-clears-doors` rule warns until that height is measured.
 
@@ -82,3 +92,5 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
   frame and the raised rack must clear their swings.
 - 2026-11-08: The frame: corner posts, a doubled 2×4 beam under each rack rail spanning wall to wall, ties at the
   sides. The rails run left to right and go onto the beams before the beams go up.
+- 2026-11-08: Beams may be ripped to 3″ or 2¾″ for headroom (an option until the rack's raised height is known).
+  No pressure-treated lumber indoors; kiln-dried 2×4s instead.

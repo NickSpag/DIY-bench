@@ -44,10 +44,17 @@ export default defineProject({
   id: "ceiling-storage",
   title: "Ceiling storage",
   units: "in",
-  options: {},
+  options: {
+    beamDepth: {
+      label: "Beams",
+      choices: { "3.5": "Full 2×4s (3½″ deep)", "3": "2×4s ripped to 3″", "2.75": "2×4s ripped to 2¾″" },
+      default: "3.5",
+    },
+  },
   phases: [{ id: "p1", title: "Build" }],
   materials: {
     "2x4": { type: "board", name: "2×4 (spruce-pine-fir, No. 2 or better)", nominal: "2×4", thickness: P.lumber.t, width: P.lumber.w, finish: "none", stockLengths: [96] },
+    "2x4-ripped": { type: "board", name: "2×4 ripped narrower on the table saw", nominal: "2×4", thickness: P.lumber.t, finish: "none", stockLengths: [96] },
   },
   banding: {},
   hardware: {
@@ -58,7 +65,7 @@ export default defineProject({
     "wall-screws": { name: "Self-drilling screws for steel studs, #10 × 2½″", unit: "box", spec: "Post to wall stud, to keep the frame from racking" },
   },
 
-  build(b) {
+  build(b, opt) {
     const { width: W, depth: D, height: H } = P.alcove;
     const wt = P.wallT;
     const door = { x: [P.doorway.left, W - P.doorway.right] as const, top: H - P.doorway.header };
@@ -121,7 +128,10 @@ export default defineProject({
 
     // ---------- the frame ----------
     const R = P.rack, L = P.lumber, T = L.t;
-    const beamY: Range = [H - P.ceilingGap - L.w, H - P.ceilingGap];
+    // Beams can be ripped shallower to raise the rails; posts and ties stay full 2×4s.
+    const beamD = Number(opt.beamDepth);
+    const beamMaterial = beamD === L.w ? "2x4" : "2x4-ripped";
+    const beamY: Range = [H - P.ceilingGap - beamD, H - P.ceilingGap];
     // The rack sits centred front to back; each beam is two 2×4s on edge, centred under its rail.
     const railZ = [D / 2 - R.rail.spacing / 2, D / 2 + R.rail.spacing / 2];
     const beams = [
@@ -153,7 +163,7 @@ export default defineProject({
     for (const bm of beams) {
       for (const [i, half] of (["a", "b"] as const).entries()) {
         const id = `${bm.id}-${half}`;
-        b.board({ id, name: "Beam", where: `${bm.where}, ${i === 0 ? "back" : "front"} half`, material: "2x4", phase: "p1", step: "p1-beams",
+        b.board({ id, name: "Beam", where: `${bm.where}, ${i === 0 ? "back" : "front"} half`, material: beamMaterial, phase: "p1", step: "p1-beams",
           box: box([0, W], beamY, [bm.z[0] + i * T, bm.z[0] + (i + 1) * T]), grain: "x", fitToSite: true,
           exposure: "limited", exposureNote: "basement storage frame",
           joins: [...posts.filter((po) => po.beam === bm.id).map((po) => ({ to: po.id, by: "rests-on" as const, note: "screwed down into the post" })),
@@ -164,7 +174,7 @@ export default defineProject({
 
     // Ties: a 2×4 on edge between the beams at each side, closing the top into a rectangle.
     for (const [id, where, x] of [["tie-left", "left", 0], ["tie-right", "right", W - T]] as const) {
-      b.board({ id, name: "Tie", where, material: "2x4", phase: "p1", step: "p1-beams",
+      b.board({ id, name: "Tie", where, material: beamMaterial, phase: "p1", step: "p1-beams",
         box: box([x, x + T], beamY, [beams[0].z[1], beams[1].z[0]]), grain: "z", exposure: "limited", exposureNote: "basement storage frame",
         joins: [{ to: "beam-back-b", by: "screws", note: "two 3″ screws through the beam into the end" }, { to: "beam-front-a", by: "screws", note: "two 3″ screws through the beam into the end" }] });
       built.push(id);
@@ -197,7 +207,7 @@ export default defineProject({
     const load = (R.capacity + R.weight) / 2;
     const a = R.rail.length;
     const M = (load / 2) * (span / 2) - (load / 2) * (a / 4);               // partial uniform load, centred
-    const S = 2 * (T * L.w ** 2) / 6, I = 2 * (T * L.w ** 3) / 12;
+    const S = 2 * (T * beamD ** 2) / 6, I = 2 * (T * beamD ** 3) / 12;
     const stress = Math.round(M / S), defl = Math.round(((load * span ** 3) / (48 * P.spf.e * I)) * 1000) / 1000; // point-load deflection, an upper bound
     b.check("beam-strength", "Each doubled 2×4 beam carries half the loaded rack", stress <= P.spf.fb && defl <= span / 360,
       `${load} lb per beam over a ${span}″ span: bending ${stress} psi (allowed ${P.spf.fb}), sag ${defl}″ (allowed ${Math.round((span / 360) * 100) / 100}″)`, "error");
