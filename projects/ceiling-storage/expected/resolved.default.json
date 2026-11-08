@@ -10,7 +10,7 @@
       "role": "floor",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-30, 77], "y": [-1, 0], "z": [-5, 88]}},
-      "src": "projects/ceiling-storage/project.ts:51:7"
+      "src": "projects/ceiling-storage/project.ts:53:7"
     },
     {
       "id": "ceiling",
@@ -19,7 +19,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 77], "y": [98.5, 100], "z": [-5, 52]}},
-      "src": "projects/ceiling-storage/project.ts:52:7"
+      "src": "projects/ceiling-storage/project.ts:54:7"
     },
     {
       "id": "wall-back-left",
@@ -29,7 +29,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 27.5], "y": [0, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:53:7"
+      "src": "projects/ceiling-storage/project.ts:55:7"
     },
     {
       "id": "wall-back-right",
@@ -39,7 +39,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [65.5, 77], "y": [0, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:54:7"
+      "src": "projects/ceiling-storage/project.ts:56:7"
     },
     {
       "id": "door-header",
@@ -48,7 +48,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [27.5, 65.5], "y": [83, 98.5], "z": [-5, 0]}},
-      "src": "projects/ceiling-storage/project.ts:55:7"
+      "src": "projects/ceiling-storage/project.ts:57:7"
     },
     {
       "id": "wall-left-back",
@@ -58,7 +58,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [0, 6.25]}},
-      "src": "projects/ceiling-storage/project.ts:56:7"
+      "src": "projects/ceiling-storage/project.ts:58:7"
     },
     {
       "id": "wall-left",
@@ -68,7 +68,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [0, 98.5], "z": [40, 52]}},
-      "src": "projects/ceiling-storage/project.ts:57:7"
+      "src": "projects/ceiling-storage/project.ts:59:7"
     },
     {
       "id": "wall-left-header",
@@ -77,7 +77,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-5, 0], "y": [86.75, 98.5], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:58:7"
+      "src": "projects/ceiling-storage/project.ts:60:7"
     },
     {
       "id": "back-door-frame-l",
@@ -87,7 +87,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [27.5, 28.5], "y": [0, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:62:7"
+      "src": "projects/ceiling-storage/project.ts:64:7"
     },
     {
       "id": "back-door-frame-r",
@@ -97,7 +97,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [64.5, 65.5], "y": [0, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:63:7"
+      "src": "projects/ceiling-storage/project.ts:65:7"
     },
     {
       "id": "back-door-frame-head",
@@ -107,7 +107,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [82, 83], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:64:7"
+      "src": "projects/ceiling-storage/project.ts:66:7"
     },
     {
       "id": "back-door",
@@ -116,7 +116,7 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-4.75, -3]}},
-      "src": "projects/ceiling-storage/project.ts:65:7"
+      "src": "projects/ceiling-storage/project.ts:67:7"
     },
     {
       "id": "left-door-casing-back",
@@ -126,7 +126,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [2.5, 6.25]}},
-      "src": "projects/ceiling-storage/project.ts:69:7"
+      "src": "projects/ceiling-storage/project.ts:71:7"
     },
     {
       "id": "left-door-casing-front",
@@ -136,7 +136,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [0, 90.5], "z": [40, 43.75]}},
-      "src": "projects/ceiling-storage/project.ts:70:7"
+      "src": "projects/ceiling-storage/project.ts:72:7"
     },
     {
       "id": "left-door-casing-head",
@@ -146,7 +146,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [0, 0.75], "y": [86.75, 90.5], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:71:7"
+      "src": "projects/ceiling-storage/project.ts:73:7"
     },
     {
       "id": "left-door",
@@ -155,7 +155,7 @@
       "role": "fixture",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-1.75, 0], "y": [0, 86.75], "z": [6.25, 40]}},
-      "src": "projects/ceiling-storage/project.ts:72:7"
+      "src": "projects/ceiling-storage/project.ts:74:7"
     },
     {
       "id": "wall-left-return",
@@ -164,7 +164,7 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [-30, -5], "y": [0, 98.5], "z": [47, 52]}},
-      "src": "projects/ceiling-storage/project.ts:73:7"
+      "src": "projects/ceiling-storage/project.ts:75:7"
     },
     {
       "id": "wall-right",
@@ -173,10 +173,31 @@
       "role": "wall",
       "cutPhase": "p1",
       "boxes": {"p1": {"x": [72, 77], "y": [0, 98.5], "z": [0, 80]}},
-      "src": "projects/ceiling-storage/project.ts:74:7"
+      "src": "projects/ceiling-storage/project.ts:76:7"
+    },
+    {
+      "id": "back-door-swing",
+      "kind": "context",
+      "name": "Back door swing",
+      "role": "space",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [28.5, 64.5], "y": [0, 82], "z": [-3, 33]}},
+      "src": "projects/ceiling-storage/project.ts:86:9"
+    },
+    {
+      "id": "left-door-swing",
+      "kind": "context",
+      "name": "Left door swing",
+      "role": "space",
+      "cutPhase": "p1",
+      "boxes": {"p1": {"x": [0, 33.75], "y": [0, 86.75], "z": [6.25, 40]}},
+      "src": "projects/ceiling-storage/project.ts:86:9"
     }
   ],
   "steps": [],
-  "checks": [],
+  "checks": [
+    {"id": "back-door-swing-clear", "pass": true, "severity": "error"},
+    {"id": "left-door-swing-clear", "pass": true, "severity": "error"}
+  ],
   "issues": []
 }

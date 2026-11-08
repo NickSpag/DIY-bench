@@ -18,6 +18,8 @@ export const P = {
   // The door in the left wall, measured to the outside of its casing as you face that wall: the casing is
   // 3¾″ wide all around and stands ¾″ proud of the wall.
   leftDoor: { left: 8.25, right: 2.5, top: 8, casing: 3.75, casingProud: 0.75 }, // inferred: measured to the casing's outer edge
+  // Both doors swing into the alcove, hinged on the left as you face them from inside it. They are closed
+  // whenever the rack is lowered, so only the frame and the raised rack have to stay out of their swing.
   doorT: 1.75,     // inferred: door thickness, for drawing only
   rightWall: 80,   // the right wall runs on past the alcove; it goes farther, but this is the part that matters
   leftReturn: 30,  // approximate: where the left wall ends, a wall turns away from the alcove, for the drawing
@@ -73,6 +75,29 @@ export default defineProject({
     b.context({ id: "wall-left-return", name: "Wall left of the alcove", role: "wall", box: box([-P.leftReturn, -wt], [0, H], [D - wt, D]) });
     b.context({ id: "wall-right", name: "Right wall", role: "wall", box: box([W, W + wt], [0, H], [0, P.rightWall]) });
 
+    // Door swings, in plan: a quarter circle about the hinge, from the floor to the top of the door.
+    const swings = [
+      { id: "back-door-swing", name: "Back door swing", hinge: [door.x[0] + fr, -P.doorway.recess] as const,
+        r: door.x[1] - door.x[0] - 2 * fr, x: [door.x[0] + fr, door.x[1] - fr] as Range, top: door.top - fr },
+      { id: "left-door-swing", name: "Left door swing", hinge: [0, leftOpening.z[1]] as const,
+        r: leftOpening.z[1] - leftOpening.z[0], x: [0, leftOpening.z[1] - leftOpening.z[0]] as Range, top: leftOpening.top },
+    ].map((sw) => ({ ...sw, z: sw.id === "back-door-swing" ? [sw.hinge[1], sw.hinge[1] + sw.r] as Range : leftOpening.z as Range }));
+    for (const sw of swings)
+      b.context({ id: sw.id, name: sw.name, role: "space", box: box(sw.x, [0, sw.top], sw.z) });
+
+    // Nothing built may stand in a door's swing below the top of the door. The swing is a quarter circle, so
+    // a part's plan footprint is clipped to the swing's square and tested against the radius from the hinge.
+    const inSwing = (bx: { x: Range; y: Range; z: Range }, sw: (typeof swings)[number]) => {
+      if (bx.y[0] >= sw.top) return false;
+      const x0 = Math.max(bx.x[0], sw.x[0]), x1 = Math.min(bx.x[1], sw.x[1]);
+      const z0 = Math.max(bx.z[0], sw.z[0]), z1 = Math.min(bx.z[1], sw.z[1]);
+      if (x0 >= x1 || z0 >= z1) return false;
+      const dx = Math.max(x0 - sw.hinge[0], 0, sw.hinge[0] - x1), dz = Math.max(z0 - sw.hinge[1], 0, sw.hinge[1] - z1);
+      return Math.hypot(dx, dz) < sw.r;
+    };
+    // Every frame and rack part's id goes in here as it is built, for the door-swing rule at the end.
+    const built: string[] = [];
+
     b.view({ id: "front", title: "Elevation", kind: "elevation", look: "-z",
       dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: -4 }, { from: "floor.y1", to: "ceiling.y0", offset: -4 },
         { from: "wall-left.x1", to: "door-header.x0", offset: 6 }, { from: "door-header.x0", to: "door-header.x1", offset: 6 },
@@ -87,5 +112,15 @@ export default defineProject({
     b.view({ id: "plan", title: "Plan", kind: "plan", look: "-y", cut: H / 2,
       dims: [{ from: "wall-left.x1", to: "wall-right.x0", offset: 4 }, { from: "wall-back-left.z1", to: "wall-left.z1", offset: -4 },
         { from: "wall-right.z0", to: "wall-right.z1", offset: W - 4 }] });
+
+    for (const sw of swings) {
+      const hits = built.filter((id) => {
+        const p = b.part(id);
+        const boxes = "box" in p && p.box ? [p.box, ...Object.values(p.moves ?? {})] : [];
+        return boxes.some((bx) => inSwing(bx, sw));
+      });
+      b.check(sw.id.replace("-swing", "-swing-clear"), `Nothing stands in the ${sw.name.toLowerCase()}`, hits.length === 0,
+        hits.length ? `in the swing: ${hits.join(", ")}` : `${sw.r}″ door, swing clear up to ${sw.top}″ off the floor`, "error");
+    }
   },
 });

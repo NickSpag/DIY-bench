@@ -14,10 +14,16 @@ wide, with 27½″ of wall to its left, 6½″ to its right and 15½″ above it
 runs on past the alcove (80″ is drawn); the left wall ends at the alcove's open side, where a wall turns
 away to the left for about 30″.
 
-Both doors swing out. The back door sits 3″ into its doorway, in a 1″ frame, so the door itself is about
+Both doors swing into the alcove, hinged on the left as you face them from inside it. The back door sits 3″ into its doorway, in a 1″ frame, so the door itself is about
 36″ × 82″. The left wall has a door near the back corner: its casing is 3¾″ wide all around, stands ¾″
 proud of the wall into the alcove, and runs from 2½″ off the back wall to 8¼″ short of the open side and
-up to 8″ below the ceiling. Inside the casing the opening is 33¾″ wide and 86¾″ tall. So far the model is only the room; the frame and the rack come next.
+up to 8″ below the ceiling. Inside the casing the opening is 33¾″ wide and 86¾″ tall. The doors are closed whenever the rack is lowered, so the lowered rack may stand in their swing; the frame
+and the raised rack may not, below the top of each door. The design rules `back-door-swing-clear` and
+`left-door-swing-clear` enforce that, testing each part against the quarter circle the door sweeps (the
+drawings show the square around it). Opened all the way, the two doors overlap near the back-left
+quarter of the alcove, so both cannot be wide open at once.
+
+So far the model is only the room; the frame and the rack come next.
 
 ## Assumptions
 
@@ -33,8 +39,6 @@ up to 8″ below the ceiling. Inside the casing the opening is 33¾″ wide and 
 
 ## Open questions
 
-- "Swing out": do the doors swing into the alcove or away from it, and which side is each hinged on? A door
-  that swings into the alcove sweeps about 3′ of floor that the frame and the lowered rack must leave clear.
 - Is the alcove open along the whole 72″ side, or is there a header across it?
 - Width at floor, middle and top, and depth at both ends, to see whether the walls are out of square.
 - Ceiling height at the four corners.
@@ -49,3 +53,5 @@ up to 8″ below the ceiling. Inside the casing the opening is 33¾″ wide and 
 - 2026-11-08: The doorway in the back wall, the right wall running on to 80″ and the wall turning left
   at the alcove's open side added to the drawing.
 - 2026-11-08: Both doors added: the back door in its recessed frame, the left door with its casing.
+- 2026-11-08: Both doors swing in, hinged on the left. They are closed whenever the rack is lowered, so only the
+  frame and the raised rack must clear their swings.
