@@ -91,6 +91,7 @@ export type ContextSpec = {
   // A space is room kept for something not chosen yet (a media console): a dashed outline, never in overlap checks.
   box: Box; phase?: string; removedIn?: string; moves?: Record<string, Box>;
   color?: string; // display colour in the 3D view and drawings (a CSS colour), e.g. water or soil
+  group?: string; // room parts with the same group are drawn as one solid: a wall built of pieces around a doorway shows no seams
 };
 
 export type PartKind = "panel" | "board" | "hardware" | "context";

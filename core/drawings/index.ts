@@ -3,7 +3,7 @@
 // selection stylesheet can highlight it and a click can select it.
 import type { Box, Range, Resolved, ResolvedPart, View } from "../model/types.ts";
 import { fmtLength } from "../units.ts";
-import { edgesOf, inFront, rectEdges, unionBoundary, type DepthRect, type Rect, type Seg } from "./hidden.ts";
+import { alongSegs, edgesOf, inFront, rectEdges, unionBoundary, type DepthRect, type Rect, type Seg } from "./hidden.ts";
 import { classify, keptDepth, type Role } from "./section.ts";
 import { lookAxis, projectBox } from "./view-mapping.ts";
 import { DRAWING_STYLE, esc, num, rectAttrs, segPath } from "./svg.ts";
@@ -144,6 +144,25 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
     const c = i.circle as { u: number; v: number; r: number };
     return `<circle ${dp(i.id)} class="${cls}" cx="${num(c.u)}" cy="${num(-c.v)}" r="${num(c.r)}"/>`;
   };
+  // Room parts in one group, side by side at the same depth (a wall in pieces around a doorway), keep only the
+  // outline of their union: the lines where the pieces meet are not drawn.
+  const groupKey = (i: DrawItem) => (i.part.kind === "context" && i.part.group ? `${i.part.group}|${i.role}|${num(i.d[0])}|${num(i.d[1])}` : "");
+  const outlineOf = new Map<string, Seg[]>();
+  for (const i of [...beyond, ...cut]) {
+    const k = groupKey(i);
+    if (!k || outlineOf.has(k)) continue;
+    const members = [...beyond, ...cut].filter((j) => groupKey(j) === k);
+    if (members.length > 1) outlineOf.set(k, unionBoundary(members.map((j) => ({ u: j.u, v: j.v }))));
+  }
+  const trim = (i: DrawItem, segs: Seg[]) => {
+    const outline = outlineOf.get(groupKey(i));
+    return outline ? segs.flatMap((sg) => alongSegs(sg, outline)) : segs;
+  };
+  for (const i of beyond) {
+    const e = edgeMap.get(i.id);
+    if (e && outlineOf.has(groupKey(i))) edgeMap.set(i.id, { visible: trim(i, e.visible), hidden: trim(i, e.hidden) });
+  }
+
   const edgeCls = (i: DrawItem) => (i.part.kind === "context" ? "e e-ctx" : i.part.kind === "hardware" ? "e e-metal" : "e");
   const hiddenEls: string[] = [], edgeEls: string[] = [];
   for (const i of beyond) {
@@ -159,7 +178,7 @@ export function drawView(r: Resolved, viewId: string, opts: DrawOptions): string
   }
   for (const i of cut) {
     if (i.circle) cutEls.push(circleEdge(i, "e e-cut"));
-    else cutEls.push(`<path ${dp(i.id)} class="e e-cut" d="${segPath(rectEdges(i))}"/>`);
+    else cutEls.push(`<path ${dp(i.id)} class="e e-cut" d="${segPath(trim(i, rectEdges(i)))}"/>`);
   }
 
   // ---------- contents: translucent, dashed outline; spaces: the outline alone ----------

@@ -207,11 +207,52 @@ function SpaceOutline({ e, offset, color, planes }: { e: Entry; offset: Vec3; co
 const meshes = new Map<string, THREE.Mesh>();
 const noRaycast = () => null;
 
-function PartMesh({ e, offset, pal, planes, selected, inStep, section }: {
+/**
+ * One solid from several boxes (a wall in pieces around a doorway), relative to `origin`: the boxes' corners cut
+ * space into a grid of cells, and a face is made wherever a filled cell meets an empty one. Coplanar faces
+ * share their edges exactly, so the edge lines come out only where the surface turns a corner.
+ */
+export function unionGeometry(boxes: Box[], origin: Vec3): THREE.BufferGeometry {
+  const axes = (["x", "y", "z"] as const).map((a) => [...new Set(boxes.flatMap((b) => [b[a][0], b[a][1]]))].sort((p, q) => p - q));
+  const [xs, ys, zs] = axes;
+  const filled = (i: number, j: number, k: number) => {
+    if (i < 0 || j < 0 || k < 0 || i >= xs.length - 1 || j >= ys.length - 1 || k >= zs.length - 1) return false;
+    const c = [(xs[i] + xs[i + 1]) / 2, (ys[j] + ys[j + 1]) / 2, (zs[k] + zs[k + 1]) / 2];
+    return boxes.some((b) => b.x[0] < c[0] && c[0] < b.x[1] && b.y[0] < c[1] && c[1] < b.y[1] && b.z[0] < c[2] && c[2] < b.z[1]);
+  };
+  const pos: number[] = [], nrm: number[] = [];
+  const quad = (pts: Vec3[], n: Vec3) => {
+    for (const idx of [0, 1, 2, 0, 2, 3]) {
+      const p = pts[idx];
+      pos.push(p[0] - origin[0], p[1] - origin[1], p[2] - origin[2]);
+      nrm.push(...n);
+    }
+  };
+  for (let i = 0; i < xs.length - 1; i++) for (let j = 0; j < ys.length - 1; j++) for (let k = 0; k < zs.length - 1; k++) {
+    if (!filled(i, j, k)) continue;
+    const [x0, x1, y0, y1, z0, z1] = [xs[i], xs[i + 1], ys[j], ys[j + 1], zs[k], zs[k + 1]];
+    if (!filled(i - 1, j, k)) quad([[x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y1, z0]], [-1, 0, 0]);
+    if (!filled(i + 1, j, k)) quad([[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], [1, 0, 0]);
+    if (!filled(i, j - 1, k)) quad([[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], [0, -1, 0]);
+    if (!filled(i, j + 1, k)) quad([[x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0]], [0, 1, 0]);
+    if (!filled(i, j, k - 1)) quad([[x0, y0, z0], [x0, y1, z0], [x1, y1, z0], [x1, y0, z0]], [0, 0, -1]);
+    if (!filled(i, j, k + 1)) quad([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], [0, 0, 1]);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nrm, 3));
+  return g;
+}
+
+function PartMesh({ e, offset, pal, planes, selected, inStep, section, union }: {
   e: Entry; offset: Vec3; pal: Palette; planes: THREE.Plane[]; selected: boolean; inStep: boolean; section: THREE.Plane | null;
+  union?: Box[]; // the boxes of this part's group, drawn as one solid by this mesh
 }) {
   const p = e.part;
   const c = centreOf(e.box);
+  const unionKey = union ? JSON.stringify(union) : "";
+  const unionGeom = useMemo(() => (union ? unionGeometry(union, c) : null), [unionKey]);   // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => unionGeom?.dispose(), [unionGeom]);
   const pos: Vec3 = [c[0] + offset[0], c[1] + offset[1], c[2] + offset[2]];
   const isContext = p.kind === "context";
   const isContents = isContext && p.role === "contents";
@@ -247,6 +288,8 @@ function PartMesh({ e, offset, pal, planes, selected, inStep, section }: {
     const cy = p.cylinder;
     geometry = <cylinderGeometry args={[cy.diameter / 2, cy.diameter / 2, cy.to - cy.from, 28]} />;
     rotation = cy.axis === "x" ? [0, 0, Math.PI / 2] : cy.axis === "z" ? [Math.PI / 2, 0, 0] : [0, 0, 0];
+  } else if (unionGeom) {
+    geometry = <primitive object={unionGeom} attach="geometry" />;
   } else {
     geometry = <boxGeometry args={sizeOf(e.box)} />;
   }
@@ -334,14 +377,22 @@ function SceneParts({ pal, plane }: { pal: Palette; plane: THREE.Plane }) {
     if (e.part.role === "fixture") return !veiled.has(e.part.id);   // drawn even above the build: an AC at the ceiling
     return !veiled.has(e.part.id) && belowTop(e);
   });
+  // Room parts in a group are drawn as one solid by the group's first part; the rest draw nothing.
+  const groups = new Map<string, Entry[]>();
+  for (const e of shown) if (e.part.kind === "context" && e.part.group && e.part.role !== "space") groups.set(e.part.group, [...(groups.get(e.part.group) ?? []), e]);
+  const unionOf = (e: Entry): Box[] | undefined | null => {
+    const g = e.part.kind === "context" && e.part.group ? groups.get(e.part.group) : undefined;
+    if (!g || g.length < 2) return undefined;
+    return g[0] === e ? g.map((m) => m.box) : null;   // null: drawn by the group's first part
+  };
   return (
     <group>
-      {shown.map((e) => (
+      {shown.filter((e) => unionOf(e) !== null).map((e) => (
         e.part.kind === "context" && e.part.role === "space"
           ? <SpaceOutline key={e.part.id} e={e} offset={explodeOffset(e, centre, k)} color={pal.ink} planes={planes} />
           : <PartMesh key={e.part.id} e={e} offset={explodeOffset(e, centre, k)} pal={pal} planes={planes}
           selected={sel.has(e.part.id)} inStep={stepParts.has(e.part.id) && !sel.has(e.part.id)}
-          section={section.enabled ? plane : null} />
+          section={section.enabled ? plane : null} union={unionOf(e) ?? undefined} />
       ))}
       {showLabels && shown.filter((e) => e.part.kind === "context" && LABELLED.has(e.part.role) && !(e.part.role === "space" && filled(e, shown))).map((e) => {
         const c = centreOf(e.box), o = explodeOffset(e, centre, k);

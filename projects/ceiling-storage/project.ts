@@ -96,12 +96,12 @@ export default defineProject({
     const zFar = Math.max(P.rightWall, D + P.room);
     b.context({ id: "floor", name: "Floor", role: "floor", box: box([-P.leftReturn, W + wt], [-1, 0], [-wt, zFar]) });
     b.context({ id: "ceiling", name: "Ceiling", role: "wall", box: box([-wt, W + wt], [H, H + 1.5], [-wt, D]) });
-    b.context({ id: "wall-back-left", name: "Back wall", where: "left of the doorway", role: "wall", box: box([-wt, door.x[0]], [0, H], [-wt, 0]) });
-    b.context({ id: "wall-back-right", name: "Back wall", where: "right of the doorway", role: "wall", box: box([door.x[1], W + wt], [0, H], [-wt, 0]) });
-    b.context({ id: "door-header", name: "Wall above the doorway", role: "wall", box: box(door.x, [door.top, H], [-wt, 0]) });
-    b.context({ id: "wall-left-back", name: "Left wall", where: "between the back wall and the door", role: "wall", box: box([-wt, 0], [0, H], [0, leftOpening.z[0]]) });
-    b.context({ id: "wall-left", name: "Left wall", where: "between the door and the open side", role: "wall", box: box([-wt, 0], [0, H], [leftOpening.z[1], D]) });
-    b.context({ id: "wall-left-header", name: "Wall above the left door", role: "wall", box: box([-wt, 0], [leftOpening.top, H], leftOpening.z) });
+    b.context({ id: "wall-back-left", name: "Back wall", where: "left of the doorway", role: "wall", group: "walls", box: box([-wt, door.x[0]], [0, H], [-wt, 0]) });
+    b.context({ id: "wall-back-right", name: "Back wall", where: "right of the doorway", role: "wall", group: "walls", box: box([door.x[1], W + wt], [0, H], [-wt, 0]) });
+    b.context({ id: "door-header", name: "Wall above the doorway", role: "wall", group: "walls", box: box(door.x, [door.top, H], [-wt, 0]) });
+    b.context({ id: "wall-left-back", name: "Left wall", where: "between the back wall and the door", role: "wall", group: "walls", box: box([-wt, 0], [0, H], [0, leftOpening.z[0]]) });
+    b.context({ id: "wall-left", name: "Left wall", where: "between the door and the open side", role: "wall", group: "walls", box: box([-wt, 0], [0, H], [leftOpening.z[1], D]) });
+    b.context({ id: "wall-left-header", name: "Wall above the left door", role: "wall", group: "walls", box: box([-wt, 0], [leftOpening.top, H], leftOpening.z) });
 
     // The back door: the doorway runs P.doorway.recess into the wall, then the door frame.
     const zDoor: Range = [-(P.doorway.recess + P.doorT), -P.doorway.recess];
@@ -116,8 +116,8 @@ export default defineProject({
     b.context({ id: "left-door-casing-front", name: "Left door casing", where: "open side", role: "wall", color: "#e9e6df", box: box(xCasing, [0, casing.top], [leftOpening.z[1], casing.z[1]]) });
     b.context({ id: "left-door-casing-head", name: "Left door casing", where: "head", role: "wall", color: "#e9e6df", box: box(xCasing, [leftOpening.top, casing.top], leftOpening.z) });
     b.context({ id: "left-door", name: "Left door", role: "fixture", color: "#cfc8bb", box: box([-P.doorT, 0], [0, leftOpening.top], leftOpening.z) });
-    b.context({ id: "wall-left-return", name: "Wall left of the alcove", role: "wall", box: box([-P.leftReturn, -wt], [0, H], [D - wt, D]) });
-    b.context({ id: "wall-right", name: "Right wall", role: "wall", box: box([W, W + wt], [0, H], [0, P.rightWall]) });
+    b.context({ id: "wall-left-return", name: "Wall left of the alcove", role: "wall", group: "walls", box: box([-P.leftReturn, -wt], [0, H], [D - wt, D]) });
+    b.context({ id: "wall-right", name: "Right wall", role: "wall", group: "walls", box: box([W, W + wt], [0, H], [0, P.rightWall]) });
 
     // Door swings, in plan: a quarter circle about the hinge, from the floor to the top of the door.
     const swings = [

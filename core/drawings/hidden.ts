@@ -11,6 +11,17 @@ export type Rect = { u: Range; v: Range };
 export type Seg = { o: "h" | "v"; at: number; from: number; to: number };
 export type DepthRect = Rect & { id: string; d: Range; occludes: boolean };
 
+/** The pieces of `s` that lie along any of the boundary segments (same orientation and line). */
+export function alongSegs(s: Seg, boundary: Seg[]): Seg[] {
+  const out: Seg[] = [];
+  for (const b of boundary) {
+    if (b.o !== s.o || Math.abs(b.at - s.at) > EPS) continue;
+    const lo = Math.max(s.from, b.from), hi = Math.min(s.to, b.to);
+    if (hi - lo > EPS) out.push({ o: s.o, at: s.at, from: lo, to: hi });
+  }
+  return mergeSegs(out);
+}
+
 export function rectEdges(r: Rect): Seg[] {
   return [
     { o: "h", at: r.v[0], from: r.u[0], to: r.u[1] },

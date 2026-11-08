@@ -8,6 +8,8 @@ import { edgesOf, splitSeg, unionBoundary, type DepthRect, type Seg } from "../.
 import { cutDepth, screenAxis } from "../../core/drawings/view-mapping.ts";
 import { projectPoint } from "../../core/geometry.ts";
 import type { Look } from "../../core/model/types.ts";
+import { box } from "../../core/model/index.ts";
+import { mini } from "./helpers.ts";
 
 const r = evaluate(closet, { top: "1" });
 const svg = (view: string, phase = "p2") => drawView(r, view, { phase, display: "in" });
@@ -97,6 +99,21 @@ describe("hidden lines on synthetic boxes", () => {
     expect(b.some((s) => s.o === "v" && s.at === 1 && s.from < 2.5 && s.to > 2.5)).toBe(false);
     expect(b).toContainEqual({ o: "v", at: 1, from: 0, to: 2 });
   });
+});
+
+test("a grouped wall in pieces around a doorway is drawn as one outline; ungrouped, the joins show", () => {
+  const wall = (group?: string) => mini((b) => {
+    for (const [id, x, y] of [["w-l", [0, 10], [0, 30]], ["w-r", [20, 30], [0, 30]], ["w-head", [10, 20], [25, 30]]] as const)
+      b.context({ id, name: "Wall", role: "wall", box: box(x, y, [-4, 0]), ...(group ? { group } : {}) });
+    b.view({ id: "front", title: "Front", kind: "elevation", look: "-z" });
+  });
+  const path = (svgText: string, id: string) => new RegExp(`<path data-part="${id}" class="e e-ctx" d="([^"]*)"`).exec(svgText)?.[1] ?? "";
+  const seam = /M10 -25V-30|M10 -30V-25/;   // the head's left end, where it meets the left piece above the doorway
+  const grouped = drawView(evaluate(wall("back")), "front", { phase: "p1", display: "in" });
+  const loose = drawView(evaluate(wall()), "front", { phase: "p1", display: "in" });
+  expect(path(loose, "w-head")).toMatch(seam);
+  expect(path(grouped, "w-head")).not.toMatch(seam);
+  expect(path(grouped, "w-head")).toMatch(/M10 -25H20|M20 -25H10/);   // the doorway's head is still drawn
 });
 
 describe("sections", () => {
