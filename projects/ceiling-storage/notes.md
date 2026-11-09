@@ -51,6 +51,10 @@ The beams are a choice (the "Beams" option); the default is the user's design:
   steel does four-fifths of the work: at full load the wood sees about 350 psi, the steel about 10,500 psi
   (21,600 allowed), and the pair sags about 5/32″ (3/16″ allowed, worked out as if the whole load hung at
   mid-span). Nothing sits between the rails, where the rack's lifting parts move.
+  At each end the wood stops 1½″ short and the tie sits on the angle's flat leg instead, running the full depth
+  from the back angle to the front one, right over the posts: post, angle and tie end stack in one line. The
+  ties are screwed up through the flat leg and through the upright leg into their ends; the beam's wood butts
+  into the tie's face and is screwed through it.
 - **Doubled 2×4s, rail underneath.** Simplest, 3½″ deep: the raised rack may hang 7¾″.
 - **Doubled 2×4s, rail hung beside the beam** from a 48″ angle. Rails highest (97⅞″, 11⅛″ for the rack), but
   the beams sit just inside the rails, where the rack's lifting parts may hit them.
@@ -84,7 +88,7 @@ swing, so the rack may hang at most 7¾″ below the tops of its rails when full
 ## Lumber on hand
 
 The user has five straight, premium 2×4s: two at 52″, one at 68″, one at 88″ and one at 120″. The shopping list
-cuts from them first: the 120″ gives one post, the 88″ one beam, and the two 52″ boards the two ties. Four 8 ft
+cuts from them first: the 120″ gives one post, the 88″ one beam (69″), and the two 52″ boards the two ties (49½″). Four 8 ft
 2×4s are still to buy, for three posts and the other beam; no other split needs fewer, since only the 120″ board
 is long enough for a 96″ post. The 68″ board is spare. The posts come out at 95⅞″, so an 8 ft (96″) board
 leaves only ⅛″: measure the ceiling at each corner first, and buy 10 ft boards for any corner over 98⅝″.
@@ -144,3 +148,4 @@ leaves only ⅛″: measure the ceiling at each corner first, and buy 10 ft boar
 - 2026-11-08: The steel-angle beams use 2×4s ripped to 2″ instead of a 2″ × 2″, so the user's own 2×4s can supply
   them; posts ripped to 2″ to match. The user's five 2×4s are used before anything is bought.
 - 2026-11-09: Measured 2¼–2⅜″ from the back wall to the left door's casing; the back-left post goes in that corner.
+- 2026-11-09: Ties sit on the steel angles at the corners and run the full depth; the beams' wood fits between them.
