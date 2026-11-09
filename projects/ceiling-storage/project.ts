@@ -18,7 +18,8 @@ export const P = {
   doorway: { left: 27.5, right: 6.5, header: 15.5, recess: 3, frame: 1 },
   // The door in the left wall, measured to the outside of its casing as you face that wall: the casing is
   // 3¾″ wide all around and stands ¾″ proud of the wall.
-  leftDoor: { left: 8.25, right: 2.5, top: 8, casing: 3.75, casingProud: 0.75 }, // inferred: measured to the casing's outer edge
+  leftDoor: { left: 8.25, right: 2.25, top: 8, casing: 3.75, casingProud: 0.75 }, // right: back wall to the casing's edge, 2¼–2⅜″ up its height (the least is used)
+  minBearing: 1,   // inferred: each post stands under at least this much of its beam, front to back
   // Both doors swing into the alcove, hinged on the left as you face them from inside it. They are closed
   // whenever the rack is lowered, so only the frame and the raised rack have to stay out of their swing.
   doorT: 1.75,     // inferred: door thickness, for drawing only
@@ -178,12 +179,22 @@ export default defineProject({
     const bz0 = Math.max(0, extent[0][1] - postD), fz1 = Math.min(D, extent[1][0] + postD);
     const postZ = { back: [bz0, bz0 + postD] as Range, front: [fz1 - postD, fz1] as Range };
     const clearOfCasing = (z: Range) => (z[0] < casing.z[1] && z[1] > casing.z[0] ? LD.casingProud : 0);
+    // The back-left post stands in the corner, between the back wall and the left door's casing, when it fits
+    // there and still stands under enough of the beam; otherwise in front of the casing.
+    const cornerZ: Range = [casing.z[0] - postD, casing.z[0]];
+    const bearing = (z: Range, beamZ: Range) => Math.min(z[1], beamZ[1]) - Math.max(z[0], beamZ[0]);
+    const inCorner = cornerZ[0] >= 0 && bearing(cornerZ, extent[0]) >= P.minBearing;
+    // In front of the casing, the post stops at the left doorway so it stays out of the door's swing.
+    const frontOfCasingZ: Range = postZ.back[1] > leftOpening.z[0] ? [leftOpening.z[0] - postD, leftOpening.z[0]] : postZ.back;
     const posts = [
-      { id: "post-back-left", where: "back left", x: clearOfCasing(postZ.back), z: postZ.back, beam: "beam-back" },
+      { id: "post-back-left", where: "back left", x: inCorner ? 0 : clearOfCasing(postZ.back), z: inCorner ? cornerZ : frontOfCasingZ, beam: "beam-back" },
       { id: "post-back-right", where: "back right", x: W - T, z: postZ.back, beam: "beam-back" },
       { id: "post-front-left", where: "front left", x: clearOfCasing(postZ.front), z: postZ.front, beam: "beam-front" },
       { id: "post-front-right", where: "front right", x: W - T, z: postZ.front, beam: "beam-front" },
     ];
+    const worst = Math.min(...posts.map((po) => bearing(po.z, extent[po.beam === "beam-back" ? 0 : 1])));
+    b.check("posts-under-beams", "Every post stands under its beam", worst >= P.minBearing,
+      `least overlap ${worst}″ front to back (at least ${P.minBearing}″); back-left post ${inCorner ? `in the corner, ${casing.z[0] - postD}″ spare behind the casing` : "in front of the left door's casing"}`, "error");
     for (const po of posts) {
       b.board({ id: po.id, name: "Post", where: po.where, material: steel ? "2x4-ripped" : "2x4", phase: "p1", step: "p1-posts",
         box: box([po.x, po.x + T], [0, postTop], po.z), grain: "y", exposure: "limited", exposureNote: "basement storage frame",
@@ -318,7 +329,7 @@ export default defineProject({
         ? "On the floor, screw each pair of 2×4s into a beam. Drill each steel angle's flat leg to match the rail's holes, bolt the rail under it (bolt heads on top, since the ceiling leaves only ½″), then lag-screw the angle's upright leg to the beam's outer face with the flat leg flush with the beam top, centred along it. Mounting the rails now saves working overhead."
         : "On the floor, screw each pair of 2×4s into a beam, then screw one rack rail to the underside of each beam, centred along it and down its middle. Mounting the rails now saves working overhead." });
     b.step({ id: "p1-posts", phase: "p1", title: "Stand the posts",
-      text: "Cut the four posts to fit under the beams (check the ceiling height at each corner first). Stand one in each corner, plumb it, and screw it to the wall at the top, middle and bottom, into studs where you can find them. The back-left post stands in front of the left door's casing." });
+      text: "Cut the four posts to fit under the beams (check the ceiling height at each corner first). Stand one in each corner, plumb it, and screw it to the wall at the top, middle and bottom, into studs where you can find them. The back-left post stands in the corner between the back wall and the left door's casing." });
     b.step({ id: "p1-beams", phase: "p1", title: "Lift the beams and tie the top",
       text: "With a helper, lift each beam onto its two posts, rails facing down, and screw down into the posts. Fit the ties between the beams at each side. Then hang the rack from the rails as its instructions say." });
 

@@ -30,8 +30,11 @@ to right, so the frame carries them on two beams that span wall to wall across t
 
 - Each beam is two 2×4s on edge, screwed together, centred under one rail. The rails are 48″ apart, so with
   the rack centred front to back the beams sit ½″ off the back wall and ½″ in from the open side.
-- A 2×4 post stands in each corner under the beam ends, screwed to a wall stud near the top and bottom so the
-  frame cannot rack. The back-left post stands in front of the left door's casing.
+- A 2×4 post stands in each corner under the beam ends, screwed to the wall so the frame cannot rack. The
+  back-left post stands in the corner between the back wall and the left door's casing: the gap there is
+  2¼″ to 2⅜″ up its height, the 2″ post leaves ¼″, and it stands under 1⅛″ of the back beam (the
+  `posts-under-beams` rule asks for at least 1″). With the rails hung beside the beams (third beam choice) the
+  back beam sits farther out, so that post stands in front of the casing instead, stopping at the doorway.
 - A 2×4 tie joins the two beams at each side.
 - The frame stops ½″ under the ceiling, so it stands up without jamming.
 - The rails screw to the beams on the floor, before the beams go up.
@@ -92,13 +95,14 @@ leaves only ⅛″: measure the ceiling at each corner first, and buy 10 ft boar
 |---|---|---|
 | Orientation | Back wall (with the exit doorway) at the far end of the 52″ depth, alcove open toward the room | "52″ deep looking at the exit door" |
 | Wall left of the alcove | about 30″ | "30 inches or so", for the drawing only |
-| Left door measurements | taken to the outside edge of the casing | gives a 33¾″ opening, about right for a door with its jamb |
+| Left door measurements | taken to the outside edge of the casing | gives a 34″ opening, about right for a door with its jamb; the back-wall side was measured to the casing (2¼–2⅜″) |
 | Rack's raised height | 6″ from the top of the rails to the platform's underside | the rack ships in a box 5½″ thick; the steel-angle beam allows 9⅛″ |
 | Rail spacing | 48″ centre to centre | "about 48 inches apart", to be checked |
 | Rail width and thickness | 2″ × 1″ | "2ish inches"; thickness a guess |
 | Rail screws or bolts | 4 per rail | until the holes are counted |
 | Angle lag screws | 7 per angle (every 8″) | a common spacing |
 | Angle screws | every 8″ on both legs | a common spacing |
+| Post under beam | at least 1″ front to back | enough to screw down through the angle and carry about 170 lb |
 | Post bracing | screwed to the wall every 32″ or closer | top, middle and bottom of a 96″ post |
 | Gap above the frame | ½″ | so the frame can be stood up under the ceiling |
 | Door thickness | 1¾″ | for drawing only |
@@ -139,3 +143,4 @@ leaves only ⅛″: measure the ceiling at each corner first, and buy 10 ft boar
 - 2026-11-08: Posts ripped to 2⅛″ to match the steel-and-2×2 beams, screwed to the wall at top, middle and bottom.
 - 2026-11-08: The steel-angle beams use 2×4s ripped to 2″ instead of a 2″ × 2″, so the user's own 2×4s can supply
   them; posts ripped to 2″ to match. The user's five 2×4s are used before anything is bought.
+- 2026-11-09: Measured 2¼–2⅜″ from the back wall to the left door's casing; the back-left post goes in that corner.
