@@ -30,8 +30,8 @@
       "qty": 2,
       "ids": ["beam-back", "beam-front"],
       "where": ["back", "front"],
-      "finished": {"l": 72, "w": 2, "t": 1.5},
-      "cut": {"l": 72, "w": 2, "t": 1.5},
+      "finished": {"l": 69, "w": 2, "t": 1.5},
+      "cut": {"l": 69, "w": 2, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame", "cut to fit"],
       "notes": []
@@ -47,8 +47,8 @@
       "qty": 2,
       "ids": ["tie-left", "tie-right"],
       "where": ["left", "right"],
-      "finished": {"l": 46.5, "w": 2, "t": 1.5},
-      "cut": {"l": 46.5, "w": 2, "t": 1.5},
+      "finished": {"l": 49.5, "w": 2, "t": 1.5},
+      "cut": {"l": 49.5, "w": 2, "t": 1.5},
       "band": {},
       "tags": ["basement storage frame"],
       "notes": []

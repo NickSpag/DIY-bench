@@ -209,8 +209,10 @@ export default defineProject({
     for (const bm of beams) {
       if (steel) {
         b.board({ id: bm.id, name: "Beam", where: bm.where, material: "2x4-ripped", phase: "p1", step: "p1-beams",
-          box: box([0, W], beamY, bm.z), grain: "x", fitToSite: true, exposure: "limited", exposureNote: "basement storage frame",
-          joins: [...restsOn(bm.id), { to: `angle-${bm.where}`, by: "screws", note: "#10 screws every 8″ through both legs of the angle" }] });
+          // The wood stops at the ties, which sit on the angle's flat leg at each end; the angle runs wall to wall.
+          box: box([T, W - T], beamY, bm.z), grain: "x", fitToSite: true, exposure: "limited", exposureNote: "basement storage frame",
+          joins: [{ to: `angle-${bm.where}`, by: "screws", note: "#10 screws every 8″ through both legs of the angle" },
+            { to: "tie-left", by: "screws", note: "two 3″ screws through the tie into the end" }, { to: "tie-right", by: "screws", note: "two 3″ screws through the tie into the end" }] });
         built.push(bm.id);
         beamIds[bm.id] = { inner: bm.id };
         // The angle wraps the beam's bottom outer corner: flat leg under it, upright leg up its outer face.
@@ -235,13 +237,18 @@ export default defineProject({
       beamIds[bm.id] = { inner: bm.side > 0 ? `${bm.id}-b` : `${bm.id}-a` };
     }
 
-    // Ties: between the beams at each side, closing the top into a rectangle.
+    // Ties: one at each side closing the top into a rectangle. With the steel angles, each tie runs the full
+    // depth and its ends sit on the angles' flat legs, over the posts; otherwise it fits between the beams.
     const tieT = T;
     for (const [id, where, x] of [["tie-left", "left", 0], ["tie-right", "right", W - tieT]] as const) {
       b.board({ id, name: "Tie", where, material: steel ? "2x4-ripped" : "2x4", phase: "p1", step: "p1-beams",
-        box: box([x, x + tieT], beamY, [beams[0].z[1], beams[1].z[0]]), grain: "z", exposure: "limited", exposureNote: "basement storage frame",
-        joins: [{ to: beamIds["beam-back"].inner, by: "screws", note: "two 3″ screws through the beam into the end" },
-          { to: beamIds["beam-front"].inner, by: "screws", note: "two 3″ screws through the beam into the end" }] });
+        box: box([x, x + tieT], beamY, steel ? [beams[0].z[0], beams[1].z[1]] : [beams[0].z[1], beams[1].z[0]]), grain: "z",
+        exposure: "limited", exposureNote: "basement storage frame",
+        joins: steel
+          ? [{ to: "angle-back", by: "rests-on", note: "screwed up through the flat leg, and through the upright leg into the end" },
+            { to: "angle-front", by: "rests-on", note: "screwed up through the flat leg, and through the upright leg into the end" }]
+          : [{ to: beamIds["beam-back"].inner, by: "screws", note: "two 3″ screws through the beam into the end" },
+            { to: beamIds["beam-front"].inner, by: "screws", note: "two 3″ screws through the beam into the end" }] });
       built.push(id);
     }
 
@@ -324,7 +331,7 @@ export default defineProject({
 
     b.step({ id: "p1-rails", phase: "p1", title: "Rails onto the beams",
       text: steel
-        ? "On the floor, rip the beam 2×4s to 2″, fit each steel angle around the bottom outer corner of one and screw it on through both legs every 8″, staggered. Drill the angle's flat leg to match the rail's holes, then lag-screw the rail up through the angle into the wood, centred along it. Mounting the rails now saves working overhead."
+        ? "On the floor, rip the beam 2×4s to 2″ and cut them 3″ shorter than the angles (the ties sit on the angle ends), fit each steel angle around the bottom outer corner of one, centred, and screw it on through both legs every 8″, staggered. Drill the angle's flat leg to match the rail's holes, then lag-screw the rail up through the angle into the wood, centred along it. Mounting the rails now saves working overhead."
         : onAngle
         ? "On the floor, screw each pair of 2×4s into a beam. Drill each steel angle's flat leg to match the rail's holes, bolt the rail under it (bolt heads on top, since the ceiling leaves only ½″), then lag-screw the angle's upright leg to the beam's outer face with the flat leg flush with the beam top, centred along it. Mounting the rails now saves working overhead."
         : "On the floor, screw each pair of 2×4s into a beam, then screw one rack rail to the underside of each beam, centred along it and down its middle. Mounting the rails now saves working overhead." });
